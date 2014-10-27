@@ -1,0 +1,35 @@
+<?xml version="1.0"?><!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="database">
+	<class name="database.Article" table="ARTICLE">
+		<id name="id" column="ID">
+			<generator class="native" />
+		</id>
+
+
+		<property name="type" column="TYPE" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">database.Type</param>
+			</type>
+		</property>
+		<property name="path" column="PATH" type="string" length="100"
+			unique="true" not-null="true">
+		</property>
+
+		<property name="title" column="TITLE" type="string" length="200">
+		</property>
+		
+		<property name="authors" column="AUTHORS" type="string" length="200">
+		</property>
+		
+		<property name="source" column="SOURCE" type="string" length="200">
+		</property>
+		
+		<property name="year" column="YEAR" type="integer">
+		</property>
+
+
+	</class>
+</hibernate-mapping>

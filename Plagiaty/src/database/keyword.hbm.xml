@@ -1,0 +1,15 @@
+<?xml version="1.0"?><!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="database">
+	<class name="database.Keyword" table="KEYWORD">
+		
+		<id name="id" column="ID">
+			<generator class="native" />
+		</id>
+		<property name="word" column="WORD" type="string" length="50" unique="true">
+		</property>
+
+	</class>
+</hibernate-mapping>
