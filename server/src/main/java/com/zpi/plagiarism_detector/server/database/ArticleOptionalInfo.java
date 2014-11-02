@@ -1,5 +1,5 @@
-package database;
-/** Klasa umo¿liwiaj¹ca dodanie nieobowi¹zkowych informacji dotycz¹cych artyku³u */
+package com.zpi.plagiarism_detector.server.database;
+/** Klasa umoï¿½liwiajï¿½ca dodanie nieobowiï¿½zkowych informacji dotyczï¿½cych artykuï¿½u */
 public class ArticleOptionalInfo {
 	private String title;
 	private String authors;

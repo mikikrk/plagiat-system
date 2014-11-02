@@ -1,4 +1,4 @@
-package database;
+package com.zpi.plagiarism_detector.server.database;
 
 import java.io.Serializable;
 

@@ -27,9 +27,10 @@
 <!-- Drop and re-create the database schema on startup -->
 <property name="hbm2ddl.auto">update</property>
 
-<mapping resource="./database/article.hbm.xml"/>
-<mapping resource="./database/assignment.hbm.xml"/>
-<mapping resource="./database/keyword.hbm.xml"/>
+<mapping resource="META-INF/article.hbm.xml"/>
+<mapping resource="META-INF/article.hbm.xml"/>
+<mapping resource="META-INF/assignment.hbm.xml"/>
+<mapping resource="META-INF/keyword.hbm.xml"/>
 
 
 

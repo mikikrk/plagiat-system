@@ -1,22 +1,22 @@
-package database;
+package com.zpi.plagiarism_detector.server.database;
 
 import java.util.Set;
 
 /**
- * Interfejs umo¿liwiaj¹cy komunikacjê z baz¹ danych.
+ * Interfejs umoï¿½liwiajï¿½cy komunikacjï¿½ z bazï¿½ danych.
  * 
  */
 public interface Dao {
 
 	/**
-	 * dodanie artyku³u do bazy danych
+	 * dodanie artykuï¿½u do bazy danych
 	 * 
 	 * @param path
-	 *            scie¿ka do pliku
+	 *            scieï¿½ka do pliku
 	 * @param type
-	 *            artyku³u (EN angielski, PL polski, CO kod)
+	 *            artykuï¿½u (EN angielski, PL polski, CO kod)
 	 * @param keywords
-	 *            zbiór s³ów kluczowych
+	 *            zbiï¿½r sï¿½ï¿½w kluczowych
 	 * 
 	 * */
 	public int addArticle(String path, Type type, Set<String> keywords);
@@ -25,37 +25,37 @@ public interface Dao {
 	public int addArticle(String path, Type type, Set<String> keywords,
 			ArticleOptionalInfo aoi);
 
-	/** ustawienie opcjonalnych informacji, dla istniej¹cego w bazie artyku³u */
+	/** ustawienie opcjonalnych informacji, dla istniejï¿½cego w bazie artykuï¿½u */
 	public int setArticleOptionalInfo(String path, ArticleOptionalInfo aoi);
 
-	/** zwraca opcjonalne informacje dla artyku³u o podanej sciezce */
+	/** zwraca opcjonalne informacje dla artykuï¿½u o podanej sciezce */
 	public ArticleOptionalInfo getArticleOptionalInfo(String path);
 
 	/**
-	 * ustawia s³owa kluczowe dla artyku³u o podanej œcie¿ce (poprzednie zostaj¹
+	 * ustawia sï¿½owa kluczowe dla artykuï¿½u o podanej ï¿½cieï¿½ce (poprzednie zostajï¿½
 	 * usuniete)
 	 */
 	public int setKeywords(String path, Set<String> keywords);
 
 	/**
-	 * dodaje s³owa kluczowe do artyku³u o podanej œcie¿ce (poprzednie zostaj¹
+	 * dodaje sï¿½owa kluczowe do artykuï¿½u o podanej ï¿½cieï¿½ce (poprzednie zostajï¿½
 	 * zachowane)
 	 * 
 	 * @return 1 -udane, 0-nieudane
 	 */
 	public int addKeywords(String path, Set<String> keywords);
 
-	/** zwraca s³owa kluczowe przypisane do artyku³u o podanej scie¿ce */
+	/** zwraca sï¿½owa kluczowe przypisane do artykuï¿½u o podanej scieï¿½ce */
 	public Set<String> getKeywords(String path);
 
 	/**
-	 * zwraca œcie¿ki do artyku³ów o podanym typie i z przynajmniej jednym ze
-	 * s³ów
+	 * zwraca ï¿½cieï¿½ki do artykuï¿½ï¿½w o podanym typie i z przynajmniej jednym ze
+	 * sï¿½ï¿½w
 	 */
 	public Set<String> findArticesWithAtLeastOne(Set<String> set, Type type);
 
 	/**
-	 * zwraca œcie¿ki do artyku³ów o podanym typie i ze wszystkimi s³owami
+	 * zwraca ï¿½cieï¿½ki do artykuï¿½ï¿½w o podanym typie i ze wszystkimi sï¿½owami
 	 * kluczowymi
 	 */
 	public Set<String> findArticesWithAll(Set<String> set, Type type);
@@ -69,28 +69,28 @@ public interface Dao {
 	public abstract int removeAll();
 
 	/**
-	 * ustawia typ artyku³u o podanej scie¿ce
+	 * ustawia typ artykuï¿½u o podanej scieï¿½ce
 	 * 
 	 * @return 1 udane, 0 nieudane
 	 * */
 	public abstract int setType(String path, Type newType);
 
 	/**
-	 * zmienia œcie¿ke artyku³u
+	 * zmienia ï¿½cieï¿½ke artykuï¿½u
 	 * 
 	 * @return 1 udane, 0 nieudane
 	 * */
 	public abstract int setPath(String currentPath, String newPath);
 
 	/**
-	 * usuwa z bazy artyku³ o podanej scie¿ce
+	 * usuwa z bazy artykuï¿½ o podanej scieï¿½ce
 	 * 
 	 * @return 1 udane, 0 nieudane
 	 * */
 	public abstract int removeArticle(String path);
 
 	/**
-	 * zwraca typ artyku³u
+	 * zwraca typ artykuï¿½u
 	 * */
 	public abstract Type getType(String path);
 

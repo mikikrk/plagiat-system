@@ -1,4 +1,4 @@
-package database;
+package com.zpi.plagiarism_detector.server.database;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +19,7 @@ class HibernateAccess {
 
 	static {
 		Configuration cfg = new Configuration();
-		cfg.configure("hibernate.cfg.xml");
+		cfg.configure("META-INF/hibernate.cfg.xml");
 
 		sessionFactory = cfg.buildSessionFactory();
 	}
