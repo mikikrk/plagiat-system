@@ -2,8 +2,14 @@ package com.zpi.plagiarism_detector.server.main;
 
 import com.zpi.plagiarism_detector.commons.protocol.ApplicationProperties;
 import com.zpi.plagiarism_detector.server.core.Server;
+import com.zpi.plagiarism_detector.server.factories.core.AbstractServerFactory;
+import com.zpi.plagiarism_detector.server.factories.core.ServerFactory;
+
+import java.io.IOException;
 
 public class ServerMain {
+
+    public static AbstractServerFactory serverFactory = new ServerFactory();
 
     public static void main(String[] args) {
         int threadPoolSize = determineThreadPoolSize(args);
@@ -32,7 +38,12 @@ public class ServerMain {
     }
 
     private static void startUpServer(int threadPoolSize, int portNumber) {
-        Server server = new Server(threadPoolSize, portNumber);
-        server.handleConnections();
+        try {
+            Server server = serverFactory.create(threadPoolSize, portNumber);
+            server.handleConnections();
+        } catch(IOException e1) {
+            System.exit(-1);
+        }
     }
+
 }

@@ -6,7 +6,6 @@ import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 public class MessageHandler {
     private ObjectInputStream in;
@@ -15,17 +14,18 @@ public class MessageHandler {
 
     /**
      * Tworzy MessageHandler dla strumieni wyjścia/wejścia danego socket'u
-     * @param socket
+     * @param out
+     * @param in
      * @return utworzony obiekt
      * @throws IOException
      */
-    public static MessageHandler createForSocket(Socket socket) throws IOException {
-        return new MessageHandler(socket);
+    public static MessageHandler create(ObjectOutputStream out, ObjectInputStream in) {
+        return new MessageHandler(out, in);
     }
 
-    private MessageHandler(Socket socket) throws IOException {
-        out = new ObjectOutputStream(socket.getOutputStream());
-        in = new ObjectInputStream(socket.getInputStream());
+    private MessageHandler(ObjectOutputStream out, ObjectInputStream in)  {
+        this.out = out;
+        this.in = in;
     }
 
     /**
@@ -39,7 +39,7 @@ public class MessageHandler {
         }
     }
 
-    private boolean tryReadMessage() {
+    public boolean tryReadMessage() {
         try {
             message = (Message)in.readObject();
         } catch (IOException | ClassNotFoundException e) {
