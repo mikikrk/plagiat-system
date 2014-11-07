@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.* ?>
+
+<BorderPane id="BorderPane" prefHeight="600" prefWidth="800" xmlns:fx="http://javafx.com/fxml" fx:controller="com.zpi.plagiarism_detector.gui.FXMLController">
+    <top>
+        <Label layoutX="200" layoutY="30" fx:id="appTitle" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
+    </top>
+    <left> 
+    </left>
+    <center>
+        <GridPane hgap="10" vgap="10">
+            <padding>
+                <Insets top="25" right="25" bottom="10" left="25"/>
+            </padding>
+            <children>
+                <TextArea fx:id="inputData" GridPane.columnIndex="0" GridPane.rowIndex="0"  />        
+                <Button minWidth="60" alignment="TOP_CENTER" text="Click Me!" onAction="#handleButtonAction" fx:id="button" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <GridPane GridPane.columnIndex="2" GridPane.rowIndex="0" hgap="10" >
+                    <children>
+                        <TextArea fx:id="outputData" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="50.0" />
+                        <RowConstraints percentHeight="50.0" />
+                    </rowConstraints>
+                </GridPane>
+            </children>
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="45.0" />
+                <ColumnConstraints percentWidth="10.0" />
+                <ColumnConstraints percentWidth="45.0" />   
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints percentHeight="100.0" /> 
+            </rowConstraints>
+        </GridPane>
+    </center>
+    <bottom>    
+        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
+    </bottom>
+</BorderPane>
+<!-- <AnchorPane id="AnchorPane" prefHeight="600" prefWidth="800" xmlns:fx="http://javafx.com/fxml" fx:controller="com.zpi.plagiarism_detector.gui.FXMLController">
+    <children>
+        <Label layoutX="200" layoutY="30" fx:id="appTitle" />
+        <TextArea fx:id="inputData" /> 
+        <Button layoutX="370" layoutY="90" minWidth="60" text="Click Me!" onAction="#handleButtonAction" fx:id="button" />
+        <Label layoutX="126" layoutY="120" minHeight="16" minWidth="69" fx:id="label" />
+    </children>
+</AnchorPane>
+-->
