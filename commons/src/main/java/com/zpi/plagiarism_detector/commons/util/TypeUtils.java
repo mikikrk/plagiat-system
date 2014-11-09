@@ -1,4 +1,4 @@
-package com.zpi.plagiarism_detector.commons.utils;
+package com.zpi.plagiarism_detector.commons.util;
 
 import java.util.*;
 

@@ -1,7 +1,6 @@
 package com.zpi.plagiarism_detector.server.handlers;
 
-import com.zpi.plagiarism_detector.commons.utils.TestUtils;
-import com.zpi.plagiarism_detector.server.factories.handlers.AbstractMessageHandlerFactory;
+import com.zpi.plagiarism_detector.commons.util.TestUtils;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -17,21 +16,18 @@ import static org.mockito.Mockito.*;
 public class ConnectionHandlerTest {
     private ConnectionHandler connectionHandler;
     private Socket clientSocket;
-    private AbstractMessageHandlerFactory messageHandlerFactory;
     private MessageHandler messageHandler;
 
     @BeforeMethod
     public void createMocks() {
         clientSocket = Mockito.mock(Socket.class);
-        messageHandlerFactory = Mockito.mock(AbstractMessageHandlerFactory.class);
         messageHandler = Mockito.mock(MessageHandler.class);
-        connectionHandler = new ConnectionHandler(clientSocket, messageHandlerFactory);
+        connectionHandler = new ConnectionHandler(clientSocket, messageHandler);
     }
 
     @Test
     public void runSuccessTest() throws InterruptedException, IOException, ClassNotFoundException {
         // given
-        doReturn(messageHandler).when(messageHandlerFactory).createForSocket(any(Socket.class));
 
         // when
         Thread thread = new Thread(connectionHandler);
@@ -45,9 +41,9 @@ public class ConnectionHandlerTest {
     }
 
     @Test
-    public void runIOExceptionTest() throws IOException, InterruptedException {
+    public void runIOExceptionTest() throws IOException, InterruptedException, ClassNotFoundException {
         // given
-        doThrow(new IOException()).when(messageHandlerFactory).createForSocket(any(Socket.class));
+        doThrow(new IOException()).when(messageHandler).handleMessages();
 
         // when
         Thread thread = new Thread(connectionHandler);
@@ -55,14 +51,14 @@ public class ConnectionHandlerTest {
         thread.join();
 
         // then
-        verify(messageHandler, never()).freeResources();
+        verify(messageHandler).freeResources();
         verify(clientSocket).close();
     }
 
     @Test
-    public void runClassNotFoundExceptionTest() throws IOException, InterruptedException {
+    public void runClassNotFoundExceptionTest() throws IOException, InterruptedException, ClassNotFoundException {
         // given
-        doReturn(messageHandler).when(messageHandlerFactory).createForSocket(any(Socket.class));
+        doThrow(new ClassNotFoundException()).when(messageHandler).handleMessages();
 
         // when
         Thread thread = new Thread(connectionHandler);
@@ -77,7 +73,6 @@ public class ConnectionHandlerTest {
     @Test
     public void freeHandlerResourcesNullMessageHandlerTest() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // given
-        doReturn(null).when(messageHandlerFactory).createForSocket(any(Socket.class));
 
         // when
         Method method = connectionHandler.getClass().getDeclaredMethod("freeHandlerResources");

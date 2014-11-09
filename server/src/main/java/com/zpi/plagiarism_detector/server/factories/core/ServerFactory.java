@@ -1,6 +1,7 @@
 package com.zpi.plagiarism_detector.server.factories.core;
 
 import com.zpi.plagiarism_detector.server.core.Server;
+import com.zpi.plagiarism_detector.server.factories.handlers.MessageHandlerFactory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,7 +14,7 @@ public class ServerFactory extends AbstractServerFactory {
         ServerSocket serverSocket = new ServerSocket(portNumber);
         ExecutorService pool = Executors.newFixedThreadPool(threadPoolSize);
 
-        return new Server(serverSocket, pool);
+        return new Server(serverSocket, pool, new MessageHandlerFactory());
     }
 
 }

@@ -27,7 +27,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.zpi.plagiarism_detector.client.ClientMain</mainClass>
+                            <mainClass>com.zpi.plagiarism_detector.client.main.ClientMain</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

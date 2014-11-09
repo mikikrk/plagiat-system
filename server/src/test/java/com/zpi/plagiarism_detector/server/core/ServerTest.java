@@ -1,5 +1,6 @@
 package com.zpi.plagiarism_detector.server.core;
 
+import com.zpi.plagiarism_detector.server.factories.handlers.MessageHandlerFactory;
 import com.zpi.plagiarism_detector.server.handlers.ConnectionHandler;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
@@ -25,7 +26,7 @@ public class ServerTest {
         clientSocket = Mockito.mock(Socket.class);
         serverSocket = Mockito.mock(ServerSocket.class);
         pool = Mockito.mock(ExecutorService.class);
-        server = new Server(serverSocket, pool);
+        server = new Server(serverSocket, pool, new MessageHandlerFactory());
     }
 
     @Test(timeOut = 1000)

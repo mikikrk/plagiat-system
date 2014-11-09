@@ -7,12 +7,12 @@ import java.net.Socket;
 
 public class MessageHandlerFactory extends AbstractMessageHandlerFactory {
     public MessageHandler createForSocket(Socket socket) throws IOException {
-        ObjectOutputStream outputStream = (ObjectOutputStream) socket.getOutputStream();
-        ObjectInputStream inputStream = (ObjectInputStream) socket.getInputStream();
+        ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+        ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
         return MessageHandler.create(outputStream, inputStream);
     }
 
-    public MessageHandler createForStreams(ObjectOutputStream outputStream, ObjectInputStream inputStream) throws IOException {
+    public MessageHandler createForStreams(ObjectOutput outputStream, ObjectInput inputStream) throws IOException {
         return MessageHandler.create(outputStream, inputStream);
     }
 }

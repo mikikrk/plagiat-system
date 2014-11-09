@@ -1,7 +1,6 @@
 package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.server.factories.handlers.AbstractMessageHandlerFactory;
-import com.zpi.plagiarism_detector.server.factories.handlers.MessageHandlerFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,16 +17,16 @@ public class ConnectionHandler implements Runnable {
      * Tworzy obiekt uchwyt który przechowuje Socket oraz mapę id i socket handlerów.
      *
      * @param socket socket potrzebny do odbioru/wysyłania danych.
+     * @param messageHandler
      */
-    public ConnectionHandler(Socket socket, AbstractMessageHandlerFactory messageHandlerFactory) {
+    public ConnectionHandler(Socket socket, MessageHandler messageHandler) {
         this.socket = socket;
-        this.messageHandlerFactory = messageHandlerFactory;
+        this.messageHandler = messageHandler;
     }
 
     @Override
     public void run() {
         try {
-            messageHandler = messageHandlerFactory.createForSocket(socket);
             messageHandler.handleMessages();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

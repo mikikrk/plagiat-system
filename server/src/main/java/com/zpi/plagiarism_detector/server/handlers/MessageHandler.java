@@ -3,27 +3,25 @@ package com.zpi.plagiarism_detector.server.handlers;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public class MessageHandler {
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private ObjectInput in;
+    private ObjectOutput out;
     private Message message;
 
     /**
-     * Tworzy MessageHandler dla strumieni wyjścia/wejścia danego socket'u
+     * Tworzy MessageHandler dla strumieni wyjścia/wejścia
      * @param out
      * @param in
      * @return utworzony obiekt
      * @throws IOException
      */
-    public static MessageHandler create(ObjectOutputStream out, ObjectInputStream in) {
+    public static MessageHandler create(ObjectOutput out, ObjectInput in) {
         return new MessageHandler(out, in);
     }
 
-    private MessageHandler(ObjectOutputStream out, ObjectInputStream in)  {
+    private MessageHandler(ObjectOutput out, ObjectInput in)  {
         this.out = out;
         this.in = in;
     }
@@ -49,15 +47,17 @@ public class MessageHandler {
         }
     }
 
-    private void dispatchMessage(Message message) {
+    private void dispatchMessage(Message message) throws IOException {
         ProtocolCode cmd = message.getCode();
         if(cmd == ProtocolCode.TEST) {
             System.out.println(message.getSentObject());
+            Message response = new Message(ProtocolCode.TEST);
+            sendMessage(response);
         }
     }
 
     /**
-     * Wysyła odpowiedź do klienta
+     * Wysyła odpowiedź
      * @param message wysyłana wiadomość
      * @throws IOException
      */
