@@ -24,8 +24,8 @@ public class Client extends Observable implements Observer {
      * Otwiera połączenie pomiędzy klientem a serwerem.
      */
     public void openConnection() {
-        reader.start();
         reader.addObserver(this);
+        reader.start();
         writer.start();
     }
 
