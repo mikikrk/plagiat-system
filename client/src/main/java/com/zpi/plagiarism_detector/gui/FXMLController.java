@@ -24,7 +24,7 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
-        outputData.setText("Napisa≈Çe≈õ: " + inputData.getText());
+        outputData.setText("Napisa≥eú: " + inputData.getText());
         outputData.setStyle("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick;");
         outputData.selectRange(11, outputData.getLength());
 

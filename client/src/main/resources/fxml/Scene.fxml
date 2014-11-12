@@ -34,12 +34,23 @@
                 <Button fx:id="button" alignment="CENTER" contentDisplay="CENTER" minWidth="60" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="78.0" stylesheets="@../styles/Styles.css" text="Click Me!" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="TOP" />
                 <GridPane hgap="10" GridPane.columnIndex="2" GridPane.rowIndex="0">
                     <children>
-                        <TextArea fx:id="outputData" editable="false"  GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                     <children>
-                        <Label layoutX="14.0" layoutY="14.0" text="Statistics" textFill="WHITE" />
-                     </children>
-                  </AnchorPane>
+                        <GridPane GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <children>
+                                <TextArea fx:id="outputData" editable="false"  GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            </children>
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints percentHeight="90.0" />
+                                <RowConstraints percentHeight="10.0" />
+                            </rowConstraints>
+                        </GridPane>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                            <children>
+                                <Label layoutX="14.0" layoutY="14.0" text="Statistics" textFill="WHITE" />
+                            </children>
+                        </AnchorPane>
                     </children>
                     <columnConstraints>
                         <ColumnConstraints percentWidth="100.0" />
