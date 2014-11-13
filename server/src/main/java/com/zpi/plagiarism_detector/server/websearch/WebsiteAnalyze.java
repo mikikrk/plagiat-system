@@ -1,11 +1,13 @@
-package com.zpi.plagiarism_detector.websearch;
+package com.zpi.plagiarism_detector.server.websearch;
+
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 //import org.htmlparser.*;
-import org.apache.commons.io.FileUtils;
 
 public class WebsiteAnalyze { 
     

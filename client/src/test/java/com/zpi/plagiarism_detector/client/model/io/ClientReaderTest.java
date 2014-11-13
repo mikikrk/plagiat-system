@@ -1,9 +1,8 @@
-package com.zpi.plagiarism_detector.client.io;
+package com.zpi.plagiarism_detector.client.model.io;
 
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.zpi.plagiarism_detector.websearch;
+package com.zpi.plagiarism_detector.server.websearch;
 
 import java.io.IOException;
 

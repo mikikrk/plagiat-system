@@ -1,17 +1,13 @@
-package com.zpi.plagiarism_detector.client.io;
+package com.zpi.plagiarism_detector.client.model.io;
 
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.mockito.Mockito.*;
 

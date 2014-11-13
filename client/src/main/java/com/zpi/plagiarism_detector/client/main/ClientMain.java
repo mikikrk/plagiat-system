@@ -1,8 +1,8 @@
 package com.zpi.plagiarism_detector.client.main;
 
-import com.zpi.plagiarism_detector.client.core.Client;
-import com.zpi.plagiarism_detector.client.factories.AbstractClientFactory;
-import com.zpi.plagiarism_detector.client.factories.ClientFactory;
+import com.zpi.plagiarism_detector.client.model.core.Client;
+import com.zpi.plagiarism_detector.client.model.factories.AbstractClientFactory;
+import com.zpi.plagiarism_detector.client.model.factories.ClientFactory;
 import com.zpi.plagiarism_detector.commons.protocol.ApplicationProperties;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;

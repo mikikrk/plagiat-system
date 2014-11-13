@@ -1,8 +1,8 @@
-package com.zpi.plagiarism_detector.client.factories;
+package com.zpi.plagiarism_detector.client.model.factories;
 
-import com.zpi.plagiarism_detector.client.core.Client;
-import com.zpi.plagiarism_detector.client.io.ClientReader;
-import com.zpi.plagiarism_detector.client.io.ClientWriter;
+import com.zpi.plagiarism_detector.client.model.core.Client;
+import com.zpi.plagiarism_detector.client.model.io.ClientReader;
+import com.zpi.plagiarism_detector.client.model.io.ClientWriter;
 
 import java.io.*;
 import java.net.Socket;

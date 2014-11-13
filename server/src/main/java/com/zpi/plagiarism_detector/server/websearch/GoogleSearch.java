@@ -1,12 +1,13 @@
-package com.zpi.plagiarism_detector.websearch;
- 
+package com.zpi.plagiarism_detector.server.websearch;
+
+import com.google.gson.Gson;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLEncoder;
-import com.google.gson.Gson;
- 
+
 public class GoogleSearch {
     
     public static String[] GoogleSearch(int numberOfResults, String keywords) throws IOException {

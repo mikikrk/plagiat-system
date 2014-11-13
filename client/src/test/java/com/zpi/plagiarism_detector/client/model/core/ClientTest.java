@@ -1,7 +1,7 @@
-package com.zpi.plagiarism_detector.client.core;
+package com.zpi.plagiarism_detector.client.model.core;
 
-import com.zpi.plagiarism_detector.client.io.ClientReader;
-import com.zpi.plagiarism_detector.client.io.ClientWriter;
+import com.zpi.plagiarism_detector.client.model.io.ClientReader;
+import com.zpi.plagiarism_detector.client.model.io.ClientWriter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

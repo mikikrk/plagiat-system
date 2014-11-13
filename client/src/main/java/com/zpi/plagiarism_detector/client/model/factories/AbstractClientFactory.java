@@ -1,6 +1,6 @@
-package com.zpi.plagiarism_detector.client.factories;
+package com.zpi.plagiarism_detector.client.model.factories;
 
-import com.zpi.plagiarism_detector.client.core.Client;
+import com.zpi.plagiarism_detector.client.model.core.Client;
 import com.zpi.plagiarism_detector.commons.factory.AbstractFactory;
 
 import java.io.IOException;
