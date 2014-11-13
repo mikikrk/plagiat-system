@@ -20,6 +20,7 @@
         <module>server</module>
         <module>client</module>
         <module>commons</module>
+        <module>websearch</module>
     </modules>
 
     <properties>
