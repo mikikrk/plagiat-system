@@ -19,7 +19,7 @@ public class FXMLController implements Initializable {
     private TextArea inputData, outputData;
 
     @FXML
-    Button button;
+    Button checkButton;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
@@ -34,7 +34,6 @@ public class FXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-        button.setAlignment(Pos.TOP_CENTER);
 
     }
 }
