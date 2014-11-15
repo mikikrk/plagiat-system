@@ -45,7 +45,7 @@
                                         </TextField>
                                     </children>
                                 </HBox>
-                                <Button mnemonicParsing="false" text="Review source code for this article" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                                <Button fx:id="codeReviewButton" mnemonicParsing="false" onAction="#handleCodeReviewButtonAction" text="Review source code for this article" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                             </children>
                         </GridPane>
                     </children>
