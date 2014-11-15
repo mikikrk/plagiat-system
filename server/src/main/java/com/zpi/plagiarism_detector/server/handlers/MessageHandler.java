@@ -2,13 +2,19 @@ package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
+
+import static com.zpi.plagiarism_detector.commons.protocol.ProtocolCode.TEST;
 
 public class MessageHandler {
     private ObjectInput in;
     private ObjectOutput out;
+    private final MessageDispatcher messageDispatcher;
     private Message message;
+    private static final Logger log = LoggerFactory.getLogger(MessageHandler.class);
 
     /**
      * Tworzy MessageHandler dla strumieni wyjścia/wejścia
@@ -17,13 +23,14 @@ public class MessageHandler {
      * @return utworzony obiekt
      * @throws IOException
      */
-    public static MessageHandler create(ObjectOutput out, ObjectInput in) {
-        return new MessageHandler(out, in);
+    public static MessageHandler create(ObjectOutput out, ObjectInput in, MessageDispatcher messageDispatcher) {
+        return new MessageHandler(out, in, messageDispatcher);
     }
 
-    private MessageHandler(ObjectOutput out, ObjectInput in)  {
+    private MessageHandler(ObjectOutput out, ObjectInput in, MessageDispatcher messageDispatcher)  {
         this.out = out;
         this.in = in;
+        this.messageDispatcher = messageDispatcher;
     }
 
     /**
@@ -32,8 +39,12 @@ public class MessageHandler {
      * @throws ClassNotFoundException
      */
     public void handleMessages() throws IOException, ClassNotFoundException {
+        Message response = null;
         while(tryReadMessage()) {
-            dispatchMessage(message);
+            response = messageDispatcher.dispatchMessage(message);
+        }
+        if (response != null) {
+            sendMessage(response);
         }
     }
 
@@ -44,15 +55,6 @@ public class MessageHandler {
             message = null;
         } finally {
             return message != null;
-        }
-    }
-
-    private void dispatchMessage(Message message) throws IOException {
-        ProtocolCode cmd = message.getCode();
-        if(cmd == ProtocolCode.TEST) {
-            System.out.println(message.getSentObject());
-            Message response = new Message(ProtocolCode.TEST);
-            sendMessage(response);
         }
     }
 

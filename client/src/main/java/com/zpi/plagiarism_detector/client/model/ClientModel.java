@@ -21,7 +21,7 @@ public class ClientModel implements Model{
             client = clientFactory.create(ApplicationProperties.HOSTNAME, ApplicationProperties.PORT);
             client.openConnection();
         } catch (IOException e) {
-            throw new CannotConnectToTheServerException();
+            throw new CannotConnectToTheServerException(e);
         }
     }
 

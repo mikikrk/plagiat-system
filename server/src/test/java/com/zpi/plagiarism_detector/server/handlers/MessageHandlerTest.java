@@ -65,27 +65,4 @@ public class MessageHandlerTest {
         // then
         Assert.assertFalse(result);
     }
-
-    @Test
-    public final void dispatchMessageSuccessTest() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException {
-        // given
-        doNothing().when(out).writeObject(any(Object.class));
-        message = new Message(ProtocolCode.TEST, "TEST");
-
-        // when
-        TestUtils.callDeclaredMethod(messageHandler, "dispatchMessage", message);
-
-        // then
-        return;
-    }
-
-    @Test(expectedExceptions = NullPointerException.class)
-    public final void dispatchMessageNullMessageTest() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        // given
-        message = null;
-
-        // when
-        TestUtils.callDeclaredMethod(messageHandler, "dispatchMessage", message);
-    }
-
 }

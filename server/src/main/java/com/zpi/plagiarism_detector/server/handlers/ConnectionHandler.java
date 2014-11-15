@@ -11,7 +11,6 @@ import java.net.Socket;
 public class ConnectionHandler implements Runnable {
     private Socket socket;
     private MessageHandler messageHandler;
-    private AbstractMessageHandlerFactory messageHandlerFactory;
 
     /**
      * Tworzy obiekt uchwyt który przechowuje Socket oraz mapę id i socket handlerów.
@@ -34,6 +33,8 @@ public class ConnectionHandler implements Runnable {
             freeHandlerResources();
         }
     }
+
+
 
     private void freeHandlerResources() {
         try {

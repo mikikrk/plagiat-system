@@ -24,4 +24,19 @@ public class Message implements Serializable {
     public Object getSentObject() {
         return sendObject;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (obj instanceof Message) {
+            Message msg = (Message) obj;
+            boolean areCodesEqual = code == msg.getCode();
+            boolean areSentObjectsEqual = sendObject == null || sendObject.equals(msg.getSentObject());
+
+            return areCodesEqual && areSentObjectsEqual;
+        } else {
+            return false;
+        }
+    }
 }
