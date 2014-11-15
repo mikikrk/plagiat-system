@@ -1,30 +1,36 @@
 package com.zpi.plagiarism_detector.client.main;
 
-import com.zpi.plagiarism_detector.client.model.core.Client;
-import com.zpi.plagiarism_detector.client.model.factories.AbstractClientFactory;
-import com.zpi.plagiarism_detector.client.model.factories.ClientFactory;
-import com.zpi.plagiarism_detector.commons.protocol.ApplicationProperties;
-import com.zpi.plagiarism_detector.commons.protocol.Message;
-import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-import java.io.IOException;
 
-public class ClientMain {
-    private static boolean waitForAnswer = true;
-    private static AbstractClientFactory clientFactory = new ClientFactory();
+public class ClientMain extends Application {
 
-    public static void main(String[] args) {
-        try {
-            Client client = clientFactory.create("localhost", ApplicationProperties.PORT);
-            client.openConnection();
-            Message message = new Message(ProtocolCode.TEST, "TEST");
-            client.sendMessage(message);
+    @Override
+    public void start(Stage stage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
 
-            if(!waitForAnswer) {
-                client.closeConnection();
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add("/styles/Styles.css");
+
+        stage.setTitle("Plagiarism detector");
+        stage.setScene(scene);
+        stage.show();
     }
+
+    /**
+     * The main() method is ignored in correctly deployed JavaFX application.
+     * main() serves only as fallback in case the application can not be
+     * launched through deployment artifacts, e.g., in IDEs with limited FX
+     * support. NetBeans ignores main().
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 }

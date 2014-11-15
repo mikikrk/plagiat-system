@@ -1,5 +1,6 @@
 package com.zpi.plagiarism_detector.client.model.core;
 
+import com.zpi.plagiarism_detector.client.model.Model;
 import com.zpi.plagiarism_detector.client.model.io.ClientReader;
 import com.zpi.plagiarism_detector.client.model.io.ClientWriter;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
