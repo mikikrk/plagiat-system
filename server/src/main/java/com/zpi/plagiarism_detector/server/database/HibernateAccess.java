@@ -24,30 +24,19 @@ class HibernateAccess {
 		sessionFactory = cfg.buildSessionFactory();
 	}
 
-	int addArticle(String path, Type type, Set<String> keywords,
-			ArticleOptionalInfo aoi) {
+	int addArticle(Article article, Set<String> keywords) {
 
 		int result = 0;
 
-		if (path == null || type == null || keywords == null) {
+		if (keywords == null) {
 			return result;
 		}
 
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.getTransaction();
 		tx.begin();
-		Article article = getArticle(path, session);
-		if (article == null) {
-
-			article = new Article();
-			article.setPath(path);
-			article.setType(type);
-			if (aoi != null) {
-				article.setTitle(aoi.getTitle());
-				article.setAuthors(aoi.getAuthors());
-				article.setSource(aoi.getSource());
-				article.setYear(aoi.getYear());
-			}
+		Article temp = getArticle(article.getPath(), session);
+		if (temp == null) {
 
 			session.save(article);
 
@@ -63,59 +52,35 @@ class HibernateAccess {
 		return result;
 	}
 
-	int setArticleOptionalInfo(String path, ArticleOptionalInfo aoi) {
-		int result = 0;
-
-		if (path == null || aoi == null) {
-			return result;
-		}
-
+	Article getArticle(String path) {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.getTransaction();
 		tx.begin();
+		Article result = getArticle(path, session);
 
-		Article article = getArticle(path, session);
-		if (article != null) {
-			article.setTitle(aoi.getTitle());
-			article.setAuthors(aoi.getAuthors());
-			article.setSource(aoi.getSource());
-			article.setYear(aoi.getYear());
-			session.update(article);
-			result = 1;
-		}
 		tx.commit();
 		session.flush();
 
 		return result;
-
 	}
 
-	ArticleOptionalInfo getArticleOptionalInfo(String path) {
-		ArticleOptionalInfo result = new ArticleOptionalInfo();
-
-		if (path == null) {
-			return result;
-		}
-
+	
+	boolean containsUri(String uri){
+		boolean result=false;
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.getTransaction();
 		tx.begin();
+		Criterion pathEq = Restrictions.eq("uri", uri);
+		Criteria crit = session.createCriteria(Article.class);
+		crit.add(pathEq);
 
-		Article article = getArticle(path, session);
-		if (article != null) {
-			result.setTitle(article.getTitle());
-			result.setAuthors(article.getAuthors());
-			result.setSource(article.getSource());
-			result.setYear(article.getYear());
-
+		if(  crit.uniqueResult()!=null){
+			result=true;
 		}
 		tx.commit();
 		session.flush();
-
 		return result;
-
 	}
-
 	private void addKeyword(String word, Long articleId, Session session) {
 		Criterion keywordEq = Restrictions.eq("word", word);
 		Criteria crit = session.createCriteria(Keyword.class);
@@ -278,7 +243,7 @@ class HibernateAccess {
 
 			Query query = session.createSQLQuery(sql);
 			query.setString("kw", kw);
-			
+
 			query.setInteger("typeNr", type.ordinal());
 
 			@SuppressWarnings("rawtypes")
@@ -343,35 +308,6 @@ class HibernateAccess {
 
 	}
 
-	int setType(String path, Type newType) {
-		int result = 0;
-		if (path == null || newType == null) {
-			return result;
-		}
-
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		Criterion pathEq = Restrictions.eq("path", path);
-		Criteria crit = session.createCriteria(Article.class);
-		crit.add(pathEq);
-
-		Article article = (Article) crit.uniqueResult();
-
-		if (article != null) {
-
-			article.setType(newType);
-			session.update(article);
-
-			result = 1;
-		}
-
-		tx.commit();
-		session.flush();
-
-		return result;
-	}
-
 	int setPath(String path, String newPath) {
 		int result = 0;
 		if (path == null || newPath == null) {
@@ -399,34 +335,6 @@ class HibernateAccess {
 		session.flush();
 
 		return result;
-	}
-
-	Type getType(String path) {
-		Type result = null;
-		if (path == null) {
-			return result;
-		}
-
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		Criterion pathEq = Restrictions.eq("path", path);
-		Criteria crit = session.createCriteria(Article.class);
-		crit.add(pathEq);
-
-		Article article = (Article) crit.uniqueResult();
-
-		if (article != null) {
-
-			result = article.getType();
-
-		}
-
-		tx.commit();
-		session.flush();
-
-		return result;
-
 	}
 
 }
