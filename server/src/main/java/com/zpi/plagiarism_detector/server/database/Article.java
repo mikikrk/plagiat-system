@@ -1,6 +1,9 @@
 package com.zpi.plagiarism_detector.server.database;
 
-
+/**
+ * Klasa zawierajaca info o artykule zapisywane w bazie
+ * 
+ */
 
 public class Article {
 	private Long id;
