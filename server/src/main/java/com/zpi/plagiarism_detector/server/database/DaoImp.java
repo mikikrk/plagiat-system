@@ -48,13 +48,13 @@ public class DaoImp implements Dao {
 
 	
 	@Override
-	public Set<String> findArticesWithAtLeastOne(Set<String> set, Type type) {
+	public Set<String> findArticlesWithAtLeastOne(Set<String> set, Type type) {
 		return hibernateAccess.findArticles(set, type, false);
 	}
 
 	
 	@Override
-	public Set<String> findArticesWithAll(Set<String> set, Type type) {
+	public Set<String> findArticlesWithAll(Set<String> set, Type type) {
 		return hibernateAccess.findArticles(set, type, true);
 	}
 

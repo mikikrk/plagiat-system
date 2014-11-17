@@ -61,14 +61,14 @@ public interface Dao {
 	 * slowem kluczowym
 	 * 
 	 */
-	public Set<String> findArticesWithAtLeastOne(Set<String> set, Type type);
+	public Set<String> findArticlesWithAtLeastOne(Set<String> set, Type type);
 
 	/**
 	 * zwraca liste sciezek do artykulow o podanym typie ze wszystkimi slowami
 	 * kluczowymi
 	 * 
 	 */
-	public Set<String> findArticesWithAll(Set<String> set, Type type);
+	public Set<String> findArticlesWithAll(Set<String> set, Type type);
 
 	/**
 	 * usuwa wszystko z bazy danych

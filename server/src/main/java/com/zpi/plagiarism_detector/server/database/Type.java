@@ -2,9 +2,9 @@
 package com.zpi.plagiarism_detector.server.database;
 
 /**
- * typ artykulu (polski, angielski, kod).
+ * typ artykulu (tekst, kod).
  *
  */
 public enum Type {
-EN, PL, CO
+TEXT,CODE;
 }
