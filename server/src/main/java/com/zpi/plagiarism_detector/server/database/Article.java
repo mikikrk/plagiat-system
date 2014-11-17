@@ -57,4 +57,15 @@ public class Article {
 	public void setType(DocumentType type) {
 		this.type = type;
 	}
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Article) {
+            Article article = (Article)obj;
+            boolean arePathsEqual = path == article.getPath() || path.equals(article.getPath());
+            boolean areTypesEqual = type == article.getType();
+            return arePathsEqual && areTypesEqual;
+        }
+        return false;
+    }
 }

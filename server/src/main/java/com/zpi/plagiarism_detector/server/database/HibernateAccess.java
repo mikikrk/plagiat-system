@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -224,7 +225,7 @@ class HibernateAccess {
 		return result;
 	}
 
-	Set<String> findArticles(Set<String> kwSet, Type type, boolean all) {
+	Set<String> findArticles(Set<String> kwSet, DocumentType type, boolean all) {
 		Set<String> result = new HashSet<String>();
 		if (kwSet == null || type == null) {
 			return result;

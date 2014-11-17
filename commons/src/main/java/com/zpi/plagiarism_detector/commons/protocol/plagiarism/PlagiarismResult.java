@@ -9,17 +9,21 @@ public class PlagiarismResult {
     private String existingDocument;   //to do czego jest porównywany dokument użytkownika
 
     private Map<PlagiarismFragment, PlagiarismFragment> plagiarisedFragments;
-    private DocumentType documentType;
+    private DocumentType type;
+
+    public PlagiarismResult() {
+
+    }
 
     public PlagiarismResult(String newDocument,
                             String existingDocument,
                             Map<PlagiarismFragment, PlagiarismFragment> plagiarisedFragments,
-                            DocumentType documentType) {
+                            DocumentType type) {
 
         this.newDocument = newDocument;
         this.existingDocument = existingDocument;
         this.plagiarisedFragments = plagiarisedFragments;
-        this.documentType = documentType;
+        this.type = type;
     }
 
     public String getNewDocument() {
@@ -47,11 +51,11 @@ public class PlagiarismResult {
         this.plagiarisedFragments = plagiarisedFragments;
     }
 
-    public DocumentType getDocumentType() {
-        return documentType;
+    public DocumentType getType() {
+        return type;
     }
 
-    public void setDocumentType(DocumentType documentType) {
-        this.documentType = documentType;
+    public void setType(DocumentType type) {
+        this.type = type;
     }
 }

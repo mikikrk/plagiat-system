@@ -1,12 +1,13 @@
 package com.zpi.plagiarism_detector.server.data;
 
-import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.database.DocumentType;
+import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.server.ServerProperties;
 import com.zpi.plagiarism_detector.server.database.Article;
 import com.zpi.plagiarism_detector.server.database.Dao;
 
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +18,7 @@ public class ServerData {
     private String path;
 
     private String title;
-    private String article;
+    private String articleText;
     private Set<String> keywords;
     private Set<String> codes;
 
@@ -43,10 +44,9 @@ public class ServerData {
     public void saveDocument(DocumentData document) {
         try {
             extractFields(document);
-            saveArticleReferenceInDatabase();
             createArticleDirectory();
-            if (article != null) {
-                saveArticleText();
+            if (articleText != null) {
+                saveArticle();
             }
             if(codes != null && !codes.isEmpty()) {
                 saveArticleCodes();
@@ -54,12 +54,12 @@ public class ServerData {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+     }
 
     private void extractFields(DocumentData document) {
         title = document.getTitle();
         keywords = document.getKeywords();
-        article = document.getArticle();
+        articleText = document.getArticle();
         codes = document.getCodes();
         path = getDirectoryPath();
     }
@@ -68,29 +68,49 @@ public class ServerData {
         return ServerProperties.DOCS_PATH + "/" + title;
     }
 
-    private void saveArticleReferenceInDatabase() {
-        Article newArticle = new Article(path, DocumentType.PL);
-        dao.addArticle(newArticle, keywords);
-    }
-
     private void createArticleDirectory() throws IOException {
-        fileData.createDir(path);
+        String dirPath = path;
+        int postfix = 1;
+        boolean created = false;
+
+        do {
+            try {
+                fileData.createDir(dirPath);
+                created = true;
+            } catch (FileAlreadyExistsException e) {
+                dirPath = path + postfix;
+                ++postfix;
+            }
+        } while(created == false);
+
+        path = dirPath;
     }
 
-    private void saveArticleText() throws IOException {
+    private void saveArticle() throws IOException {
         String articlePath = getArticlePath();
-        fileData.writeToFile(articlePath, article);
+        saveDocumentReferenceInDatabase(articlePath, DocumentType.TEXT);
+        saveDocumentFile(articlePath, articleText);
     }
 
     private String getArticlePath() {
         return path + "/article";
     }
 
+    private void saveDocumentReferenceInDatabase(String documentPath, DocumentType documentType) {
+        Article newDocument = new Article(documentPath, documentType);
+        dao.addArticle(newDocument, keywords);
+    }
+
+    private void saveDocumentFile(String articlePath, String articleText) throws IOException {
+        fileData.writeToFile(articlePath, articleText);
+    }
+
     private void saveArticleCodes() throws IOException {
         int i = 1;
         for (String code : codes) {
             String codePath = getCodePath(i);
-            fileData.writeToFile(codePath, code);
+            saveDocumentFile(codePath, code);
+            saveDocumentReferenceInDatabase(codePath, DocumentType.CODE);
             ++i;
         }
     }

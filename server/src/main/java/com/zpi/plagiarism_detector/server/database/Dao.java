@@ -1,5 +1,7 @@
 package com.zpi.plagiarism_detector.server.database;
 
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
+
 import java.util.Set;
 
 /**
@@ -61,14 +63,14 @@ public interface Dao {
 	 * slowem kluczowym
 	 * 
 	 */
-	public Set<String> findArticlesWithAtLeastOne(Set<String> set, Type type);
+	public Set<String> findArticlesWithAtLeastOne(Set<String> set, DocumentType type);
 
 	/**
 	 * zwraca liste sciezek do artykulow o podanym typie ze wszystkimi slowami
 	 * kluczowymi
 	 * 
 	 */
-	public Set<String> findArticlesWithAll(Set<String> set, Type type);
+	public Set<String> findArticlesWithAll(Set<String> set, DocumentType type);
 
 	/**
 	 * usuwa wszystko z bazy danych

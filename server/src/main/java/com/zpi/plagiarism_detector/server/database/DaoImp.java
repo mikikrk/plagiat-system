@@ -1,5 +1,7 @@
 package com.zpi.plagiarism_detector.server.database;
 
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
+
 import java.util.Set;
 
 public class DaoImp implements Dao {
@@ -48,13 +50,13 @@ public class DaoImp implements Dao {
 
 	
 	@Override
-	public Set<String> findArticlesWithAtLeastOne(Set<String> set, Type type) {
+	public Set<String> findArticlesWithAtLeastOne(Set<String> set, DocumentType type) {
 		return hibernateAccess.findArticles(set, type, false);
 	}
 
 	
 	@Override
-	public Set<String> findArticlesWithAll(Set<String> set, Type type) {
+	public Set<String> findArticlesWithAll(Set<String> set, DocumentType type) {
 		return hibernateAccess.findArticles(set, type, true);
 	}
 

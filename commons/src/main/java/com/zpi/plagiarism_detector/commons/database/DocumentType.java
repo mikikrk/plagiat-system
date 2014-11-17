@@ -1,3 +1,8 @@
 package com.zpi.plagiarism_detector.commons.database;
 
-public enum DocumentType {PL, EN}
+/**
+ * typ artykulu (tekst, kod).
+ */
+public enum DocumentType {
+    TEXT, CODE;
+}

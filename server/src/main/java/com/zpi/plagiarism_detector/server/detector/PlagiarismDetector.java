@@ -13,6 +13,9 @@ public class PlagiarismDetector {
     private WebData webData;
     private ComparingAlgorithm comparingAlgorithm;
 
+    private DocumentData analyzedDocument;
+    private String keywords;
+
     public PlagiarismDetector(ServerData serverData, WebData webData, ComparingAlgorithm comparingAlgorithm) {
         this.serverData = serverData;
         this.webData = webData;
@@ -20,20 +23,32 @@ public class PlagiarismDetector {
     }
 
     public PlagiarismDetectionResult checkForPlagiarism(DocumentData document) {
-
-        String title = document.getTitle();
-        String keywords = document.getKeywordsJoined();
-
-        serverData.saveDocument(document);
-        List<String> databaseLinks = serverData.getLinksFromDatabase();
-        List<DocumentData> foundDocs = webData.searchDocuments(keywords, databaseLinks);
-        serverData.saveDocuments(foundDocs);
-
-        List<DocumentData> matchingDocs = serverData.getCommonKeywordDocuments(keywords);
-        List<PlagiarismResult> plagiarisms = comparingAlgorithm.determinePlagiarism(document, matchingDocs);
+        this.analyzedDocument = document;
+        this.keywords = document.getKeywordsJoined();
+        saveDocument();
+        List<DocumentData> matchingDocs = getSimilarDocuments();
+        List<PlagiarismResult> plagiarisms = determinePlagiarism(matchingDocs);
 
         PlagiarismDetectionResult result = new PlagiarismDetectionResult(plagiarisms);
         return result;
+    }
+
+    private void saveDocument() {
+        serverData.saveDocument(analyzedDocument);
+    }
+
+    private List<DocumentData> getSimilarDocuments() {
+        return serverData.getCommonKeywordDocuments(keywords);
+    }
+
+    private List<PlagiarismResult> determinePlagiarism(List<DocumentData> matchingDocs) {
+        return comparingAlgorithm.determinePlagiarism(analyzedDocument, matchingDocs);
+    }
+
+    private void findSimilarDocumentsInWeb() {
+        List<String> databaseLinks = serverData.getLinksFromDatabase();
+        List<DocumentData> foundDocs = webData.searchDocuments(keywords, databaseLinks);
+        serverData.saveDocuments(foundDocs);
     }
 
 }
