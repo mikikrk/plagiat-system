@@ -91,4 +91,9 @@ public interface Dao {
 	 */
 	public int removeArticle(String path);
 
+    /**
+     * Zwraca linki do artykułów z bazy
+     * @return tablica linków
+     */
+    public abstract java.util.List<String> getArticlesLinks();
 }

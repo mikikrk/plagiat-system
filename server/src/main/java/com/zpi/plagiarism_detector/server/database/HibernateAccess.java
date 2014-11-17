@@ -337,4 +337,14 @@ class HibernateAccess {
 		return result;
 	}
 
+    public List<String> getArticlesLinks() {
+        Session session = sessionFactory.openSession();
+
+        String sql = "SELECT al.ADDRESS FROM ARTICLE_LINKS al";
+        Query query = session.createSQLQuery(sql);
+
+        List<String> result = query.list();
+
+        return result;
+    }
 }

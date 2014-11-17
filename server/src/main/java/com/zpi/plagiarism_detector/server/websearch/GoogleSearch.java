@@ -9,8 +9,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 public class GoogleSearch {
-    
-    public static String[] GoogleSearch(int numberOfResults, String keywords) throws IOException {
+
+    public String[] search(int numberOfResults, String keywords) throws IOException {
         String[] urls = new String[numberOfResults];
         
         /**
