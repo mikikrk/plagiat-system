@@ -21,12 +21,14 @@ public class MessageHandlerTest {
     private ObjectInput in;
     private ObjectOutput out;
     private Message message;
+    private MessageDispatcher messageDispatcher;
 
     @BeforeMethod
     public final void initMocks() throws IOException, ClassNotFoundException {
         in = mock(ObjectInput.class);
         out = mock(ObjectOutput.class);
-        messageHandler = messageHandlerFactory.createForStreams(out, in);
+        messageDispatcher = mock(MessageDispatcher.class);
+        messageHandler = MessageHandler.create(out, in, messageDispatcher);
     }
 
     @Test(enabled = false) /* Problem z niedziałającym mock'iem */

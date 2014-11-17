@@ -1,14 +1,12 @@
 package com.zpi.plagiarism_detector.server.database;
 
-/**
- * Klasa zawierajaca info o artykule zapisywane w bazie
- * 
- */
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
 
 public class Article {
 	private Long id;
 	private String path;
-	private Type type;
+
+	private DocumentType type;
 	private String title;
 	private String uri;
 
@@ -16,11 +14,10 @@ public class Article {
 		return uri;
 	}
 
-	Article() {
-
+	public Article() {
 	}
 
-	public Article(String path, Type type) {
+	public Article(String path, DocumentType type) {
 		this.path = path;
 		this.type = type;
 	}
@@ -53,11 +50,11 @@ public class Article {
 		this.title = title;
 	}
 
-	public Type getType() {
+	public DocumentType getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(DocumentType type) {
 		this.type = type;
 	}
 }

@@ -2,7 +2,7 @@ package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
-import com.zpi.plagiarism_detector.commons.protocol.PlagiarismDetectionResult;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
 import org.testng.Assert;
@@ -67,7 +67,7 @@ public class MessageDispatcherTest {
     @Test
     public void dispatchMessage_messagePlagiarismCheckWithAllParametersReturnCorrectResultTest() {
         // given
-        PlagiarismDetectionResult toBeReturned = new PlagiarismDetectionResult();
+        PlagiarismDetectionResult toBeReturned = mock(PlagiarismDetectionResult.class);
         doReturn(toBeReturned).when(plagiarismDetector).checkForPlagiarism(document);
         Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, document);
 

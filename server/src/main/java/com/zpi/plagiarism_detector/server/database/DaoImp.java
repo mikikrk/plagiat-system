@@ -79,4 +79,9 @@ public class DaoImp implements Dao {
 	}
 	
 
+    @Override
+    public java.util.List<String> getArticlesLinks() {
+        return hibernateAccess.getArticlesLinks();
+    }
+
 }

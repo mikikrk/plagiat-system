@@ -6,5 +6,5 @@ package com.zpi.plagiarism_detector.server.database;
  *
  */
 public enum Type {
-EN, PL, CO
+EN, PL
 }

@@ -2,7 +2,7 @@ package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
-import com.zpi.plagiarism_detector.commons.protocol.PlagiarismDetectionResult;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
 import org.slf4j.Logger;
@@ -12,7 +12,7 @@ import static com.zpi.plagiarism_detector.commons.protocol.ProtocolCode.TEST;
 
 public class MessageDispatcher {
     private static final Logger log = LoggerFactory.getLogger(MessageDispatcher.class);
-    private Message response = null;
+    private Message response;
     private PlagiarismDetector plagiarismDetector;
 
     public MessageDispatcher(PlagiarismDetector plagiarismDetector) {
@@ -22,8 +22,8 @@ public class MessageDispatcher {
     public Message dispatchMessage(Message message) {
         ProtocolCode command = message.getCode();
         Object sentObject = message.getSentObject();
-        log.debug(command.toString());
 
+        response = null;
         if(command == TEST) {
             handleTestMessage();
         } else if (command == ProtocolCode.CHECK_FOR_PLAGIARISM) {

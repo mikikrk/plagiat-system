@@ -9,9 +9,11 @@ import java.net.URL;
 
 //import org.htmlparser.*;
 
-public class WebsiteAnalyze { 
-    
-    public static String WebsiteAnalyze(String[] linksArray, String[] linksInDatabase) throws IOException {
+public class WebsiteAnalyze {
+
+    private String dirName = "./docs";
+
+    public String analyze(String[] linksArray, String[] linksInDatabase) throws IOException {
         String fileName = null;
         for (int i = 0; i < linksArray.length; i++) {
             boolean check = false;
@@ -28,7 +30,6 @@ public class WebsiteAnalyze {
              * w podanym istniejącym folderze.
              */
             if (linksArray[i].endsWith(".pdf") && check != true) {
-                String dirName = "C:\\FolderArtykuly";
                 fileName = linksArray[i].substring(linksArray[i].lastIndexOf("/") + 1);
                 saveFileFromUrl(dirName + "\\" + fileName, linksArray[i]);
                 
