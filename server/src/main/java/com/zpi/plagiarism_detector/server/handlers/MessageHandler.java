@@ -1,13 +1,13 @@
 package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.commons.protocol.Message;
-import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
+import com.zpi.plagiarism_detector.server.exceptions.AbortConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-
-import static com.zpi.plagiarism_detector.commons.protocol.ProtocolCode.TEST;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 public class MessageHandler {
     private ObjectInput in;
@@ -18,6 +18,7 @@ public class MessageHandler {
 
     /**
      * Tworzy MessageHandler dla strumieni wyjścia/wejścia
+     *
      * @param out
      * @param in
      * @return utworzony obiekt
@@ -27,7 +28,7 @@ public class MessageHandler {
         return new MessageHandler(out, in, messageDispatcher);
     }
 
-    private MessageHandler(ObjectOutput out, ObjectInput in, MessageDispatcher messageDispatcher)  {
+    private MessageHandler(ObjectOutput out, ObjectInput in, MessageDispatcher messageDispatcher) {
         this.out = out;
         this.in = in;
         this.messageDispatcher = messageDispatcher;
@@ -35,22 +36,27 @@ public class MessageHandler {
 
     /**
      * Obsługuje przychodzące wiadomości
+     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
     public void handleMessages() throws IOException, ClassNotFoundException {
         Message response = null;
-        while(tryReadMessage()) {
-            response = messageDispatcher.dispatchMessage(message);
-        }
-        if (response != null) {
-            sendMessage(response);
+        try {
+            while (tryReadMessage()) {
+                response = messageDispatcher.dispatchMessage(message);
+                if (response != null) {
+                    sendMessage(response);
+                }
+            }
+        } catch (AbortConnectionException e) {
+            return;
         }
     }
 
     public boolean tryReadMessage() {
         try {
-            message = (Message)in.readObject();
+            message = (Message) in.readObject();
         } catch (IOException | ClassNotFoundException e) {
             message = null;
         } finally {
@@ -60,6 +66,7 @@ public class MessageHandler {
 
     /**
      * Wysyła odpowiedź
+     *
      * @param message wysyłana wiadomość
      * @throws IOException
      */
@@ -69,6 +76,7 @@ public class MessageHandler {
 
     /**
      * Zwalnia zasoby strumienia danych
+     *
      * @throws IOException
      */
     public void freeResources() throws IOException {

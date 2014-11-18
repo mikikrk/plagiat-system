@@ -17,6 +17,7 @@ public class ClientWriter extends Thread {
 
     public ClientWriter(ObjectOutput out) {
         this.out = out;
+        this.setName("ClientWriter");
     }
 
     @Override
@@ -45,13 +46,17 @@ public class ClientWriter extends Thread {
     }
 
     private synchronized void sendMessage() throws InterruptedException, IOException {
+        log.debug("entering sendMessage()");
         Message message = sendQueue.take();
         if (message == Message.POISON_PILL) {
+            log.debug("ClientWriter received POISON_PILL message");
             stopWriter();
         } else {
             log.debug("processing next message from sendQueue: [{}]", message);
-            out.writeObject(message);
+
         }
+        out.writeObject(message);
+        log.debug("leaving sendMessage()");
     }
 
     private synchronized void stopWriter() {

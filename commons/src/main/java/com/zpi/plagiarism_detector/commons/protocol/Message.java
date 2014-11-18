@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class Message implements Serializable {
-    public static final Message POISON_PILL = new Message(ProtocolCode.TEST);
+    public static final Message POISON_PILL = new Message(ProtocolCode.POISON_PILL);
     private ProtocolCode code;
     private Object sendObject;
 

@@ -1,6 +1,5 @@
 package com.zpi.plagiarism_detector.client.model.core;
 
-import com.zpi.plagiarism_detector.client.model.Model;
 import com.zpi.plagiarism_detector.client.model.io.ClientReader;
 import com.zpi.plagiarism_detector.client.model.io.ClientWriter;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
@@ -14,6 +13,7 @@ public class Client extends Observable implements Observer {
     private Socket socket;
     private ClientReader reader;
     private ClientWriter writer;
+    private boolean waitForResponse;
 
     public Client(Socket socket, ClientReader reader, ClientWriter writer) {
         this.socket = socket;
@@ -35,20 +35,31 @@ public class Client extends Observable implements Observer {
      *
      * @throws InterruptedException
      */
-    public void closeConnection() throws InterruptedException, IOException {
+    public synchronized void closeConnection() throws InterruptedException, IOException {
+        waitForResponse();
         writer.close();
         writer.joinWriter();
         reader.close();
         socket.close();
     }
 
+    private void waitForResponse() throws InterruptedException {
+        int i = 0;
+        while (waitForResponse && i < 10) {
+            Thread.sleep(1000);
+            ++i;
+        }
+    }
+
+
     /**
      * Wysyła wiadomość do serwera
      *
      * @param msg message which is sent to the server
      */
-    public synchronized void sendMessage(Message msg) {
+    public synchronized void sendSyncMessage(Message msg) {
         try {
+            waitForResponse = true;
             writer.writeMessage(msg);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -57,6 +68,7 @@ public class Client extends Observable implements Observer {
 
     @Override
     public void update(java.util.Observable o, Object arg) {
+        waitForResponse=false;
         notifyObservers(arg);
     }
 }

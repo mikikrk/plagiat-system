@@ -5,6 +5,7 @@ import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
+import com.zpi.plagiarism_detector.server.exceptions.AbortConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +20,14 @@ public class MessageDispatcher {
         this.plagiarismDetector = plagiarismDetector;
     }
 
-    public Message dispatchMessage(Message message) {
+    public Message dispatchMessage(Message message) throws AbortConnectionException {
         ProtocolCode command = message.getCode();
         Object sentObject = message.getSentObject();
 
         response = null;
+        if(command == ProtocolCode.POISON_PILL) {
+            throw new AbortConnectionException();
+        }
         if(command == TEST) {
             handleTestMessage();
         } else if (command == ProtocolCode.CHECK_FOR_PLAGIARISM) {

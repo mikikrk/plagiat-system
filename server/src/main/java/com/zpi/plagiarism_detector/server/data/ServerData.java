@@ -109,8 +109,8 @@ public class ServerData {
         int i = 1;
         for (String code : codes) {
             String codePath = getCodePath(i);
-            saveDocumentFile(codePath, code);
             saveDocumentReferenceInDatabase(codePath, DocumentType.CODE);
+            saveDocumentFile(codePath, code);
             ++i;
         }
     }

@@ -5,6 +5,7 @@ import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
+import com.zpi.plagiarism_detector.server.exceptions.AbortConnectionException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -25,7 +26,7 @@ public class MessageDispatcherTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void dispatchMessage_nullMessageFailureTest() {
+    public void dispatchMessage_nullMessageFailureTest() throws AbortConnectionException {
         // when
         Message message = null;
 
@@ -53,7 +54,7 @@ public class MessageDispatcherTest {
     }
 
     @Test
-    public void dispatchMessage_messagePlagiarismCheckWithNullMessageReturnsErrorResponseTest() {
+    public void dispatchMessage_messagePlagiarismCheckWithNullMessageReturnsErrorResponseTest() throws AbortConnectionException {
         // when
         Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, null);
 
@@ -65,7 +66,7 @@ public class MessageDispatcherTest {
     }
 
     @Test
-    public void dispatchMessage_messagePlagiarismCheckWithAllParametersReturnCorrectResultTest() {
+    public void dispatchMessage_messagePlagiarismCheckWithAllParametersReturnCorrectResultTest() throws AbortConnectionException {
         // given
         PlagiarismDetectionResult toBeReturned = mock(PlagiarismDetectionResult.class);
         doReturn(toBeReturned).when(plagiarismDetector).checkForPlagiarism(document);

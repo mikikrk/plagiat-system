@@ -36,16 +36,21 @@ public class ClientReader extends Observable {
                 runAlg();
             }
         });
+        thread.setName("ClientReader");
         thread.start();
     }
 
     private void runAlg() {
+        log.debug("entering run()");
         try {
             receiveMessages();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
+            log.debug("ClientReader stopped receiving messages");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             close();
+            log.debug("leaving run()");
         }
     }
 
@@ -75,6 +80,7 @@ public class ClientReader extends Observable {
         notifyObservers(message);
         ProtocolCode cmd = message.getCode();
         if (cmd == ProtocolCode.TEST) {
+            log.debug("received test message");
         }
     }
 
