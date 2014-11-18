@@ -118,6 +118,14 @@
                 <executions></executions>
             </plugin>
         </plugins>
+        <resources>
+	      <resource>
+	        <directory>src/main/resources</directory>
+	        <includes>
+	         <include>highlight.pack.js</include>
+	        </includes>
+	      </resource>
+    	</resources>
     </build>
 
 

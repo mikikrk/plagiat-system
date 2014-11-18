@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ServerDataIT {
+public class ServerDataIt {
 
     private Dao dao;
     private FileData fileData;
