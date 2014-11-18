@@ -4,15 +4,17 @@ import com.zpi.plagiarism_detector.commons.database.DocumentType;
 
 import java.util.Set;
 
-public class DaoImp implements Dao {
-	private HibernateAccess hibernateAccess;
+ class DaoImp implements Dao {
+	
+	HibernateAccess hibernateAccess;
 
 	public DaoImp() {
-		hibernateAccess = new HibernateAccess();
+		createHibernateAccess();
 	}
-
+	void createHibernateAccess(){
+		hibernateAccess = new HibernateAccess("META-INF/hibernate.cfg.xml");
+	}
 	
-	@Override
 	public Article getArticle(String path) {
 		return hibernateAccess.getArticle(path);
 	}
@@ -85,5 +87,6 @@ public class DaoImp implements Dao {
     public java.util.List<String> getArticlesLinks() {
         return hibernateAccess.getArticlesLinks();
     }
-
+    
+   
 }

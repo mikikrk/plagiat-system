@@ -1,17 +1,18 @@
 package itest.com.zpi.plagiarism_detector.server.data;
 
-import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
-import com.zpi.plagiarism_detector.server.data.FileData;
-import com.zpi.plagiarism_detector.server.data.ServerData;
-import com.zpi.plagiarism_detector.server.database.Dao;
-import com.zpi.plagiarism_detector.server.database.DaoImp;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
+import com.zpi.plagiarism_detector.server.data.FileData;
+import com.zpi.plagiarism_detector.server.data.ServerData;
+import com.zpi.plagiarism_detector.server.database.Dao;
+import com.zpi.plagiarism_detector.server.database.DaoFactory;
 
 public class ServerDataIt {
 
@@ -21,7 +22,7 @@ public class ServerDataIt {
 
     @BeforeClass
     public void setUp() {
-        dao = new DaoImp();
+        dao = DaoFactory.createDao();
         fileData = new FileData();
         serverData = new ServerData(dao, fileData);
     }

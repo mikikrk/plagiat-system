@@ -18,11 +18,12 @@ class HibernateAccess {
 
 	private static SessionFactory sessionFactory;
 
-	static {
+	public HibernateAccess(String pathToConfigurationFile) {
+		
 		Configuration cfg = new Configuration();
-		cfg.configure("META-INF/hibernate.cfg.xml");
-
+		cfg.configure(pathToConfigurationFile);
 		sessionFactory = cfg.buildSessionFactory();
+
 	}
 
 	int addArticle(Article article, Set<String> keywords) {
@@ -45,11 +46,11 @@ class HibernateAccess {
 			for (String kw : keywords) {
 				addKeyword(kw, articleId, session);
 			}
-			tx.commit();
-			session.flush();
+			
 			result = 1;
 		}
-
+		tx.commit();
+		session.flush();
 		return result;
 	}
 
@@ -348,4 +349,6 @@ class HibernateAccess {
 
         return result;
     }
+    
+
 }
