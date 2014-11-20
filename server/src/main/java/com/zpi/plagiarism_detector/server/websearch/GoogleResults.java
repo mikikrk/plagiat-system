@@ -2,30 +2,39 @@ package com.zpi.plagiarism_detector.server.websearch;
 
 import java.util.List;
 
-class GoogleResults{
- 
-    private ResponseData responseData;
-    public ResponseData getResponseData() { return responseData; }
-    public void setResponseData(ResponseData responseData) { this.responseData = responseData; }
+/**
+ * Klasa uzywana do konwersji Json'a do Javy
+ */
+public class GoogleResults {
+
+    public String link;
+    public List<GoogleResults> items;
+    public String dc;
+
+    public String getLink() {
+        return link;
+    }
+
+    public List<GoogleResults> getItems() {
+        return items;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setGroups(List<GoogleResults> items) {
+        this.items = items;
+    }
+
+    public GoogleResults getThing (int i) {
+        //System.out.println(items.get(i));
+        return items.get(i);
+    }
+    
     @Override
-    public String toString() { return "ResponseData[" + responseData + "]"; }
- 
-    static class ResponseData {
-        private List<Result> results;
-        public List<Result> getResults() { return results; }
-        public void setResults(List<Result> results) { this.results = results; }
-        @Override
-        public String toString() { return "Results[" + results + "]"; }
+    public String toString() {
+        return String.format("%s", link);
     }
- 
-    static class Result {
-        private String url;
-        private String title;
-        public String getUrl() { return url; }
-        public String getTitle() { return title; }
-        public void setUrl(String url) { this.url = url; }
-        public void setTitle(String title) { this.title = title; }
-        @Override
-        public String toString() { return "Result[url:" + url +",title:" + title + "]"; }
-    }
+
 }
