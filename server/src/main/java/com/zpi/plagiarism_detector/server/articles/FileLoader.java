@@ -1,4 +1,4 @@
-package CompareEngine;
+package com.zpi.plagiarism_detector.server.articles;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -12,22 +12,25 @@ public class FileLoader {
 	private String pattern;
 	private String text;
 	
+	
 	public FileLoader(String _patternPath, String _textPath) {
 		this.patternPath=_patternPath;
 		this.textPath=_textPath;
 	}
 	
-	//Returns pattern String
 	public String getPattern(){
 		return this.pattern;
 	}
 	
-	//Returns article String
 	public String getText(){
 		return this.text;
 	}
 	
-	//Loads files from files
+	/**
+	 * Wczytanie zawartosci plikow do zmiennych
+	 * @param _patternPath
+	 * @param _textPath
+	 **/
 	public void loadFiles() throws IOException{
 		
 		File f = new File(patternPath);
