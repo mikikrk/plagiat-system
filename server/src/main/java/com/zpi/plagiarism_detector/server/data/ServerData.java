@@ -119,7 +119,7 @@ public class ServerData {
         return path + "/code" + i;
     }
 
-    public List<DocumentData> getCommonKeywordDocuments(String keywords) {
+    public List<DocumentData> getCommonKeywordDocuments(Set<String> keywords) {
         return null;
     }
 

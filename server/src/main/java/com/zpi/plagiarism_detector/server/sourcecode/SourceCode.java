@@ -101,7 +101,7 @@ public class SourceCode {
 	}
 
 	/**
-	 * Ignorowanie identyfikatorów
+	 * Ignorowanie identyfikatorow
 	 * @param ignoreIdentifiers
 	 */
 	public void setIgnoreIdentifiers(boolean ignoreIdentifiers) {
@@ -140,15 +140,15 @@ public class SourceCode {
 	}
 	
 	/**
-	 * Dodanie plików do porównania
-	 * @param path - œcie¿ka do katalogu
+	 * Dodanie plikow do porownania
+	 * @param path - sciezka do katalogu
 	 * @throws IOException
 	 */
 	public void addRecursively(String path) throws IOException{
 		this.cPD.addRecursively(path);
 	}
 	/**
-	 * Dodanie plików do porównania
+	 * Dodanie plikow do porownania
 	 * @param file 
 	 * @throws IOException
 	 */
@@ -157,7 +157,7 @@ public class SourceCode {
 		this.cPD.add(file);
 	}
 	/**
-	 * Uruchomienie procesu porównywania plików
+	 * Uruchomienie procesu porownywania plikow
 	 */
 	public void go(){
 		
@@ -181,7 +181,7 @@ public class SourceCode {
 	}
 	
 	/**
-	 * Funkcja zwraca duplikaty kodu w plikach w formacie xml, uwzglêdniaj¹c tylko podany plik
+	 * Funkcja zwraca duplikaty kodu w plikach w formacie xml, uwzgledniajac tylko podany plik
 	 * @param filename - nazwa pliku
 	 * @return xml
 	 */
@@ -330,8 +330,8 @@ public class SourceCode {
 	}
 	/**
 	 * Odczyt pliku do Stringa
-	 * @param filename - nazwa pliku
-	 * @param encodinge - kodowanie
+	 * @param path - nazwa pliku
+	 * @param encoding - kodowanie
 	 * @return file content
 	 */
 	public String readFile(String path, Charset encoding) throws IOException 

@@ -4,15 +4,15 @@ import com.zpi.plagiarism_detector.commons.database.DocumentType;
 
 import java.util.Set;
 
- class DaoImp implements Dao {
-	
-	HibernateAccess hibernateAccess;
+ public class DaoImp implements Dao {
+     private final static String pathToConfigurationFile = "META-INF/hibernate.cfg.xml";
+     HibernateAccess hibernateAccess;
 
-	public DaoImp() {
+     public DaoImp() {
 		createHibernateAccess();
 	}
 	void createHibernateAccess(){
-		hibernateAccess = new HibernateAccess("META-INF/hibernate.cfg.xml");
+        hibernateAccess = new HibernateAccess(pathToConfigurationFile);
 	}
 	
 	public Article getArticle(String path) {

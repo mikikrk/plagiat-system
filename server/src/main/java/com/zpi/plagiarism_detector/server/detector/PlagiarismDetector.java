@@ -7,6 +7,7 @@ import com.zpi.plagiarism_detector.server.data.ServerData;
 import com.zpi.plagiarism_detector.server.data.WebData;
 
 import java.util.List;
+import java.util.Set;
 
 public class PlagiarismDetector {
     private ServerData serverData;
@@ -14,7 +15,7 @@ public class PlagiarismDetector {
     private ComparingAlgorithm comparingAlgorithm;
 
     private DocumentData analyzedDocument;
-    private String keywords;
+    private Set<String> keywords;
 
     public PlagiarismDetector(ServerData serverData, WebData webData, ComparingAlgorithm comparingAlgorithm) {
         this.serverData = serverData;
@@ -24,7 +25,7 @@ public class PlagiarismDetector {
 
     public PlagiarismDetectionResult checkForPlagiarism(DocumentData document) {
         this.analyzedDocument = document;
-        this.keywords = document.getKeywordsJoined();
+        this.keywords = document.getKeywords();
         saveDocument();
         List<DocumentData> matchingDocs = getSimilarDocuments();
         List<PlagiarismResult> plagiarisms = determinePlagiarism(matchingDocs);

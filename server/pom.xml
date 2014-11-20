@@ -25,11 +25,6 @@
 			<version>5.1.6</version>
 		</dependency>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>1.4.182</version>
-		</dependency>
-		<dependency>
 			<groupId>com.zpi.plagiarism_detector</groupId>
 			<artifactId>commons</artifactId>
 		</dependency>
@@ -130,14 +125,6 @@
 				<executions></executions>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>highlight.pack.js</include>
-				</includes>
-			</resource>
-		</resources>
 	</build>
 
 
