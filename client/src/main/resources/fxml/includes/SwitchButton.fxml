@@ -1,0 +1,8 @@
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.control.Label" xmlns:fx="http://javafx.com/fxml">
+    <Label text="Article" />
+    <Button fx:id="switchButton" text="" />
+</fx:root>
