@@ -21,8 +21,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
-public class FXMLController implements Initializable, Controller {
+public class MainSceneController implements Initializable, Controller {
+
     private static final ClientFactory clientFactory = new ClientFactory();
+    private static Stage mainWindow = new Stage();
     private ClientModel model;
 
     @FXML
@@ -39,15 +41,32 @@ public class FXMLController implements Initializable, Controller {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        try {
-            model.openConnection();
-            Message message = new Message(ProtocolCode.TEST);
-            model.sendMessage(message);
-            model.closeConnection();
-        } catch (CannotConnectToTheServerException e) {
-            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
-        }
 
+        try {
+
+            mainWindow = (Stage) checkButton.getScene().getWindow();
+            mainWindow.hide();
+            showResultScene();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*
+         try {
+         model.openConnection();
+         Message message = new Message(ProtocolCode.TEST);
+         model.sendMessage(message);
+         model.closeConnection();
+         } catch (CannotConnectToTheServerException e) {
+         ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+         }
+         /*
+         System.out.println("You clicked me!");
+         outputData.setText("Napisa?e?: " + inputData.getText());
+         outputData.setStyle("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick;");
+         outputData.selectRange(11, outputData.getLength());
+         label.setText("Hello Guys! ;)"); 
+         */
     }
 
     @FXML
@@ -68,6 +87,23 @@ public class FXMLController implements Initializable, Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showResultScene() throws IOException {
+        Parent root;
+        System.out.println("You clicked me, bastard!");
+        URL url = getClass().getResource("/fxml/ResultScene.fxml");
+        root = FXMLLoader.load(url);
+        Stage stage = new Stage();
+        stage.setTitle("Result");
+        Scene scene = new Scene(root, 600, 500);
+        scene.getStylesheets().add("/styles/Styles.css");
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    public static void showMainWindow() {
+        mainWindow.show();
     }
 
     @Override
