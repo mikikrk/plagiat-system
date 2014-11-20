@@ -24,43 +24,20 @@ public class MainTest {
 	public static void main(String[] args) throws IOException, ScriptException, NoSuchMethodException{
 		// TODO Auto-generated method stub
 		
-		SourceCode sc = new SourceCode(20);
-		//rozpoznanie jezyka przykladu
-		String lang = sc.recognizeLanguage("E:\\test\\testtest.java");
-		sc.setLanguageString(lang);
-		//inicjacja zmiennych
-		sc.init();
 		
-		try {
-			//dodanie pliku uzytkownika jako pierwszego
-			sc.add(new File("E:\\test\\testtest.java"));
-			
-			//dodanie pliku do porownania
-			sc.add(new File("E:\\test\\test2.java"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//uruchomienie porownania
-		sc.go();
+		SourceCodeComparison scc = new SourceCodeComparison();
 		
-		/*System.out.print(sc.getMatches());
-		System.out.println("-------------------------");
-		System.out.println("");*/
-		
-		//zwrocenie wynikow porownania, sciezka do pliku uzytkownika
-		System.out.println(sc.getMatches("E:\\test\\testtest.java"));
-		
-		//przetworzenie xml na obiekt PlagiarismResult
-		PlagiarismResult result = sc.convertXml(sc.getMatches("E:\\test\\testtest.java"),"E:\\test\\testtest.java");
+		PlagiarismResult result = scc.compareFiles("E:\\test\\test2.java","E:\\test\\rb.txt");
+		System.out.println(result);
+		result = scc.compareFiles("E:\\test\\testtescik.java","E:\\test\\testtest.java");
 		Map<PlagiarismFragment, PlagiarismFragment> mp = result.getPlagiarisedFragments();
 		Iterator it = mp.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry pairs = (Map.Entry)it.next();
-	        System.out.println(((PlagiarismFragment) pairs.getKey()).getEnd() + " = " + ((PlagiarismFragment) pairs.getValue()).getEnd());
-	        it.remove(); // avoids a ConcurrentModificationException
+	        System.out.println(((PlagiarismFragment) pairs.getKey()).getFragment() + " = " + ((PlagiarismFragment) pairs.getValue()).getFragment());
+	        System.out.println("--------------------");
+	        it.remove();
 	    }
-		//System.out.println();
 
 		
 	}

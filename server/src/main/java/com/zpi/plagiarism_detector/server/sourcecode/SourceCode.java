@@ -281,7 +281,6 @@ public class SourceCode {
 	        				
 	        				for(int k = 1; k < bN; ++k){
 	        					String line = br.readLine();
-	        					System.out.println("linie: "+line);
 	        					beginNew += line.length()+System.getProperty("line.separator").length();
 	        				}
 	        				for(int k = 1; k <= size; ++k){
