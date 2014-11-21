@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Observer;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 import static org.mockito.Mockito.*;
 
@@ -16,6 +18,7 @@ public class ClientTest {
     private Socket socket;
     private ClientReader reader;
     private ClientWriter writer;
+    private CyclicBarrier cyclicBarrier;
 
     @BeforeMethod
     public void init() {
@@ -23,15 +26,6 @@ public class ClientTest {
         reader = mock(ClientReader.class);
         writer = mock(ClientWriter.class);
         client = new Client(socket, reader, writer);
-    }
-
-    @Test(expectedExceptions = InterruptedException.class)
-    public void closeConnectionInterruptedExceptionTest() throws InterruptedException, IOException {
-        // given
-        doThrow(new InterruptedException()).when(writer).joinWriter();
-
-        // when
-        client.closeConnection();
     }
 
     @Test

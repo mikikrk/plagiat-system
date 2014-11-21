@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.concurrent.BrokenBarrierException;
 
 public class ClientModel implements Model{
     private Logger log = LoggerFactory.getLogger(ClientModel.class);
@@ -35,8 +36,8 @@ public class ClientModel implements Model{
     public void closeConnection() {
         try {
             client.closeConnection();
-        } catch (InterruptedException | IOException e) {
-//            e.printStackTrace();
+        } catch (InterruptedException | IOException | BrokenBarrierException e) {
+            e.printStackTrace();
         } finally {
             log.debug("Connection closed");
         }

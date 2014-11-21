@@ -6,18 +6,17 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.ObjectOutput;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.*;
 
-public class ClientWriter extends Thread {
+public class ClientWriter implements Runnable{
     private ObjectOutput out;
     BlockingQueue<Message> sendQueue = new LinkedBlockingQueue<>();
     private boolean stop = false;
     private static final Logger log = LoggerFactory.getLogger(ClientWriter.class);
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     public ClientWriter(ObjectOutput out) {
         this.out = out;
-        this.setName("ClientWriter");
     }
 
     @Override
@@ -48,12 +47,9 @@ public class ClientWriter extends Thread {
     private synchronized void sendMessage() throws InterruptedException, IOException {
         log.debug("entering sendMessage()");
         Message message = sendQueue.take();
+        log.debug("processing next message from sendQueue: [{}]", message);
         if (message == Message.POISON_PILL) {
-            log.debug("ClientWriter received POISON_PILL message");
             stopWriter();
-        } else {
-            log.debug("processing next message from sendQueue: [{}]", message);
-
         }
         out.writeObject(message);
         log.debug("leaving sendMessage()");
@@ -65,6 +61,7 @@ public class ClientWriter extends Thread {
 
     private synchronized void releaseResources() {
         try {
+            countDownLatch.countDown();
             out.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,10 +85,7 @@ public class ClientWriter extends Thread {
         writeMessage(Message.POISON_PILL);
     }
 
-    /**
-     * Dodana na użytek testów, ponieważ nie można zamokować Thread.join();
-     */
-    public void joinWriter() throws InterruptedException {
-        this.join();
+    public void await() throws BrokenBarrierException, InterruptedException {
+        countDownLatch.await();
     }
 }

@@ -31,8 +31,9 @@ public class ClientWriterTest {
         when(sendQueue.take()).thenReturn(message, Message.POISON_PILL);
 
         // when
-        clientWriter.start();
-        clientWriter.join();
+        Thread thread = new Thread(clientWriter);
+        thread.start();
+        thread.join();
 
         // then
         verify(sendQueue, times(2)).take();
@@ -46,8 +47,9 @@ public class ClientWriterTest {
         when(sendQueue.take()).thenReturn(Message.POISON_PILL);
 
         // when
-        clientWriter.start();
-        clientWriter.join();
+        Thread thread = new Thread(clientWriter);
+        thread.start();
+        thread.join();
 
         // then
         verify(sendQueue, times(1)).take();

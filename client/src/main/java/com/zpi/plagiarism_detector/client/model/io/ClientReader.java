@@ -9,8 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.ObjectInput;
 
-public class ClientReader extends Observable {
-    Thread thread;
+public class ClientReader extends Observable implements Runnable {
     private ObjectInput in;
     private static final Logger log = LoggerFactory.getLogger(ClientReader.class);
     private Message message;
@@ -19,28 +18,8 @@ public class ClientReader extends Observable {
         this.in = in;
     }
 
-    /**
-     * Uruchamia wątek odbierania wiadomości, Dodane dla zgodności z metodami klasy Thread
-     */
-    public void start() {
-        run();
-    }
-
-    /**
-     * @see ClientReader#start()
-     */
+    @Override
     public void run() {
-        thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runAlg();
-            }
-        });
-        thread.setName("ClientReader");
-        thread.start();
-    }
-
-    private void runAlg() {
         log.debug("entering run()");
         try {
             receiveMessages();
@@ -60,9 +39,11 @@ public class ClientReader extends Observable {
      * @throws ClassNotFoundException
      */
     public void receiveMessages() throws IOException, ClassNotFoundException {
+        log.debug("entering receiveMessages()");
         while (tryReadMessage()) {
             processMessage();
         }
+        log.debug("leaving receiveMessages()");
     }
 
     /**
@@ -72,16 +53,20 @@ public class ClientReader extends Observable {
      * @throws IOException
      */
     public boolean tryReadMessage() throws ClassNotFoundException, IOException {
+        log.debug("entering tryReadMessage()");
         message = (Message) in.readObject();
+        log.debug("leaving tryReadMessage()");
         return message != null;
     }
 
     private void processMessage() {
+        log.debug("entering processMessage()");
         notifyObservers(message);
         ProtocolCode cmd = message.getCode();
         if (cmd == ProtocolCode.TEST) {
             log.debug("received test message");
         }
+        log.debug("leaving processMessage()");
     }
 
 
@@ -96,7 +81,6 @@ public class ClientReader extends Observable {
             log.debug("closing with an exception clientReader thread: {}", e);
         } finally {
             log.debug("leaving close()");
-            thread.interrupt();
         }
     }
 }

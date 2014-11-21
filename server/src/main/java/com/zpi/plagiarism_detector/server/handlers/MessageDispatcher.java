@@ -21,6 +21,7 @@ public class MessageDispatcher {
     }
 
     public Message dispatchMessage(Message message) throws AbortConnectionException {
+        log.debug("entering dispatchMessage()");
         ProtocolCode command = message.getCode();
         Object sentObject = message.getSentObject();
 
@@ -33,6 +34,7 @@ public class MessageDispatcher {
         } else if (command == ProtocolCode.CHECK_FOR_PLAGIARISM) {
             handlePlagiarismChecking(sentObject);
         }
+        log.debug("leaving dispatchMessage()");
         return response;
     }
 

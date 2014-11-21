@@ -1,6 +1,8 @@
 package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.server.factories.handlers.AbstractMessageHandlerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -9,6 +11,7 @@ import java.net.Socket;
  * Odpowiada za odbiór danych od klientów, odpowiednie przetworzenie i wysłanie odpowiedzi.
  */
 public class ConnectionHandler implements Runnable {
+    private static final Logger log = LoggerFactory.getLogger(ConnectionHandler.class);
     private Socket socket;
     private MessageHandler messageHandler;
 
@@ -25,6 +28,7 @@ public class ConnectionHandler implements Runnable {
 
     @Override
     public void run() {
+        log.debug("entering run()");
         try {
             messageHandler.handleMessages();
         } catch (IOException | ClassNotFoundException e) {
@@ -32,6 +36,7 @@ public class ConnectionHandler implements Runnable {
         } finally {
             freeHandlerResources();
         }
+        log.debug("leaving run()");
     }
 
 

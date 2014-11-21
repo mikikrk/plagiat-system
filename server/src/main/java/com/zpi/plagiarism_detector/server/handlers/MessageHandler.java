@@ -41,9 +41,11 @@ public class MessageHandler {
      * @throws ClassNotFoundException
      */
     public void handleMessages() throws IOException, ClassNotFoundException {
+        log.debug("entering handleMessages()");
         Message response = null;
         try {
             while (tryReadMessage()) {
+                log.debug("dispatchingMessage: {}", message);
                 response = messageDispatcher.dispatchMessage(message);
                 if (response != null) {
                     sendMessage(response);
@@ -52,6 +54,7 @@ public class MessageHandler {
         } catch (AbortConnectionException e) {
             return;
         }
+        log.debug("leaving handleMessages()");
     }
 
     public boolean tryReadMessage() {
@@ -71,7 +74,9 @@ public class MessageHandler {
      * @throws IOException
      */
     public void sendMessage(Message message) throws IOException {
+        log.debug("entering sendMessage()");
         out.writeObject(message);
+        log.debug("leaving sendMessage()");
     }
 
     /**

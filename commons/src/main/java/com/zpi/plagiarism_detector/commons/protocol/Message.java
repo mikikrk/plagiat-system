@@ -39,4 +39,15 @@ public class Message implements Serializable {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Msg code: ");
+        String codeValue = code != null ? code.name() : "null";
+        sb.append(codeValue);
+        sb.append("\tvalue: ");
+        Object sendObject1 = sendObject != null ? sendObject : "null";
+        sb.append(sendObject1);
+        return sb.toString();
+    }
 }

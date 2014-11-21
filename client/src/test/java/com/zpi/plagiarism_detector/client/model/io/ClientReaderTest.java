@@ -18,8 +18,6 @@ public class ClientReaderTest {
     public void init() {
         in = mock(ObjectInput.class);
         clientReader = new ClientReader(in);
-        clientReader.thread = mock(Thread.class);
-        doNothing().when(clientReader.thread).interrupt();
     }
 
     @Test
