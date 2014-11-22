@@ -10,7 +10,7 @@ import java.io.StringWriter;
 
 public class PdfUtils {
     public static String getText(File pdfFile) throws IOException {
-        try(Document pdf = PDF.open(pdfFile)) {
+        try (Document pdf = PDF.open(pdfFile)) {
             StringWriter buffer = new StringWriter();
             pdf.pipe(new OutputTarget(buffer));
             return buffer.toString();

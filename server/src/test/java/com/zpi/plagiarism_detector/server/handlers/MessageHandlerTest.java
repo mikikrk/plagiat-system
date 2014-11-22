@@ -9,10 +9,11 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class MessageHandlerTest {

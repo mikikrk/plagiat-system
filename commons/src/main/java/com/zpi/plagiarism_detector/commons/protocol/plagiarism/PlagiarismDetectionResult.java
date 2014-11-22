@@ -5,13 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlagiarismDetectionResult implements Serializable {
-    private boolean isPlagiarism;
-
-	private List<PlagiarismResult> plagiarisms;
+    private List<PlagiarismResult> plagiarisms;
 
     public PlagiarismDetectionResult() {
         this.plagiarisms = new ArrayList<>();
-        this.isPlagiarism = !plagiarisms.isEmpty();
     }
 
     public PlagiarismDetectionResult(List<PlagiarismResult> plagiarisms) {
@@ -23,6 +20,20 @@ public class PlagiarismDetectionResult implements Serializable {
     }
 
     public boolean isPlagiarism() {
-        return isPlagiarism;
+        return !plagiarisms.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        int i = 1;
+        for (PlagiarismResult plagiarism : plagiarisms) {
+            sb.append(i);
+            sb.append(". ");
+            sb.append(plagiarism);
+            sb.append("\n");
+            ++i;
+        }
+        return sb.toString();
     }
 }

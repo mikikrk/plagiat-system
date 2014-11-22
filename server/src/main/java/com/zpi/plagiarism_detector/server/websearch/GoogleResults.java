@@ -15,23 +15,23 @@ public class GoogleResults {
         return link;
     }
 
-    public List<GoogleResults> getItems() {
-        return items;
-    }
-
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public List<GoogleResults> getItems() {
+        return items;
     }
 
     public void setGroups(List<GoogleResults> items) {
         this.items = items;
     }
 
-    public GoogleResults getThing (int i) {
+    public GoogleResults getThing(int i) {
         //System.out.println(items.get(i));
         return items.get(i);
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s", link);

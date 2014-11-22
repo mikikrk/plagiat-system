@@ -1,9 +1,6 @@
 package com.zpi.plagiarism_detector.server.factories.core;
 
 import com.zpi.plagiarism_detector.server.core.Server;
-import com.zpi.plagiarism_detector.server.factories.core.AbstractServerFactory;
-import com.zpi.plagiarism_detector.server.factories.core.ServerFactory;
-import org.mockito.Mock;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;

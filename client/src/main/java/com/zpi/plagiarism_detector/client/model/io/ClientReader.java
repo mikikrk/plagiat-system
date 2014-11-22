@@ -1,7 +1,6 @@
 package com.zpi.plagiarism_detector.client.model.io;
 
 import com.zpi.plagiarism_detector.commons.protocol.Message;
-import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.commons.util.Observable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +9,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 
 public class ClientReader extends Observable implements Runnable {
-    private ObjectInput in;
     private static final Logger log = LoggerFactory.getLogger(ClientReader.class);
+    private ObjectInput in;
     private Message message;
 
     public ClientReader(ObjectInput in) {
@@ -35,6 +34,7 @@ public class ClientReader extends Observable implements Runnable {
 
     /**
      * Odbiera wiadomości przychodzące z serwera
+     *
      * @throws IOException
      * @throws ClassNotFoundException
      */
@@ -48,6 +48,7 @@ public class ClientReader extends Observable implements Runnable {
 
     /**
      * próbuje odczytać wiadomość z strumienia
+     *
      * @return wartość logiczna określająca czy udało się odebrać wiadomość
      * @throws ClassNotFoundException
      * @throws IOException
@@ -62,10 +63,7 @@ public class ClientReader extends Observable implements Runnable {
     private void processMessage() {
         log.debug("entering processMessage()");
         notifyObservers(message);
-        ProtocolCode cmd = message.getCode();
-        if (cmd == ProtocolCode.TEST) {
-            log.debug("received test message");
-        }
+        log.debug("response received:\n{}", message);
         log.debug("leaving processMessage()");
     }
 

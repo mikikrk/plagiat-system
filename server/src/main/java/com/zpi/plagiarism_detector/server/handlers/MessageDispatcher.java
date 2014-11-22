@@ -2,12 +2,14 @@ package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
-import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
 import com.zpi.plagiarism_detector.server.exceptions.AbortConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 import static com.zpi.plagiarism_detector.commons.protocol.ProtocolCode.TEST;
 
@@ -26,10 +28,10 @@ public class MessageDispatcher {
         Object sentObject = message.getSentObject();
 
         response = null;
-        if(command == ProtocolCode.POISON_PILL) {
+        if (command == ProtocolCode.POISON_PILL) {
             throw new AbortConnectionException();
         }
-        if(command == TEST) {
+        if (command == TEST) {
             handleTestMessage();
         } else if (command == ProtocolCode.CHECK_FOR_PLAGIARISM) {
             handlePlagiarismChecking(sentObject);
@@ -46,9 +48,17 @@ public class MessageDispatcher {
         if (sentObject == null) {
             response = new Message(ProtocolCode.NULL_DOCUMENT_ERROR);
         } else {
+            checkForPlagiarism((DocumentData) sentObject);
+        }
+    }
+
+    private void checkForPlagiarism(DocumentData sentObject) {
+        try {
             DocumentData document = (DocumentData) sentObject;
             PlagiarismDetectionResult result = plagiarismDetector.checkForPlagiarism(document);
             response = new Message(ProtocolCode.PLAGIARISM_CHECK_RESULT, result);
+        } catch (IOException e) {
+            response = new Message(ProtocolCode.PLAGIARISM_CHECK_ERROR, e.getCause());
         }
     }
 }

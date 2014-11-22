@@ -1,9 +1,11 @@
 package com.zpi.plagiarism_detector.commons.util;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Map;
 
 public class TypeUtils {
     private final static Map<Class<?>, Class<?>> primitives = new Hashtable<Class<?>, Class<?>>();
+
     static {
         primitives.put(Boolean.class, boolean.class);
         primitives.put(Byte.class, byte.class);
@@ -17,12 +19,16 @@ public class TypeUtils {
 
 
     public static boolean isPrimitiveType(final Object object) {
-        if (object == null) { return false; }
+        if (object == null) {
+            return false;
+        }
         return isPrimitiveType(object.getClass());
     }
 
     public static boolean isPrimitiveType(final Class<?> clazz) {
-        if (clazz == null) { return false; }
+        if (clazz == null) {
+            return false;
+        }
         return primitives.containsKey(clazz);
     }
 

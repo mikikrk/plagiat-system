@@ -22,7 +22,8 @@ public class ServerMain {
         if (args.length > 0) {
             try {
                 threadPoolSize = Integer.parseInt(args[0]);
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+            }
         }
         return threadPoolSize;
     }
@@ -32,7 +33,8 @@ public class ServerMain {
         if (args.length > 1) {
             try {
                 portNumber = Integer.parseInt(args[1]);
-            } catch (NumberFormatException e) {}
+            } catch (NumberFormatException e) {
+            }
         }
         return portNumber;
     }
@@ -41,7 +43,7 @@ public class ServerMain {
         try {
             Server server = serverFactory.create(threadPoolSize, portNumber);
             server.handleConnections();
-        } catch(IOException e1) {
+        } catch (IOException e1) {
             System.exit(-1);
         }
     }

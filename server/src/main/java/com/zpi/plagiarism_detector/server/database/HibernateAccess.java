@@ -1,9 +1,5 @@
 package com.zpi.plagiarism_detector.server.database;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.zpi.plagiarism_detector.commons.database.DocumentType;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -14,330 +10,335 @@ import org.hibernate.classic.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 class HibernateAccess {
 
-	private static SessionFactory sessionFactory;
-
-	public HibernateAccess(String pathToConfigurationFile) {
-		
-		Configuration cfg = new Configuration();
-		cfg.configure(pathToConfigurationFile);
-		sessionFactory = cfg.buildSessionFactory();
-
-	}
-
-	int addArticle(Article article, Set<String> keywords) {
-
-		int result = 0;
-
-		if (keywords == null) {
-			return result;
-		}
-
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		Article temp = getArticle(article.getPath(), session);
-		if (temp == null) {
-
-			session.save(article);
-
-			Long articleId = article.getId();
-			for (String kw : keywords) {
-				addKeyword(kw, articleId, session);
-			}
-			
-			result = 1;
-		}
-		tx.commit();
-		session.flush();
-		return result;
-	}
-
-	Article getArticle(String path) {
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		Article result = getArticle(path, session);
-
-		tx.commit();
-		session.flush();
-
-		return result;
-	}
-
-	
-	boolean containsUri(String uri){
-		boolean result=false;
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		Criterion pathEq = Restrictions.eq("uri", uri);
-		Criteria crit = session.createCriteria(Article.class);
-		crit.add(pathEq);
-
-		if(  crit.uniqueResult()!=null){
-			result=true;
-		}
-		tx.commit();
-		session.flush();
-		return result;
-	}
-	private void addKeyword(String word, Long articleId, Session session) {
-		Criterion keywordEq = Restrictions.eq("word", word);
-		Criteria crit = session.createCriteria(Keyword.class);
-		crit.add(keywordEq);
-		Keyword keyword = (Keyword) crit.uniqueResult();
-		if (keyword == null) {
-			keyword = new Keyword();
-			keyword.setWord(word);
-			session.save(keyword);
-
-		}
-		addAssignment(articleId, keyword.getId(), session);
-	}
-
-	private void addAssignment(Long articleId, Long keywordId, Session session) {
-		Assignment assignment = new Assignment();
-		assignment.setArticleId(articleId);
-		assignment.setKeywordId(keywordId);
-
-		session.saveOrUpdate(assignment);
-	}
-
-	private void removeKeywords(Long articleId, Session session) {
-		String hql = " DELETE FROM " + Assignment.class.getName() + " as asg "
-				+ "where asg.articleId=:articleId";
-
-		Query query = session.createQuery(hql);
-		query.setLong("articleId", articleId);
-		query.executeUpdate();
-
-		hql = " DELETE FROM " + Keyword.class.getName() + " as key "
-				+ "where key.id not in " + "(Select keywordId from "
-				+ Assignment.class.getName() + ")";
-
-		query = session.createQuery(hql);
-		query.executeUpdate();
-	}
+    private static SessionFactory sessionFactory;
+
+    public HibernateAccess(String pathToConfigurationFile) {
+
+        Configuration cfg = new Configuration();
+        cfg.configure(pathToConfigurationFile);
+        sessionFactory = cfg.buildSessionFactory();
+
+    }
+
+    int addArticle(Article article, Set<String> keywords) {
+
+        int result = 0;
+
+        if (keywords == null) {
+            return result;
+        }
+
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
+        Article temp = getArticle(article.getPath(), session);
+        if (temp == null) {
+
+            session.save(article);
+
+            Long articleId = article.getId();
+            for (String kw : keywords) {
+                addKeyword(kw, articleId, session);
+            }
+
+            result = 1;
+        }
+        tx.commit();
+        session.flush();
+        return result;
+    }
+
+    Article getArticle(String path) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
+        Article result = getArticle(path, session);
+
+        tx.commit();
+        session.flush();
+
+        return result;
+    }
+
+
+    boolean containsUri(String uri) {
+        boolean result = false;
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
+        Criterion pathEq = Restrictions.eq("uri", uri);
+        Criteria crit = session.createCriteria(Article.class);
+        crit.add(pathEq);
+
+        if (crit.uniqueResult() != null) {
+            result = true;
+        }
+        tx.commit();
+        session.flush();
+        return result;
+    }
+
+    private void addKeyword(String word, Long articleId, Session session) {
+        Criterion keywordEq = Restrictions.eq("word", word);
+        Criteria crit = session.createCriteria(Keyword.class);
+        crit.add(keywordEq);
+        Keyword keyword = (Keyword) crit.uniqueResult();
+        if (keyword == null) {
+            keyword = new Keyword();
+            keyword.setWord(word);
+            session.save(keyword);
+
+        }
+        addAssignment(articleId, keyword.getId(), session);
+    }
+
+    private void addAssignment(Long articleId, Long keywordId, Session session) {
+        Assignment assignment = new Assignment();
+        assignment.setArticleId(articleId);
+        assignment.setKeywordId(keywordId);
+
+        session.saveOrUpdate(assignment);
+    }
+
+    private void removeKeywords(Long articleId, Session session) {
+        String hql = " DELETE FROM " + Assignment.class.getName() + " as asg "
+                + "where asg.articleId=:articleId";
+
+        Query query = session.createQuery(hql);
+        query.setLong("articleId", articleId);
+        query.executeUpdate();
 
-	int removeArticle(String path) {
-		int result = 0;
-		if (path == null) {
-			return result;
-		}
+        hql = " DELETE FROM " + Keyword.class.getName() + " as key "
+                + "where key.id not in " + "(Select keywordId from "
+                + Assignment.class.getName() + ")";
 
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		Criterion pathEq = Restrictions.eq("path", path);
-		Criteria crit = session.createCriteria(Article.class);
-		crit.add(pathEq);
+        query = session.createQuery(hql);
+        query.executeUpdate();
+    }
 
-		Article article = (Article) crit.uniqueResult();
+    int removeArticle(String path) {
+        int result = 0;
+        if (path == null) {
+            return result;
+        }
 
-		if (article != null) {
-			session.delete(article);
-			removeKeywords(article.getId(), session);
-			result = 1;
-		}
-		tx.commit();
-		session.flush();
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
+        Criterion pathEq = Restrictions.eq("path", path);
+        Criteria crit = session.createCriteria(Article.class);
+        crit.add(pathEq);
 
-		return result;
-	}
+        Article article = (Article) crit.uniqueResult();
 
-	private Article getArticle(String path, Session session) {
-		Criterion pathEq = Restrictions.eq("path", path);
-		Criteria crit = session.createCriteria(Article.class);
-		crit.add(pathEq);
+        if (article != null) {
+            session.delete(article);
+            removeKeywords(article.getId(), session);
+            result = 1;
+        }
+        tx.commit();
+        session.flush();
 
-		return (Article) crit.uniqueResult();
-	}
+        return result;
+    }
 
-	Set<String> getKeywords(String path) {
-		Set<String> result = new HashSet<String>();
-		if (path == null) {
-			return result;
-		}
+    private Article getArticle(String path, Session session) {
+        Criterion pathEq = Restrictions.eq("path", path);
+        Criteria crit = session.createCriteria(Article.class);
+        crit.add(pathEq);
 
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
+        return (Article) crit.uniqueResult();
+    }
 
-		Article article = getArticle(path, session);
+    Set<String> getKeywords(String path) {
+        Set<String> result = new HashSet<String>();
+        if (path == null) {
+            return result;
+        }
 
-		if (article != null) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
 
-			Long articleId = article.getId();
+        Article article = getArticle(path, session);
 
-			String hql = " SELECT ke.word FROM " + Assignment.class.getName()
-					+ " as asg, " + Keyword.class.getName() + " as ke "
-					+ "where asg.articleId=:articleId AND ke.id=asg.keywordId";
+        if (article != null) {
 
-			Query query = session.createQuery(hql);
-			query.setLong("articleId", articleId);
-			@SuppressWarnings("rawtypes")
-			List list = query.list();
+            Long articleId = article.getId();
 
-			for (Object obj : list) {
-				result.add((String) obj);
-			}
+            String hql = " SELECT ke.word FROM " + Assignment.class.getName()
+                    + " as asg, " + Keyword.class.getName() + " as ke "
+                    + "where asg.articleId=:articleId AND ke.id=asg.keywordId";
 
-		}
-		tx.commit();
-		session.flush();
+            Query query = session.createQuery(hql);
+            query.setLong("articleId", articleId);
+            @SuppressWarnings("rawtypes")
+            List list = query.list();
 
-		return result;
+            for (Object obj : list) {
+                result.add((String) obj);
+            }
 
-	}
+        }
+        tx.commit();
+        session.flush();
 
-	int setKeywords(String path, Set<String> keywords, boolean append) {
-		int result = 0;
-		if (path == null || keywords == null) {
-			return result;
-		}
-
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-
-		Article article = getArticle(path, session);
+        return result;
 
-		if (article != null) {
-
-			Long articleId = article.getId();
+    }
 
-			if (!append) {
+    int setKeywords(String path, Set<String> keywords, boolean append) {
+        int result = 0;
+        if (path == null || keywords == null) {
+            return result;
+        }
+
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
+
+        Article article = getArticle(path, session);
 
-				removeKeywords(articleId, session);
+        if (article != null) {
+
+            Long articleId = article.getId();
 
-			}
+            if (!append) {
 
-			for (String kw : keywords) {
-				addKeyword(kw, articleId, session);
-			}
+                removeKeywords(articleId, session);
 
-			result = 1;
-		}
-		tx.commit();
-		session.flush();
-
-		return result;
-	}
+            }
 
-	Set<String> findArticles(Set<String> kwSet, DocumentType type, boolean all) {
-		Set<String> result = new HashSet<String>();
-		if (kwSet == null || type == null) {
-			return result;
-		}
+            for (String kw : keywords) {
+                addKeyword(kw, articleId, session);
+            }
 
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		boolean firstIt = true;
-		for (String kw : kwSet) {
-			String sql = " SELECT ar.path FROM  ARTICLE" + " ar"
-					+ " JOIN ASSIGNMENT" + " ass ON " + "ar.id=ass.article_Id "
-					+ " JOIN " + "KEYWORD" + " ke ON "
-					+ " ass.keyword_Id=ke.id WHERE ke.word=:kw "
-					+ " AND  ar.type=:typeNr ";
+            result = 1;
+        }
+        tx.commit();
+        session.flush();
+
+        return result;
+    }
 
-			Query query = session.createSQLQuery(sql);
-			query.setString("kw", kw);
+    Set<String> findArticles(Set<String> kwSet, DocumentType type, boolean all) {
+        Set<String> result = new HashSet<String>();
+        if (kwSet == null || type == null) {
+            return result;
+        }
 
-			query.setInteger("typeNr", type.ordinal());
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
+        boolean firstIt = true;
+        for (String kw : kwSet) {
+            String sql = " SELECT ar.path FROM  ARTICLE" + " ar"
+                    + " JOIN ASSIGNMENT" + " ass ON " + "ar.id=ass.article_Id "
+                    + " JOIN " + "KEYWORD" + " ke ON "
+                    + " ass.keyword_Id=ke.id WHERE ke.word=:kw "
+                    + " AND  ar.type=:typeNr ";
 
-			@SuppressWarnings("rawtypes")
-			List list = query.list();
+            Query query = session.createSQLQuery(sql);
+            query.setString("kw", kw);
 
-			if (!all) {
-				for (Object obj : list) {
+            query.setInteger("typeNr", type.ordinal());
 
-					result.add((String) obj);
-				}
-			} else {
-				Set<String> tempSet = new HashSet<String>();
-				for (Object obj : list) {
+            @SuppressWarnings("rawtypes")
+            List list = query.list();
 
-					tempSet.add((String) obj);
+            if (!all) {
+                for (Object obj : list) {
 
-				}
+                    result.add((String) obj);
+                }
+            } else {
+                Set<String> tempSet = new HashSet<String>();
+                for (Object obj : list) {
 
-				if (firstIt) {
-					result.addAll(tempSet);
-					firstIt = false;
-				} else {
-					result.retainAll(tempSet);
-				}
-				if (result.size() == 0) {
-					break;
-				}
-			}
+                    tempSet.add((String) obj);
 
-		}
-		tx.commit();
-		session.flush();
+                }
 
-		return result;
-	}
+                if (firstIt) {
+                    result.addAll(tempSet);
+                    firstIt = false;
+                } else {
+                    result.retainAll(tempSet);
+                }
+                if (result.size() == 0) {
+                    break;
+                }
+            }
 
-	int removeAll() {
-		int result = 0;
-		Session session = null;
-		Transaction tx = null;
+        }
+        tx.commit();
+        session.flush();
 
-		session = sessionFactory.openSession();
-		tx = session.getTransaction();
-		tx.begin();
-		String hql = " DELETE FROM " + Assignment.class.getName() + "  ";
-		Query query = session.createQuery(hql);
-		query.executeUpdate();
+        return result;
+    }
 
-		hql = " DELETE FROM " + Keyword.class.getName() + "  ";
-		query = session.createQuery(hql);
-		query.executeUpdate();
+    int removeAll() {
+        int result = 0;
+        Session session = null;
+        Transaction tx = null;
 
-		hql = " DELETE FROM " + Article.class.getName() + "  ";
-		query = session.createQuery(hql);
-		query.executeUpdate();
+        session = sessionFactory.openSession();
+        tx = session.getTransaction();
+        tx.begin();
+        String hql = " DELETE FROM " + Assignment.class.getName() + "  ";
+        Query query = session.createQuery(hql);
+        query.executeUpdate();
 
-		tx.commit();
-		session.flush();
-		result = 1;
+        hql = " DELETE FROM " + Keyword.class.getName() + "  ";
+        query = session.createQuery(hql);
+        query.executeUpdate();
 
-		return result;
+        hql = " DELETE FROM " + Article.class.getName() + "  ";
+        query = session.createQuery(hql);
+        query.executeUpdate();
 
-	}
+        tx.commit();
+        session.flush();
+        result = 1;
 
-	int setPath(String path, String newPath) {
-		int result = 0;
-		if (path == null || newPath == null) {
-			return result;
-		}
+        return result;
 
-		Session session = sessionFactory.openSession();
-		Transaction tx = session.getTransaction();
-		tx.begin();
-		Criterion pathEq = Restrictions.eq("path", path);
-		Criteria crit = session.createCriteria(Article.class);
-		crit.add(pathEq);
+    }
 
-		Article article = (Article) crit.uniqueResult();
+    int setPath(String path, String newPath) {
+        int result = 0;
+        if (path == null || newPath == null) {
+            return result;
+        }
 
-		if (article != null) {
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.getTransaction();
+        tx.begin();
+        Criterion pathEq = Restrictions.eq("path", path);
+        Criteria crit = session.createCriteria(Article.class);
+        crit.add(pathEq);
 
-			article.setPath(newPath);
-			session.update(article);
+        Article article = (Article) crit.uniqueResult();
 
-			result = 1;
-		}
+        if (article != null) {
 
-		tx.commit();
-		session.flush();
+            article.setPath(newPath);
+            session.update(article);
 
-		return result;
-	}
+            result = 1;
+        }
+
+        tx.commit();
+        session.flush();
+
+        return result;
+    }
 
     public List<String> getArticlesLinks() {
         Session session = sessionFactory.openSession();
@@ -349,6 +350,6 @@ class HibernateAccess {
 
         return result;
     }
-    
+
 
 }

@@ -3,9 +3,7 @@ package com.zpi.plagiarism_detector.server.core;
 import com.zpi.plagiarism_detector.server.factories.handlers.MessageHandlerFactory;
 import com.zpi.plagiarism_detector.server.handlers.ConnectionHandler;
 import org.mockito.Mockito;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

@@ -6,15 +6,13 @@ import com.zpi.plagiarism_detector.server.ServerProperties;
 import com.zpi.plagiarism_detector.server.database.Article;
 import com.zpi.plagiarism_detector.server.database.Dao;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 
@@ -27,6 +25,7 @@ public class ServerDataTest extends PowerMockTestCase {
     private Set<String> codes;
     private Set<String> keywords;
     private DocumentData document;
+    private List<String> codesPaths;
 
     @BeforeMethod
     public void init() {
@@ -36,12 +35,12 @@ public class ServerDataTest extends PowerMockTestCase {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void saveDocument_nullArgExceptionTest() {
+    public void saveDocument_nullArgExceptionTest() throws IOException {
         // given
         DocumentData document = null;
 
         // when
-        serverData.saveDocument(document);
+        serverData.saveDocument(document, null);
     }
 
     @Test
@@ -50,18 +49,21 @@ public class ServerDataTest extends PowerMockTestCase {
         keywords = new HashSet<>();
         keywords.add("keyword");
         codes = new HashSet<>();
+        codesPaths = new LinkedList<>();
 
         title = "title";
         articleText = "article";
         DocumentData document = new DocumentData(title, keywords, articleText, codes);
 
         // when
-        serverData.saveDocument(document);
+        String articlePath = serverData.saveDocument(document, codesPaths);
 
         // then
         String expectedDirPath = getDirPathWithPostfix("");
         String expectedArtPath = expectedDirPath + "/article";
 
+        Assert.assertEquals(articlePath, expectedArtPath);
+        Assert.assertTrue(codesPaths.isEmpty());
         verify(dao).addArticle(any(Article.class), eq(keywords));
         verify(fileData).createDir(expectedDirPath);
         verify(fileData).writeToFile(expectedArtPath, articleText);
@@ -76,13 +78,14 @@ public class ServerDataTest extends PowerMockTestCase {
         codes.add("a");
         codes.add("b");
         codes.add("c");
+        codesPaths = new LinkedList<>();
 
         title = "title";
         articleText = "article";
         DocumentData document = new DocumentData(title, keywords, articleText, codes);
 
         // when
-        serverData.saveDocument(document);
+        serverData.saveDocument(document, codesPaths);
 
         // then
         String expectedDirPath = getDirPathWithPostfix("");
@@ -90,6 +93,7 @@ public class ServerDataTest extends PowerMockTestCase {
         String expectedCodeBPath = expectedDirPath + "/code2";
         String expectedCodeCPath = expectedDirPath + "/code3";
 
+        Assert.assertEquals(codesPaths.size(), 3);
         verify(fileData).writeToFile(expectedCodeAPath, "a");
         verify(fileData).writeToFile(expectedCodeBPath, "b");
         verify(fileData).writeToFile(expectedCodeCPath, "c");
@@ -104,13 +108,14 @@ public class ServerDataTest extends PowerMockTestCase {
         codes.add("a");
         codes.add("b");
         codes.add("c");
+        codesPaths = new LinkedList<>();
 
         title = "title";
         articleText = null;
         document = new DocumentData(title, keywords, articleText, codes);
 
         // when
-        serverData.saveDocument(document);
+        serverData.saveDocument(document, codesPaths);
 
         // then
         String expectedDirPath = getDirPathWithPostfix("");
@@ -150,10 +155,10 @@ public class ServerDataTest extends PowerMockTestCase {
             add(defaultDirPath + "1");
         }};
         doThrow(ex).doThrow(ex).when(fileData).createDir(any(String.class));
-        doNothing().when(fileData).createDir(defaultDirPath+"2");
+        doNothing().when(fileData).createDir(defaultDirPath + "2");
 
         // when
-        serverData.saveDocument(document);
+        serverData.saveDocument(document, null);
 
         // then
         String expectedDirPath = getDirPathWithPostfix("2");
@@ -163,5 +168,17 @@ public class ServerDataTest extends PowerMockTestCase {
         verify(dao).addArticle(new Article(expectedArtPath, DocumentType.TEXT), keywords);
     }
 
+    @Test
+    public void getCommonKeywordDocuments_NonEmptyKeywordSet() {
+        // given
+        keywords = new HashSet<>();
+        Collections.addAll(keywords, new String[]{"a", "b", "c"});
+        doReturn(new HashSet<>()).when(dao).findArticlesWithAtLeastOne(keywords, DocumentType.TEXT);
 
+        // when
+        Set<String> commonKeywordDocuments = serverData.getCommonKeywordDocumentsPaths(keywords, DocumentType.TEXT);
+
+        // then
+        Assert.assertNotNull(commonKeywordDocuments);
+    }
 }

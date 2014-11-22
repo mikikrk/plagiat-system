@@ -4,7 +4,9 @@ import com.zpi.plagiarism_detector.client.model.core.Client;
 import com.zpi.plagiarism_detector.client.model.io.ClientReader;
 import com.zpi.plagiarism_detector.client.model.io.ClientWriter;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientFactory extends AbstractClientFactory {

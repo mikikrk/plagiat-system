@@ -36,8 +36,16 @@ public class DocumentData implements Serializable {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Set<String> getKeywords() {
         return keywords;
+    }
+
+    public void setKeywords(Set<String> keywords) {
+        this.keywords = keywords;
     }
 
     public String getKeywordsJoined() {
@@ -49,28 +57,20 @@ public class DocumentData implements Serializable {
         return article;
     }
 
-    public String getFilePath() {
-        return filePath;
-    }
-    
-    public Set<String> getCodes() {
-        return codes;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setKeywords(Set<String> keywords) {
-        this.keywords = keywords;
-    }
-
     public void setArticle(String article) {
         this.article = article;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public Set<String> getCodes() {
+        return codes;
     }
 
     public void setCodes(Set<String> codes) {
@@ -84,7 +84,9 @@ public class DocumentData implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
-    
-    
-    
+
+    public int getCodesCount() {
+        return codes.size();
+    }
+
 }

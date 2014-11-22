@@ -29,7 +29,7 @@ public class Server {
     public void handleConnections() {
         log.debug("entering handleConnections()");
         try {
-            while(!Thread.interrupted()) {
+            while (!Thread.interrupted()) {
                 Socket clientSocket = serverSocket.accept();
                 log.debug("connection has arrived");
                 MessageHandler messageHandler = messageHandlerFactory.createForSocket(clientSocket);

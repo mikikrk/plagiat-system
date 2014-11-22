@@ -5,7 +5,6 @@
  */
 package com.zpi.plagiarism_detector.client.view;
 
-import java.io.IOException;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,8 +16,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 
+import java.io.IOException;
+
 /**
- *
  * @author Agat
  */
 public class SwitchButton extends Label {
@@ -50,7 +50,7 @@ public class SwitchButton extends Label {
             articleSwitchedOn.addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> ov,
-                        Boolean t, Boolean t1) {
+                                    Boolean t, Boolean t1) {
                     if (t1) {
                         setText("Article");
                         setStyle("-fx-text-fill:white;");
@@ -68,7 +68,6 @@ public class SwitchButton extends Label {
             throw new RuntimeException(e);
         }
     }
-
 
 
     public SimpleBooleanProperty switchOnProperty() {

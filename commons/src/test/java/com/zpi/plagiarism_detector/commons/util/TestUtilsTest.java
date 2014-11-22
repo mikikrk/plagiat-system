@@ -16,7 +16,7 @@ public class TestUtilsTest {
         TestUtils.callDeclaredMethod(obj, "incr1noArgVoid");
 
         // then
-        Assert.assertEquals(obj.getValue(), startValue+1);
+        Assert.assertEquals(obj.getValue(), startValue + 1);
     }
 
     @Test
@@ -30,7 +30,7 @@ public class TestUtilsTest {
         TestUtils.callDeclaredMethod(obj, "incrArgVoid", additionValue);
 
         // then
-        Assert.assertEquals(obj.getValue(), startValue+additionValue);
+        Assert.assertEquals(obj.getValue(), startValue + additionValue);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class TestUtilsTest {
         TestUtils.callDeclaredMethod(obj, "concatText", text1, text2);
 
         // then
-        Assert.assertEquals(obj.getText(), " " + text1 + " " +text2);
+        Assert.assertEquals(obj.getText(), " " + text1 + " " + text2);
     }
 
     private static class TestObj {
@@ -57,7 +57,7 @@ public class TestUtilsTest {
         }
 
         private void incr1noArgVoid() {
-            this.value = value+1;
+            this.value = value + 1;
         }
 
         private void incrArgVoid(int arg) {

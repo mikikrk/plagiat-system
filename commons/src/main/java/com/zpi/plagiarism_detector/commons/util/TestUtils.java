@@ -24,10 +24,10 @@ public class TestUtils {
 
     private static Class<?> determineVarType(Object currentObject) {
         Class<?> aClass;
-        if(TypeUtils.isPrimitiveType(currentObject)) {
+        if (TypeUtils.isPrimitiveType(currentObject)) {
             aClass = TypeUtils.obtainType(currentObject);
         } else {
-            aClass  = currentObject.getClass();
+            aClass = currentObject.getClass();
         }
         return aClass;
     }

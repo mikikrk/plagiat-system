@@ -12,6 +12,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import static org.mockito.Mockito.doReturn;
@@ -37,7 +38,7 @@ public class PlagiarismDetectorTest {
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void checkForPlagiarism_nullDocumentThrowsNullPointerExceptionTest() {
+    public void checkForPlagiarism_nullDocumentThrowsNullPointerExceptionTest() throws IOException {
         // given
         document = null;
 
@@ -46,10 +47,10 @@ public class PlagiarismDetectorTest {
     }
 
     @Test(enabled = false)
-    public void checkForPlagiarism_documentIsPlagiarismResultTrueTest() {
+    public void checkForPlagiarism_documentIsPlagiarismResultTrueTest() throws IOException {
         // given
-        String title="title";
-        String[] keywords = new String[] {"a", "b", "c", "d", "e"};
+        String title = "title";
+        String[] keywords = new String[]{"a", "b", "c", "d", "e"};
         String keywordsJoined = StringUtils.join(keywords, " ");
 
         LinkedList<PlagiarismResult> expectedResults = new LinkedList<>();

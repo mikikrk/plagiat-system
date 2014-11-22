@@ -2,13 +2,15 @@ package com.zpi.plagiarism_detector.server.handlers;
 
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
-import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
 import com.zpi.plagiarism_detector.server.exceptions.AbortConnectionException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -66,7 +68,7 @@ public class MessageDispatcherTest {
     }
 
     @Test
-    public void dispatchMessage_messagePlagiarismCheckWithAllParametersReturnCorrectResultTest() throws AbortConnectionException {
+    public void dispatchMessage_messagePlagiarismCheckWithAllParametersReturnCorrectResultTest() throws AbortConnectionException, IOException {
         // given
         PlagiarismDetectionResult toBeReturned = mock(PlagiarismDetectionResult.class);
         doReturn(toBeReturned).when(plagiarismDetector).checkForPlagiarism(document);

@@ -29,32 +29,33 @@ public class ServerData {
 
     /**
      * Zapisuje dokumenty w odpowiednie miejsca w drzewie katalogów
-     * @param foundDocs dokumenty do zapisania
+     *
+     * @param docs dokumenty do zapisania
      */
-    public void saveDocuments(List<DocumentData> foundDocs) {
-        for (DocumentData document : foundDocs) {
-            saveDocument(document);
+    public void saveDocuments(List<DocumentData> docs, List<String> codesPaths) throws IOException {
+        for (DocumentData document : docs) {
+            saveDocument(document, codesPaths);
         }
     }
 
     /**
      * Zapisuje dokument w odpowiednim miejscu w drzewie katalogów
-     * @param document dokument do zapisania
+     *
+     * @param document   dokument do zapisania
+     * @param codesPaths
      */
-    public void saveDocument(DocumentData document) {
-        try {
-            extractFields(document);
-            createArticleDirectory();
-            if (articleText != null) {
-                saveArticle();
-            }
-            if(codes != null && !codes.isEmpty()) {
-                saveArticleCodes();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public String saveDocument(DocumentData document, List<String> codesPaths) throws IOException {
+        String articlePath = null;
+        extractFields(document);
+        createArticleDirectory();
+        if (articleText != null) {
+            articlePath = saveArticle();
         }
-     }
+        if (codes != null && !codes.isEmpty()) {
+            saveArticleCodes(codesPaths);
+        }
+        return articlePath;
+    }
 
     private void extractFields(DocumentData document) {
         title = document.getTitle();
@@ -81,15 +82,16 @@ public class ServerData {
                 dirPath = path + postfix;
                 ++postfix;
             }
-        } while(created == false);
+        } while (created == false);
 
         path = dirPath;
     }
 
-    private void saveArticle() throws IOException {
+    private String saveArticle() throws IOException {
         String articlePath = getArticlePath();
         saveDocumentReferenceInDatabase(articlePath, DocumentType.TEXT);
         saveDocumentFile(articlePath, articleText);
+        return articlePath;
     }
 
     private String getArticlePath() {
@@ -105,10 +107,11 @@ public class ServerData {
         fileData.writeToFile(articlePath, articleText);
     }
 
-    private void saveArticleCodes() throws IOException {
+    private void saveArticleCodes(List<String> codesPaths) throws IOException {
         int i = 1;
         for (String code : codes) {
             String codePath = getCodePath(i);
+            codesPaths.add(codePath);
             saveDocumentReferenceInDatabase(codePath, DocumentType.CODE);
             saveDocumentFile(codePath, code);
             ++i;
@@ -119,8 +122,9 @@ public class ServerData {
         return path + "/code" + i;
     }
 
-    public List<DocumentData> getCommonKeywordDocuments(Set<String> keywords) {
-        return null;
+    public Set<String> getCommonKeywordDocumentsPaths(Set<String> keywords, DocumentType documentType) {
+        Set<String> commonArticlesPaths = dao.findArticlesWithAtLeastOne(keywords, DocumentType.TEXT);
+        return commonArticlesPaths;
     }
 
     public List<String> getLinksFromDatabase() {

@@ -1,12 +1,7 @@
 package com.zpi.plagiarism_detector.server.factories.handlers;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
-
+import com.zpi.plagiarism_detector.server.articles.ArticleComparison;
+import com.zpi.plagiarism_detector.server.articles.CompareEngine;
 import com.zpi.plagiarism_detector.server.data.FileData;
 import com.zpi.plagiarism_detector.server.data.ServerData;
 import com.zpi.plagiarism_detector.server.data.WebData;
@@ -16,8 +11,12 @@ import com.zpi.plagiarism_detector.server.detector.ComparingAlgorithm;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
 import com.zpi.plagiarism_detector.server.handlers.MessageDispatcher;
 import com.zpi.plagiarism_detector.server.handlers.MessageHandler;
+import com.zpi.plagiarism_detector.server.sourcecode.SourceCodeComparison;
 import com.zpi.plagiarism_detector.server.websearch.GoogleSearch;
 import com.zpi.plagiarism_detector.server.websearch.WebsiteAnalyze;
+
+import java.io.*;
+import java.net.Socket;
 
 public class MessageHandlerFactory extends AbstractMessageHandlerFactory {
 
@@ -45,7 +44,10 @@ public class MessageHandlerFactory extends AbstractMessageHandlerFactory {
         FileData fileData = new FileData();
         ServerData serverData = new ServerData(dao, fileData);
         WebData webData = new WebData(googleSearch, websiteAnalyze);
-        ComparingAlgorithm comparingAlgorithm = new ComparingAlgorithm();
+        CompareEngine compareEngine = new CompareEngine();
+        ArticleComparison articleComparison = new ArticleComparison(compareEngine);
+        SourceCodeComparison sourceCodeComparison = new SourceCodeComparison();
+        ComparingAlgorithm comparingAlgorithm = new ComparingAlgorithm(articleComparison, sourceCodeComparison);
 
         PlagiarismDetector plagiarismDetector = new PlagiarismDetector(serverData, webData, comparingAlgorithm);
         messageDispatcher = new MessageDispatcher(plagiarismDetector);

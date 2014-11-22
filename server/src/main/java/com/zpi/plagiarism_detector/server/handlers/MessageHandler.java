@@ -10,11 +10,17 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 public class MessageHandler {
+    private static final Logger log = LoggerFactory.getLogger(MessageHandler.class);
+    private final MessageDispatcher messageDispatcher;
     private ObjectInput in;
     private ObjectOutput out;
-    private final MessageDispatcher messageDispatcher;
     private Message message;
-    private static final Logger log = LoggerFactory.getLogger(MessageHandler.class);
+
+    private MessageHandler(ObjectOutput out, ObjectInput in, MessageDispatcher messageDispatcher) {
+        this.out = out;
+        this.in = in;
+        this.messageDispatcher = messageDispatcher;
+    }
 
     /**
      * Tworzy MessageHandler dla strumieni wyjścia/wejścia
@@ -26,12 +32,6 @@ public class MessageHandler {
      */
     public static MessageHandler create(ObjectOutput out, ObjectInput in, MessageDispatcher messageDispatcher) {
         return new MessageHandler(out, in, messageDispatcher);
-    }
-
-    private MessageHandler(ObjectOutput out, ObjectInput in, MessageDispatcher messageDispatcher) {
-        this.out = out;
-        this.in = in;
-        this.messageDispatcher = messageDispatcher;
     }
 
     /**

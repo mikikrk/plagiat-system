@@ -1,6 +1,7 @@
 package com.zpi.plagiarism_detector.server.websearch;
 
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
+
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -16,19 +17,19 @@ public class MainClass {
         keywords.add("java");
         keywords.add("interface"); //slowa kluczowe do wyszukania
         List<DocumentData> serres; //lista ze znalezionymi pasujacymi wynikami
-        
+
         /**
          * Jako argumenty metody GoogleSearch podajemy liczbe wynikow w Google 
          * i slowa kluczowe ktore zostana uzyte w zapytaniu Google. 
          */
         linksArray = GoogleSearch.GoogleSearch(numberOfResults, keywords);
-        
+
         /**
          * Jako argumenty metody WebsiteAnalyze podajemy tablice linkow 
          * linksArray zwrocona przez metode GoogleSearch, tablice 
          * linkow linksInDatabase czyli linki obecne juz w bazie danych w celu 
          * porownania oraz tresc zapytania do Google.
-         */        
+         */
         if (linksArray[0] != null) {
             serres = WebsiteAnalyze.WebsiteAnalyze(linksArray, linksInDatabase, keywords, searchType);
         }

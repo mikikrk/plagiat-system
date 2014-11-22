@@ -5,7 +5,7 @@
 <hibernate-mapping package="com.zpi.plagiarism_detector.server.database">
     <class name="com.zpi.plagiarism_detector.server.database.ArticleLink" table="ARTICLE_LINKS">
         <id name="articleId" column="ARTICLE_ID">
-            <generator class="native" />
+            <generator class="native"/>
         </id>
 
         <property name="articleAddress" column="ADDRESS" type="string" length="255"

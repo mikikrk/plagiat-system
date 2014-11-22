@@ -1,6 +1,5 @@
 package com.zpi.plagiarism_detector.server.handlers;
 
-import com.zpi.plagiarism_detector.server.factories.handlers.AbstractMessageHandlerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +17,7 @@ public class ConnectionHandler implements Runnable {
     /**
      * Tworzy obiekt uchwyt który przechowuje Socket oraz mapę id i socket handlerów.
      *
-     * @param socket socket potrzebny do odbioru/wysyłania danych.
+     * @param socket         socket potrzebny do odbioru/wysyłania danych.
      * @param messageHandler
      */
     public ConnectionHandler(Socket socket, MessageHandler messageHandler) {
@@ -38,7 +37,6 @@ public class ConnectionHandler implements Runnable {
         }
         log.debug("leaving run()");
     }
-
 
 
     private void freeHandlerResources() {

@@ -58,4 +58,10 @@ public class PlagiarismResult {
     public void setType(DocumentType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        // TODO: ktos kto wie jak to wyswietlic niech tutaj cos napisze :)
+        return super.toString();
+    }
 }

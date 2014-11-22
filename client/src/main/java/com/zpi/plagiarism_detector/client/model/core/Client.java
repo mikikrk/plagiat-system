@@ -14,14 +14,13 @@ import java.util.concurrent.*;
 
 public class Client extends Observable implements Observer {
     private static final Logger log = LoggerFactory.getLogger(Client.class);
+    private static final long readerWriterShutDownTimeout = 2;
     private Socket socket;
     private ClientReader reader;
     private ClientWriter writer;
     private ExecutorService executorService = Executors.newFixedThreadPool(2);
     private CyclicBarrier cyclicBarrier = new CyclicBarrier(2);
     private boolean waitForResponse;
-
-    private static final long readerWriterShutDownTimeout = 2;
 
     public Client(Socket socket, ClientReader reader, ClientWriter writer) {
         this.socket = socket;

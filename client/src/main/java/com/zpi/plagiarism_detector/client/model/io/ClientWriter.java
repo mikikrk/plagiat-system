@@ -6,13 +6,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.ObjectOutput;
-import java.util.concurrent.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
 
-public class ClientWriter implements Runnable{
-    private ObjectOutput out;
-    BlockingQueue<Message> sendQueue = new LinkedBlockingQueue<>();
-    private boolean stop = false;
+public class ClientWriter implements Runnable {
     private static final Logger log = LoggerFactory.getLogger(ClientWriter.class);
+    BlockingQueue<Message> sendQueue = new LinkedBlockingQueue<>();
+    private ObjectOutput out;
+    private boolean stop = false;
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     public ClientWriter(ObjectOutput out) {
@@ -50,6 +53,7 @@ public class ClientWriter implements Runnable{
         log.debug("processing next message from sendQueue: [{}]", message);
         if (message == Message.POISON_PILL) {
             stopWriter();
+            return;
         }
         out.writeObject(message);
         log.debug("leaving sendMessage()");
@@ -70,6 +74,7 @@ public class ClientWriter implements Runnable{
 
     /**
      * Dodaje wysyłaną wiadomość do kolejki
+     *
      * @param message
      * @throws InterruptedException
      */
@@ -79,6 +84,7 @@ public class ClientWriter implements Runnable{
 
     /**
      * Powoduje zamknięcie obiektu wysyłającego wiadomości
+     *
      * @throws InterruptedException
      */
     public void close() throws InterruptedException {

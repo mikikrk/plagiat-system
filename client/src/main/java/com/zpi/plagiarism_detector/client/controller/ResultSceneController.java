@@ -7,11 +7,6 @@ import com.zpi.plagiarism_detector.client.view.SwitchButton;
 import com.zpi.plagiarism_detector.client.view.ViewUtils;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,45 +14,33 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class ResultSceneController implements Initializable, Controller {
 
     private static final ClientFactory clientFactory = new ClientFactory();
+    @FXML
+    Button button;
+    @FXML
+    Button checkButton, codeReviewButton;
+    @FXML
+    SwitchButton switchButton;
+    @FXML
+    Parent inputArticleGrid, outputArticleGrid;
     private ClientModel model;
-
     @FXML
     private Label label, appTitle;
-
     @FXML
     private TextArea inputData, outputData;
 
     @FXML
-    Button button;
-
-    @FXML
-    Button checkButton, codeReviewButton;
-    
-    @FXML
-    SwitchButton switchButton;
-    
-    @FXML
-    Parent inputArticleGrid, outputArticleGrid;
-
-    @FXML
     private void handleButtonAction(ActionEvent event) {
-        
-         try {
-         model.openConnection();
-         Message message = new Message(ProtocolCode.TEST);
-         model.sendMessage(message);
-         model.closeConnection();
-         } catch (CannotConnectToTheServerException e) {
-         ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
-         }
          /*
          System.out.println("You clicked me!");
          outputData.setText("Napisa?e?: " + inputData.getText());
@@ -92,7 +75,7 @@ public class ResultSceneController implements Initializable, Controller {
     public void initialize(URL url, ResourceBundle rb) {
         model = createModel();
         System.out.println("switchButton: " + switchButton.switchOnProperty().toString());
-    //    outputData.setText(switchButton.switchOnProperty().toString());
+        //    outputData.setText(switchButton.switchOnProperty().toString());
     }
 
     private ClientModel createModel() {

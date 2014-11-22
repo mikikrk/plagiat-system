@@ -5,10 +5,8 @@ import com.zpi.plagiarism_detector.client.model.io.ClientWriter;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.Observer;
-import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
 import static org.mockito.Mockito.*;

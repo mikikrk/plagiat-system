@@ -1,11 +1,14 @@
 package com.zpi.plagiarism_detector.server.detector;
 
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import com.zpi.plagiarism_detector.server.data.ServerData;
 import com.zpi.plagiarism_detector.server.data.WebData;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,6 +19,8 @@ public class PlagiarismDetector {
 
     private DocumentData analyzedDocument;
     private Set<String> keywords;
+    private String articlePath;
+    private ArrayList<String> codesPaths;
 
     public PlagiarismDetector(ServerData serverData, WebData webData, ComparingAlgorithm comparingAlgorithm) {
         this.serverData = serverData;
@@ -23,33 +28,70 @@ public class PlagiarismDetector {
         this.comparingAlgorithm = comparingAlgorithm;
     }
 
-    public PlagiarismDetectionResult checkForPlagiarism(DocumentData document) {
-        this.analyzedDocument = document;
-        this.keywords = document.getKeywords();
+    public PlagiarismDetectionResult checkForPlagiarism(DocumentData document) throws IOException {
+        extractData(document);
         saveDocument();
-        List<DocumentData> matchingDocs = getSimilarDocuments();
-        List<PlagiarismResult> plagiarisms = determinePlagiarism(matchingDocs);
+        List<PlagiarismResult> results = new ArrayList<>();
+        if (articlePath != null) {
+            List<PlagiarismResult> articleResults = checkArticle();
+            results.addAll(articleResults);
+        }
+        if (codesPaths != null && !codesPaths.isEmpty()) {
+            List<PlagiarismResult> codesResults = checkCodes();
+            results.addAll(codesResults);
+        }
 
-        PlagiarismDetectionResult result = new PlagiarismDetectionResult(plagiarisms);
+        PlagiarismDetectionResult result = new PlagiarismDetectionResult(results);
         return result;
     }
 
-    private void saveDocument() {
-        serverData.saveDocument(analyzedDocument);
+    private void extractData(DocumentData document) {
+        this.analyzedDocument = document;
+        this.keywords = document.getKeywords();
     }
 
-    private List<DocumentData> getSimilarDocuments() {
-        return serverData.getCommonKeywordDocuments(keywords);
+    private void saveDocument() throws IOException {
+        int codesCount = analyzedDocument.getCodesCount();
+        codesPaths = new ArrayList<>(codesCount);
+        articlePath = serverData.saveDocument(analyzedDocument, codesPaths);
     }
 
-    private List<PlagiarismResult> determinePlagiarism(List<DocumentData> matchingDocs) {
-        return comparingAlgorithm.determinePlagiarism(analyzedDocument, matchingDocs);
+    private List<PlagiarismResult> checkArticle() {
+        Set<String> matchingDocsPaths = getSimilarDocumentsPaths();
+        List<PlagiarismResult> plagiarisms = determineArticlePlagiarism(matchingDocsPaths);
+        return plagiarisms;
     }
 
-    private void findSimilarDocumentsInWeb() {
-        List<String> databaseLinks = serverData.getLinksFromDatabase();
-        List<DocumentData> foundDocs = webData.searchDocuments(keywords, databaseLinks);
-        serverData.saveDocuments(foundDocs);
+    private Set<String> getSimilarDocumentsPaths() {
+        Set<String> commonKeywordDocumentsPaths = getCommonKeywordDocumentsPaths(keywords, DocumentType.TEXT);
+        commonKeywordDocumentsPaths.remove(articlePath);
+        return commonKeywordDocumentsPaths;
     }
 
+    private Set<String> getCommonKeywordDocumentsPaths(Set<String> kw, DocumentType type) {
+        return serverData.getCommonKeywordDocumentsPaths(kw, type);
+    }
+
+    private List<PlagiarismResult> determineArticlePlagiarism(Set<String> matchingDocsPath) {
+        return comparingAlgorithm.determineArticlePlagiarism(articlePath, matchingDocsPath);
+    }
+
+    private List<PlagiarismResult> checkCodes() {
+        Set<String> matchingCodesPaths = getSimilarCodesPaths();
+        List<PlagiarismResult> plagiarisms = determineCodePlagiarism(matchingCodesPaths);
+        return plagiarisms;
+    }
+
+    public Set<String> getSimilarCodesPaths() {
+        return getCommonKeywordDocumentsPaths(keywords, DocumentType.CODE);
+    }
+
+    private List<PlagiarismResult> determineCodePlagiarism(Set<String> matchingCodesPaths) {
+        List<PlagiarismResult> result = new ArrayList<>();
+        for (String codePath : codesPaths) {
+            List<PlagiarismResult> resultsForCode = comparingAlgorithm.determineCodePlagiarism(codePath, matchingCodesPaths);
+            result.addAll(resultsForCode);
+        }
+        return result;
+    }
 }

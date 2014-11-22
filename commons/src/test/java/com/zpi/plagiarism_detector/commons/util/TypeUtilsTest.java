@@ -106,9 +106,9 @@ public class TypeUtilsTest {
         Class<?> aClass = TypeUtils.obtainType(obj);
 
         // then
-        Assert.assertEquals(aClass,String.class);
+        Assert.assertEquals(aClass, String.class);
     }
-    
+
     @Test(expectedExceptions = NullPointerException.class)
     public void obtainTypeNullArgTest() {
         // given
