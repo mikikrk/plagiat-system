@@ -124,6 +124,24 @@
                 </configuration>
                 <executions></executions>
             </plugin>
+
+            <!-- Create deb package -->
+            <plugin>
+                <groupId>net.sf.debian-maven</groupId>
+                <artifactId>debian-maven-plugin</artifactId>
+                <version>1.0.6</version>
+                <configuration>
+                    <packageDescription>Server</packageDescription>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
