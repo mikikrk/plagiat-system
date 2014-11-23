@@ -1,6 +1,4 @@
-package com.zpi.plagiarism_detector.server.articles;
-
-import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+package CompareEngine;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -14,12 +12,12 @@ public class ArticleComparison {
         this.compareEngine = compareEngine;
     }
 
-    public List<PlagiarismResult> compare(String patternPath, String textPath) {
+    public PlagiarismResult compare(String patternPath, String textPath) {
         try {
             return compareEngine.compare(patternPath, textPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Collections.emptyList();
+        return null;
     }
 }

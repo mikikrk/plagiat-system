@@ -1,10 +1,7 @@
-package com.zpi.plagiarism_detector.server.articles;
-
-import com.zpi.plagiarism_detector.commons.database.DocumentType;
-import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
-import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+package CompareEngine;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -12,10 +9,11 @@ public class TextProcessing {
 
     private String patternPath;
     private String textPath;
-    private LinkedList<PlagiarismResult> comparisonResults = new LinkedList<>();
-    private Map<PlagiarismFragment, PlagiarismFragment> map = new HashMap<PlagiarismFragment, PlagiarismFragment>();
+    private PlagiarismResult plagiarismResult = new PlagiarismResult();
+    private Map<PlagiarismFragment, PlagiarismFragment> map = new LinkedHashMap<PlagiarismFragment, PlagiarismFragment>();
 
     public TextProcessing() {
+    	plagiarismResult.setType(DocumentType.TEXT);
 
     }
 
@@ -25,12 +23,12 @@ public class TextProcessing {
      * @param str
      * @param p
      */
-    public LinkedList<PlagiarismResult> compareTexts(String str, String p) {
+    public PlagiarismResult compareTexts(String str, String p) {
         int m = p.length();
         int[] next = new int[m];
         next = getNext(p);
-        LinkedList<PlagiarismResult> results = findKMPSub(str, p, next);
-        return results;
+        plagiarismResult.setPlagiarisedFragments(findKMPSub(str,p,next));
+        return plagiarismResult;
     }
 
 
@@ -59,7 +57,7 @@ public class TextProcessing {
     /**
      * Znajduje podstring p w przeszukiwanym tekscie str
      */
-    public LinkedList<PlagiarismResult> findKMPSub(String str, String p, int next[]) {
+    private  Map<PlagiarismFragment, PlagiarismFragment> findKMPSub(String str, String p, int next[]) {
         char[] string = str.toCharArray();
         char[] pattern = p.toCharArray();
         int i = 0;
@@ -74,16 +72,12 @@ public class TextProcessing {
             if (j == p.length()) {
                 j = 0;
                 map.put(new PlagiarismFragment(p, 0, 0, p.length()),
-                        new PlagiarismFragment(str, i - p.length(), i, p.length()));
-                System.out.println(i);
-                comparisonResults.add(new PlagiarismResult("", "", map, DocumentType.TEXT));
-
-            } else {
-                int v = -1;
+                        new PlagiarismFragment(str.substring(i-p.length(),i), i - p.length(), i, p.length()));
             }
         }
-        return comparisonResults;
+        return map;
     }
+
 }
 
 
