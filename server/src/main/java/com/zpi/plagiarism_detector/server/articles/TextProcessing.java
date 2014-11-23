@@ -1,9 +1,11 @@
-package CompareEngine;
+package com.zpi.plagiarism_detector.server.articles;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.Map;
+
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 
 public class TextProcessing {
 

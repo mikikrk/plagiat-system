@@ -1,4 +1,4 @@
-package CompareEngine;
+package com.zpi.plagiarism_detector.server.articles;
 
 
 import java.io.DataInputStream;

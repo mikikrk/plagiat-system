@@ -1,9 +1,10 @@
-package CompareEngine;
+package com.zpi.plagiarism_detector.server.articles;
 
 
 
 import java.io.IOException;
-import java.util.LinkedList;
+
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 
 
 public class CompareEngine {
