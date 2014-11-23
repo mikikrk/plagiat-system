@@ -9,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.BrokenBarrierException;
 
-public class ClientModel implements Model {
+public class ClientModel extends com.zpi.plagiarism_detector.commons.util.Observable implements Model, Observer {
     private Logger log = LoggerFactory.getLogger(ClientModel.class);
     private AbstractClientFactory clientFactory;
     private Client client;
@@ -23,6 +25,7 @@ public class ClientModel implements Model {
     public void openConnection() throws CannotConnectToTheServerException {
         try {
             client = clientFactory.create(ApplicationProperties.HOSTNAME, ApplicationProperties.PORT);
+            client.addObserver(this);
             client.openConnection();
         } catch (IOException e) {
             throw new CannotConnectToTheServerException(e);
@@ -41,5 +44,10 @@ public class ClientModel implements Model {
         } finally {
             log.debug("Connection closed");
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        notifyObservers(arg);
     }
 }

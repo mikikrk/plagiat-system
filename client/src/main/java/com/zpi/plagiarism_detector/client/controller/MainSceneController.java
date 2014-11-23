@@ -7,6 +7,7 @@ import com.zpi.plagiarism_detector.client.view.ViewUtils;
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.util.TextUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,12 +22,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 
-public class MainSceneController implements Initializable, Controller {
+public class MainSceneController implements Initializable, Controller, Observer {
 
     private static final ClientFactory clientFactory = new ClientFactory();
     private static Stage mainWindow = new Stage();
@@ -60,24 +59,13 @@ public class MainSceneController implements Initializable, Controller {
         final DocumentData documentData = getViewDocumentData();
 
         try {
-            ExecutorService executor = Executors.newFixedThreadPool(1);
-
-            FutureTask<Object> task = new FutureTask(new Callable() {
-                @Override
-                public Object call() throws CannotConnectToTheServerException {
-                    model.openConnection();
-                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
-                    model.sendMessage(message);
-                    model.closeConnection();
-                    return null;
-                }
-            });
-
-            Future<?> submit = executor.submit(task);
-            task.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
+            model.openConnection();
+            Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+            model.sendMessage(message);
+            model.closeConnection();
+        } catch (CannotConnectToTheServerException e) {
             ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+            e.printStackTrace();
         }
 
          /*
@@ -139,6 +127,22 @@ public class MainSceneController implements Initializable, Controller {
 
     private ClientModel createModel() {
         ClientModel model = new ClientModel(clientFactory);
+        model.addObserver(this);
         return model;
+    }
+
+    /**
+     * Metoda która obsługuje komunikaty przychodzące od serwera
+     * @param o
+     * @param arg
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        Message message = (Message) arg;
+
+        ProtocolCode code = message.getCode();
+        if(code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
+            PlagiarismDetectionResult plagiarismDetectionResult = (PlagiarismDetectionResult) message.getSentObject();
+        }
     }
 }

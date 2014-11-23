@@ -93,7 +93,7 @@ public class ServerProperties {
 
     private static boolean trySetDouble(Field property, String value) throws IllegalAccessException {
         try {
-            double doubleVal = Float.parseFloat(value);
+            double doubleVal = Double.parseDouble(value);
             property.set(null, doubleVal);
             return true;
         } catch (NumberFormatException e1) {
