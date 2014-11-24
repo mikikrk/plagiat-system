@@ -128,8 +128,5 @@ public class ServerData {
         return commonArticlesPaths;
     }
 
-    public List<String> getLinksFromDatabase() {
-        List<String> articlesLinks = dao.getArticlesLinks();
-        return articlesLinks;
-    }
+   
 }
