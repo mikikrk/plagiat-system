@@ -31,7 +31,7 @@ public class MainSceneController implements Initializable, Controller {
     private static final ClientFactory clientFactory = new ClientFactory();
     private static Stage mainWindow = new Stage();
     @FXML
-    Button button;
+    Button button, clearButton;
     @FXML
     Button checkButton, codeReviewButton;
     private ClientModel model;
@@ -47,38 +47,38 @@ public class MainSceneController implements Initializable, Controller {
     @FXML
     private void handleButtonAction(ActionEvent event) {
 
-//        try {
-//
-//            mainWindow = (Stage) checkButton.getScene().getWindow();
-//            mainWindow.hide();
-//            showResultScene();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-        final DocumentData documentData = getViewDocumentData();
-
         try {
-            ExecutorService executor = Executors.newFixedThreadPool(1);
 
-            FutureTask<Object> task = new FutureTask(new Callable() {
-                @Override
-                public Object call() throws CannotConnectToTheServerException {
-                    model.openConnection();
-                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
-                    model.sendMessage(message);
-                    model.closeConnection();
-                    return null;
-                }
-            });
+            mainWindow = (Stage) checkButton.getScene().getWindow();
+            mainWindow.hide();
+            showResultScene();
 
-            Future<?> submit = executor.submit(task);
-            task.get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
         }
+
+//        final DocumentData documentData = getViewDocumentData();
+//
+//        try {
+//            ExecutorService executor = Executors.newFixedThreadPool(1);
+//
+//            FutureTask<Object> task = new FutureTask(new Callable() {
+//                @Override
+//                public Object call() throws CannotConnectToTheServerException {
+//                    model.openConnection();
+//                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+//                    model.sendMessage(message);
+//                    model.closeConnection();
+//                    return null;
+//                }
+//            });
+//
+//            Future<?> submit = executor.submit(task);
+//            task.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+//        }
 
          /*
          System.out.println("You clicked me!");
@@ -100,10 +100,10 @@ public class MainSceneController implements Initializable, Controller {
     }
 
     @FXML
-    private void handleCodeReviewButtonAction(ActionEvent event) {
+    private void handleChangeServerButtonAction(ActionEvent event) {
         Parent root;
         System.out.println("You clicked me, bastard!");
-        URL url = getClass().getResource("/fxml/CodeScene.fxml");
+        URL url = getClass().getResource("/fxml/ChooseServerScene.fxml");
         try {
             root = FXMLLoader.load(url);
             Stage stage = new Stage();
@@ -118,6 +118,13 @@ public class MainSceneController implements Initializable, Controller {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    private void handleClearButtonAction(ActionEvent event) {
+        inputData.setText(null);
+        inputTitle.setText(null);
+        inputKeywords.setText(null);
+    }
 
     private void showResultScene() throws IOException {
         Parent root;
@@ -126,7 +133,7 @@ public class MainSceneController implements Initializable, Controller {
         root = FXMLLoader.load(url);
         Stage stage = new Stage();
         stage.setTitle("Result");
-        Scene scene = new Scene(root, 600, 500);
+        Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setScene(scene);
         stage.show();

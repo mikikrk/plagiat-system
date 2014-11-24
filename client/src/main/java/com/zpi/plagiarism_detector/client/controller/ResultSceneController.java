@@ -7,20 +7,21 @@ import com.zpi.plagiarism_detector.client.view.SwitchButton;
 import com.zpi.plagiarism_detector.client.view.ViewUtils;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 public class ResultSceneController implements Initializable, Controller {
 
@@ -36,12 +37,14 @@ public class ResultSceneController implements Initializable, Controller {
     private ClientModel model;
     @FXML
     private Label label, appTitle;
+//    @FXML
+//    private TextArea inputData, outputData;
     @FXML
-    private TextArea inputData, outputData;
+    GridPane container;
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-         /*
+        /*
          System.out.println("You clicked me!");
          outputData.setText("Napisa?e?: " + inputData.getText());
          outputData.setStyle("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick;");
@@ -70,16 +73,38 @@ public class ResultSceneController implements Initializable, Controller {
         }
     }
 
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         model = createModel();
-        System.out.println("switchButton: " + switchButton.switchOnProperty().toString());
-        //    outputData.setText(switchButton.switchOnProperty().toString());
+        handleSwitchButtonAction();
     }
 
     private ClientModel createModel() {
         ClientModel model = new ClientModel(clientFactory);
         return model;
+    }
+
+    @FXML
+    private void handleSwitchButtonAction() {
+        
+        String name = "article";
+        if(switchButton.switchOnProperty().getValue() == true) {
+            name = "code";
+        }
+        container.getChildren().clear();
+        try {
+            Node gridNode = (Node) FXMLLoader.load(getClass().getResource("/fxml/includes/" + name + "Grid.fxml"));
+            container.getChildren().add(gridNode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Switch switchy switch!");
+
+    }
+    
+    @FXML
+    private void handleBackButtonAction() {
+        container.getScene().getWindow().hide();
+        MainSceneController.showMainWindow();
     }
 }

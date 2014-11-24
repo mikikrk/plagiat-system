@@ -21,10 +21,12 @@ import java.io.IOException;
 /**
  * @author Agat
  */
-public class SwitchButton extends Label {
+public class SwitchButton extends Button {
 
     @FXML
     private Button switchButton;
+    @FXML
+    private Label label;
 
     private SimpleBooleanProperty articleSwitchedOn = new SimpleBooleanProperty(true);
 
@@ -35,29 +37,29 @@ public class SwitchButton extends Label {
 
         try {
             loader.load();
-            this.setPrefWidth(90);
-            switchButton.setPrefWidth(40);
+            label.setPrefWidth(90);
+            this.setPrefWidth(40);
             setStyle("-fx-background-color: gray;");
-            switchButton.setOnAction(new EventHandler<ActionEvent>() {
+            this.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent t) {
                     articleSwitchedOn.set(!articleSwitchedOn.get());
                 }
             });
 
-            setGraphic(switchButton);
+            setGraphic(label);
 
             articleSwitchedOn.addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> ov,
                                     Boolean t, Boolean t1) {
-                    if (t1) {
-                        setText("Article");
-                        setStyle("-fx-text-fill:white;");
+                    if (!t1) {
+                        label.setText("Article");
+                        label.setStyle("-fx-text-fill:white;");
                         setContentDisplay(ContentDisplay.RIGHT);
                     } else {
-                        setText("Code");
-                        setStyle("-fx-text-fill:white;");
+                        label.setText("Code");
+                        label.setStyle("-fx-text-fill:white;");
                         setContentDisplay(ContentDisplay.LEFT);
                     }
                 }
