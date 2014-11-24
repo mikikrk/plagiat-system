@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Set;
 
 public interface WebsiteAnalyzeInterface {
-    List<DocumentData> analyze(String[] linksArray, String[] linksInDatabase, Set<String> keywords, char searchType);
+    List<DocumentData> analyze(Set<String> keywords);
 }

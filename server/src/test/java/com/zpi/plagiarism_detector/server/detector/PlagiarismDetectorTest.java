@@ -5,7 +5,6 @@ import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetecti
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import com.zpi.plagiarism_detector.server.data.ServerData;
 import com.zpi.plagiarism_detector.server.data.WebData;
-import com.zpi.plagiarism_detector.server.websearch.GoogleSearch;
 import com.zpi.plagiarism_detector.server.websearch.WebsiteAnalyze;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
@@ -20,7 +19,6 @@ import static org.mockito.Mockito.mock;
 
 public class PlagiarismDetectorTest {
     private PlagiarismDetector plagiarismDetector;
-    private GoogleSearch googleSearch;
     private WebsiteAnalyze websiteAnalyze;
 
     private ServerData serverData;

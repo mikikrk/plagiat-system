@@ -12,7 +12,6 @@ import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
 import com.zpi.plagiarism_detector.server.handlers.MessageDispatcher;
 import com.zpi.plagiarism_detector.server.handlers.MessageHandler;
 import com.zpi.plagiarism_detector.server.sourcecode.SourceCodeComparison;
-import com.zpi.plagiarism_detector.server.websearch.GoogleSearch;
 import com.zpi.plagiarism_detector.server.websearch.WebsiteAnalyze;
 
 import java.io.*;
@@ -38,12 +37,11 @@ public class MessageHandlerFactory extends AbstractMessageHandlerFactory {
     }
 
     private void initFields() {
-        GoogleSearch googleSearch = new GoogleSearch();
-        WebsiteAnalyze websiteAnalyze = new WebsiteAnalyze();
         Dao dao = DaoFactory.createDao();
+        WebsiteAnalyze websiteAnalyze = new WebsiteAnalyze(dao); 
         FileData fileData = new FileData();
         ServerData serverData = new ServerData(dao, fileData);
-        WebData webData = new WebData(googleSearch, websiteAnalyze);
+        WebData webData = new WebData(websiteAnalyze);
         CompareEngine compareEngine = new CompareEngine();
         ArticleComparison articleComparison = new ArticleComparison(compareEngine);
         SourceCodeComparison sourceCodeComparison = new SourceCodeComparison();

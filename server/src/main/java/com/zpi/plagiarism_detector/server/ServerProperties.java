@@ -14,7 +14,6 @@ public class ServerProperties {
     private static final Logger log = LoggerFactory.getLogger(ServerProperties.class);
     public static String DOCS_PATH = "./docs";
     public static int NUMBER_OF_RESULTS = 20;
-    public static char SEARCH_TYPE = 'A'; //A - wyszukiwanie artykulu, K - wyszukiwanie kodu
     public static int MIN_WORD_SIMILARITY_PERCENTAGE = 50;
     public static int PAGES_TO_SEARCH = 1;
 
