@@ -14,7 +14,6 @@
         <property name="hbm2ddl.auto">update</property>
 
         <mapping resource="META-INF/article.hbm.xml"/>
-        <mapping resource="META-INF/article_link.hbm.xml"/>
         <mapping resource="META-INF/assignment.hbm.xml"/>
         <mapping resource="META-INF/keyword.hbm.xml"/>
     </session-factory>

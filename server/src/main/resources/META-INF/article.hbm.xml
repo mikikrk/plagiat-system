@@ -20,6 +20,9 @@
 
         <property name="title" column="TITLE" type="string" length="200">
         </property>
+        
+        <property name="uri" column="URI" type="string" length="200">
+        </property>
 
     </class>
 </hibernate-mapping>

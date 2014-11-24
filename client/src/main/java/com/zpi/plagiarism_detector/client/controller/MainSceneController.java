@@ -27,6 +27,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+import java.util.concurrent.*;
+
 public class MainSceneController implements Initializable, Controller, Observer {
 
     private static final ClientFactory clientFactory = new ClientFactory();
@@ -54,6 +59,12 @@ public class MainSceneController implements Initializable, Controller, Observer 
     private void handleButtonAction(ActionEvent event) {
 
         try {
+            model.openConnection();
+            Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+            model.sendMessage(message);
+            model.closeConnection();
+        } catch (CannotConnectToTheServerException e) {
+            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
 
             mainWindow = (Stage) checkButton.getScene().getWindow();
             mainWindow.hide();
@@ -197,22 +208,6 @@ public class MainSceneController implements Initializable, Controller, Observer 
         model.addObserver(this);
         return model;
     }
-
-    /**
-     * Metoda która obsługuje komunikaty przychodzące od serwera
-     *
-     * @param o
-     * @param arg
-     */
-    @Override
-    public void update(Observable o, Object arg) {
-        Message message = (Message) arg;
-
-        ProtocolCode code = message.getCode();
-        if (code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
-            PlagiarismDetectionResult plagiarismDetectionResult = (PlagiarismDetectionResult) message.getSentObject();
-        }
-    }
     
     public static void setServerAndPort(String _hostname, int _port) {
         hostname = _hostname;
@@ -225,4 +220,19 @@ public class MainSceneController implements Initializable, Controller, Observer 
    public static int getPort() {
        return port;
    }
+
+    /**
+     * Metoda która obsługuje komunikaty przychodzące od serwera
+     * @param o
+     * @param arg
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        Message message = (Message) arg;
+
+        ProtocolCode code = message.getCode();
+        if(code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
+            PlagiarismDetectionResult plagiarismDetectionResult = (PlagiarismDetectionResult) message.getSentObject();
+        }
+    }
 }

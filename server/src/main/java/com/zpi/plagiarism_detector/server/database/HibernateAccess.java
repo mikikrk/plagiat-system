@@ -37,7 +37,7 @@ class HibernateAccess {
         Session session = sessionFactory.openSession();
         Transaction tx = session.getTransaction();
         tx.begin();
-        Article temp = getArticle(article.getPath(), session);
+        Article temp = getArticle("path",article.getPath(), session);
         if (temp == null) {
 
             session.save(article);
@@ -58,7 +58,7 @@ class HibernateAccess {
         Session session = sessionFactory.openSession();
         Transaction tx = session.getTransaction();
         tx.begin();
-        Article result = getArticle(path, session);
+        Article result = getArticle("path",path, session);
 
         tx.commit();
         session.flush();
@@ -148,8 +148,8 @@ class HibernateAccess {
         return result;
     }
 
-    private Article getArticle(String path, Session session) {
-        Criterion pathEq = Restrictions.eq("path", path);
+    private Article getArticle(String par,String value, Session session) {
+        Criterion pathEq = Restrictions.eq(par, value);
         Criteria crit = session.createCriteria(Article.class);
         crit.add(pathEq);
 
@@ -166,7 +166,7 @@ class HibernateAccess {
         Transaction tx = session.getTransaction();
         tx.begin();
 
-        Article article = getArticle(path, session);
+        Article article = getArticle("path",path, session);
 
         if (article != null) {
 
@@ -193,9 +193,9 @@ class HibernateAccess {
 
     }
 
-    int setKeywords(String path, Set<String> keywords, boolean append) {
+    int setKeywords(String par, String value, Set<String> keywords, boolean append) {
         int result = 0;
-        if (path == null || keywords == null) {
+        if (value == null || keywords == null) {
             return result;
         }
 
@@ -203,7 +203,7 @@ class HibernateAccess {
         Transaction tx = session.getTransaction();
         tx.begin();
 
-        Article article = getArticle(path, session);
+        Article article = getArticle(par,value, session);
 
         if (article != null) {
 
@@ -340,16 +340,7 @@ class HibernateAccess {
         return result;
     }
 
-    public List<String> getArticlesLinks() {
-        Session session = sessionFactory.openSession();
 
-        String sql = "SELECT al.ADDRESS FROM ARTICLE_LINKS al";
-        Query query = session.createSQLQuery(sql);
-
-        List<String> result = query.list();
-
-        return result;
-    }
 
 
 }

@@ -9,85 +9,98 @@ import java.util.Set;
  */
 public interface Dao {
 
-    /**
-     * zwraca artykul dla podanej sciezki (gdy sciezka nie istnieje null)
-     */
-    public Article getArticle(String path);
+	/**
+	 * zwraca artykul dla podanej sciezki (gdy sciezka nie istnieje null)
+	 */
+	public Article getArticle(String path);
 
-    /**
-     * sprawdza czy istnieje artykul o zadanym uri
-     */
-    public boolean containsUri(String uri);
+	/**
+	 * sprawdza czy istnieje artykul o zadanym uri
+	 */
+	public boolean containsUri(String uri);
 
-    /**
-     * dodanie artyku�u do bazy danych
-     *
-     * @param article  zawiera info o artykle
-     * @param keywords zbior slow kluczowych
-     */
-    public int addArticle(Article article, Set<String> keywords);
+	/**
+	 * dodanie artyku�u do bazy danych
+	 *
+	 * @param article
+	 *            zawiera info o artykle
+	 * @param keywords
+	 *            zbior slow kluczowych
+	 */
+	public int addArticle(Article article, Set<String> keywords);
 
-    /**
-     * ustawia slowa kluczowe dla artykulu o podanej sciezce (poprzednie zostaja
-     * usuniete)
-     *
-     * @return 1 -udane, 0-nieudane
-     */
-    public int replaceKeywords(String path, Set<String> keywords);
+	/**
+	 * ustawia slowa kluczowe dla artykulu o podanej sciezce (poprzednie zostaja
+	 * usuniete)
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public int replaceKeywords(String path, Set<String> keywords);
 
-    /**
-     * dodaje slowa kluczowe dla artykulu o podanej sciezce (poprzednie zostaja
-     * zachowane)
-     *
-     * @return 1 -udane, 0-nieudane
-     */
-    public int addKeywords(String path, Set<String> keywords);
+	/**
+	 * dodaje slowa kluczowe dla artykulu o podanej sciezce (poprzednie zostaja
+	 * zachowane)
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public int addKeywords(String path, Set<String> keywords);
 
-    /**
-     * zwraca slowa kluczowe dla artykulu o podanej sciezce (poprzednie zostaja
-     * zachowane)
-     *
-     * @return 1 -udane, 0-nieudane
-     */
-    public Set<String> getKeywords(String path);
+	/**
+	 * ustawia slowa kluczowe dla artykulu o podanym uri (poprzednie zostaja
+	 * usuniete)
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public int replaceKeywordsToUri(String uri, Set<String> keywords);
 
-    /**
-     * zwraca liste sciezek do artykulow o podanym typie z conajmniej jednym
-     * slowem kluczowym
-     */
-    public Set<String> findArticlesWithAtLeastOne(Set<String> set, DocumentType type);
+	/**
+	 * dodaje slowa kluczowe dla artykulu o podanym uri (poprzednie zostaja
+	 * zachowane)
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public int addKeywordsToUri(String uri, Set<String> keywords);
 
-    /**
-     * zwraca liste sciezek do artykulow o podanym typie ze wszystkimi slowami
-     * kluczowymi
-     */
-    public Set<String> findArticlesWithAll(Set<String> set, DocumentType type);
+	/**
+	 * zwraca slowa kluczowe dla artykulu o podanej sciezce (poprzednie zostaja
+	 * zachowane)
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public Set<String> getKeywords(String path);
 
-    /**
-     * usuwa wszystko z bazy danych
-     *
-     * @return 1 -udane, 0-nieudane
-     */
-    public int removeAll();
+	/**
+	 * zwraca liste sciezek do artykulow o podanym typie z conajmniej jednym
+	 * slowem kluczowym
+	 */
+	public Set<String> findArticlesWithAtLeastOne(Set<String> set,
+			DocumentType type);
 
-    /**
-     * zmienia sciezke do artykulu
-     *
-     * @return 1 -udane, 0-nieudane
-     */
-    public int changePath(String currentPath, String newPath);
+	/**
+	 * zwraca liste sciezek do artykulow o podanym typie ze wszystkimi slowami
+	 * kluczowymi
+	 */
+	public Set<String> findArticlesWithAll(Set<String> set, DocumentType type);
 
-    /**
-     * usuwa z bazy artykul o podanej sciezce
-     *
-     * @return 1 -udane, 0-nieudane
-     */
-    public int removeArticle(String path);
+	/**
+	 * usuwa wszystko z bazy danych
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public int removeAll();
 
-    /**
-     * Zwraca linki do artykułów z bazy
-     *
-     * @return tablica linków
-     */
-    public abstract java.util.List<String> getArticlesLinks();
+	/**
+	 * zmienia sciezke do artykulu
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public int changePath(String currentPath, String newPath);
+
+	/**
+	 * usuwa z bazy artykul o podanej sciezce
+	 *
+	 * @return 1 -udane, 0-nieudane
+	 */
+	public int removeArticle(String path);
+
 }
