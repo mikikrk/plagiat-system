@@ -27,29 +27,37 @@ import java.util.Set;
 public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
     private Dao dao;
     
+    @Override
+    public List<DocumentData> analyze(Set<String> keywords) {
+        List<DocumentData> ret = new ArrayList<>();
+        try {
+            ret = webAnalyze(keywords);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return ret;
+    }
+    
     public WebsiteAnalyze(Dao dao) {
         this.dao = dao;
     }
 
-    public List<DocumentData> WebsiteAnalyze(Set<String> keywords) throws IOException {
+    public List<DocumentData> webAnalyze(Set<String> keywords) throws IOException {
         
         String keyword = StringUtils.join(keywords, " ");
-        String[] linksArray = GoogleSearch(keyword);
+        String[] linksArray = googleSearch(keyword);
         List<DocumentData> sr = new ArrayList<>();
         
         for (int i = 0; i < linksArray.length; i++) {
 
-            boolean check = false;
-            
             /**
              * Sprawdzanie czy dany link jest juz w bazie.
              */
             if (dao.containsUri(linksArray[i])) {
-                    check = true;
-                    dao.addKeywords(linksArray[i], keywords); //dodanie slowa kluczowego jesli dany url jest ju¿ w bazie, ale szukany keyword siê tam nie znajduje.
-            }
+            	
+                dao.addKeywordsToUri(linksArray[i], keywords); //dodanie slowa kluczowego jesli dany url jest ju¿ w bazie, ale szukany keyword siê tam nie znajduje.
+            }else{
 
-            if (check != true) {
                 String fileName = null;
                 String dirName = ServerProperties.DOCS_PATH;
                 URL url = new URL(linksArray[i]);
@@ -184,7 +192,7 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
         FileUtils.copyURLToFile(new URL(fileUrl), new File(fileName));
     }
 
-    public String[] GoogleSearch(String keywords) throws IOException {
+    public String[] googleSearch(String keywords) throws IOException {
         
         int numberOfResults = ServerProperties.NUMBER_OF_RESULTS;
         String[] urls = new String[numberOfResults];
@@ -246,16 +254,5 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
         }
         return urls;
     }    
-    
-    @Override
-    public List<DocumentData> analyze(Set<String> keywords) {
-        List<DocumentData> ret = new ArrayList<>();
-        try {
-            ret = WebsiteAnalyze(keywords);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return ret;
-    }
 
 }

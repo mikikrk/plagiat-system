@@ -40,6 +40,8 @@ public class PlagiarismDetector {
             List<PlagiarismResult> codesResults = checkCodes();
             results.addAll(codesResults);
         }
+        
+        System.out.println(results);
 
         PlagiarismDetectionResult result = new PlagiarismDetectionResult(results);
         return result;

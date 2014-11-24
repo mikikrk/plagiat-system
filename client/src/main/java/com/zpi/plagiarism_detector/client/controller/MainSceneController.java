@@ -60,18 +60,20 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
         try {
             model.openConnection();
-            Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+            Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, getViewDocumentData());
             model.sendMessage(message);
             model.closeConnection();
         } catch (CannotConnectToTheServerException e) {
+        	try{
             ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
 
             mainWindow = (Stage) checkButton.getScene().getWindow();
             mainWindow.hide();
             showResultScene();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+	        } catch (IOException e1) {
+	            e1.printStackTrace();
+	        }
         }
 
 //        final DocumentData documentData = getViewDocumentData();
