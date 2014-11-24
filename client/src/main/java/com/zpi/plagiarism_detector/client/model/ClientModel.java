@@ -31,6 +31,15 @@ public class ClientModel extends com.zpi.plagiarism_detector.commons.util.Observ
             throw new CannotConnectToTheServerException(e);
         }
     }
+    public void openConnection(String hostname, int port) throws CannotConnectToTheServerException {
+        try {
+            client = clientFactory.create(hostname, port);
+            client.addObserver(this);
+            client.openConnection();
+        } catch (IOException e) {
+            throw new CannotConnectToTheServerException(e);
+        }
+    }
 
     public void sendMessage(Message message) {
         client.sendSyncMessage(message);
