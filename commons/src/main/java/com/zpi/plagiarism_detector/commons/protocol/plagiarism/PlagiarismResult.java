@@ -1,10 +1,11 @@
 package com.zpi.plagiarism_detector.commons.protocol.plagiarism;
 
-import com.zpi.plagiarism_detector.commons.database.DocumentType;
-
+import java.io.Serializable;
 import java.util.Map;
 
-public class PlagiarismResult {
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
+
+public class PlagiarismResult implements Serializable{
     private String newDocument;        //to co użytkownik przesłał
     private String existingDocument;   //to do czego jest porównywany dokument użytkownika
 
