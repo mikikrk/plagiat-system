@@ -10,7 +10,6 @@ public class DocumentData implements Serializable {
     private String title;
     private Set<String> keywords;
     private String article;
-    private String filePath;
     private String url;
     private Set<String> codes;
 
@@ -19,7 +18,6 @@ public class DocumentData implements Serializable {
         this.keywords = new HashSet<>();
         this.keywords.add("n/a");
         this.article = "n/a";
-        this.filePath = "n/a";
         this.url = "n/a";
         this.codes = new HashSet<>();
         this.codes.add("n/a");
@@ -59,14 +57,6 @@ public class DocumentData implements Serializable {
 
     public void setArticle(String article) {
         this.article = article;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     public Set<String> getCodes() {

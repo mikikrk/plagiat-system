@@ -10,6 +10,10 @@
     -fx-font-weight: bold;
 }
 
+.label {
+    -fx-text-fill: white;
+}
+
 #appTitle {
     -fx-font-size: 32px;
     -fx-font-family: "Arial Black";

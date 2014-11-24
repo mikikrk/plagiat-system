@@ -42,6 +42,8 @@ public class ResultSceneController implements Initializable, Controller {
     @FXML
     GridPane container;
 
+    Node articleGridNode, codeGridNode;
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
         /*
@@ -76,6 +78,13 @@ public class ResultSceneController implements Initializable, Controller {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         model = createModel();
+        FXMLLoader loader = new FXMLLoader();
+        try {
+            articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
+            codeGridNode = loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         handleSwitchButtonAction();
     }
 
@@ -86,22 +95,17 @@ public class ResultSceneController implements Initializable, Controller {
 
     @FXML
     private void handleSwitchButtonAction() {
-        
-        String name = "article";
-        if(switchButton.switchOnProperty().getValue() == true) {
-            name = "code";
+
+        Node gridNode = articleGridNode;
+        if (switchButton.switchOnProperty().getValue() == true) {
+            gridNode = codeGridNode;
         }
         container.getChildren().clear();
-        try {
-            Node gridNode = (Node) FXMLLoader.load(getClass().getResource("/fxml/includes/" + name + "Grid.fxml"));
-            container.getChildren().add(gridNode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        container.getChildren().add(gridNode);
         System.out.println("Switch switchy switch!");
 
     }
-    
+
     @FXML
     private void handleBackButtonAction() {
         container.getScene().getWindow().hide();

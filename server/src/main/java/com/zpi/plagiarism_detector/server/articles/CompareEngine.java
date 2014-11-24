@@ -1,9 +1,10 @@
 package com.zpi.plagiarism_detector.server.articles;
 
-import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+
 
 import java.io.IOException;
-import java.util.LinkedList;
+
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 
 
 public class CompareEngine {
@@ -12,7 +13,7 @@ public class CompareEngine {
     private String text = "";
     private String[] patternTab;
     private String[] textTab;
-    private LinkedList<PlagiarismResult> comparisonResult = new LinkedList<>();
+    private PlagiarismResult comparisonResult;
     private FileLoader fL;
     private TextProcessing tP = new TextProcessing();
 
@@ -35,7 +36,7 @@ public class CompareEngine {
      * @param _pattern
      * @param _text
      */
-    public LinkedList<PlagiarismResult> compare(String _pattern, String _text) throws IOException {
+    public PlagiarismResult compare(String _pattern, String _text) throws IOException {
         fL = new FileLoader(_pattern, _text);
         fL.loadFiles();
         pattern = fL.getPattern();
@@ -43,6 +44,7 @@ public class CompareEngine {
         this.splitStrings();
         int i = 0;
         for (String patternSentence : patternTab) {
+        	System.out.println(patternSentence);
             comparisonResult = tP.compareTexts(text, patternSentence);
         }
 

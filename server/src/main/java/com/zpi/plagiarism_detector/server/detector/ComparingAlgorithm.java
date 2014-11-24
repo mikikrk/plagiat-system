@@ -21,8 +21,8 @@ public class ComparingAlgorithm {
     public List<PlagiarismResult> determineArticlePlagiarism(String articlePath, Set<String> matchingArticlesPaths) {
         List<PlagiarismResult> overalResults = new LinkedList<>();
         for (String matchingCodePath : matchingArticlesPaths) {
-            List<PlagiarismResult> plagiarismResults = articleComparison.compare(articlePath, matchingCodePath);
-            overalResults.addAll(plagiarismResults);
+            PlagiarismResult plagiarismResult = articleComparison.compare(articlePath, matchingCodePath);
+            overalResults.add(plagiarismResult);
         }
         return overalResults;
     }

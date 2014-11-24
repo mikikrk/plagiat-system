@@ -66,7 +66,7 @@ public class ServerData {
     }
 
     private String getDirectoryPath() {
-        return ServerProperties.DOCS_PATH + "/" + title;
+        return ServerProperties.DOCS_PATH + "/" + title.replaceAll("\\s", "");
     }
 
     private void createArticleDirectory() throws IOException {
@@ -100,6 +100,7 @@ public class ServerData {
 
     private void saveDocumentReferenceInDatabase(String documentPath, DocumentType documentType) {
         Article newDocument = new Article(documentPath, documentType);
+        newDocument.setTitle(title);
         dao.addArticle(newDocument, keywords);
     }
 

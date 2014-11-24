@@ -1,6 +1,7 @@
 package com.zpi.plagiarism_detector.server.main;
 
 import com.zpi.plagiarism_detector.commons.protocol.ApplicationProperties;
+import com.zpi.plagiarism_detector.server.ServerProperties;
 import com.zpi.plagiarism_detector.server.core.Server;
 import com.zpi.plagiarism_detector.server.factories.core.AbstractServerFactory;
 import com.zpi.plagiarism_detector.server.factories.core.ServerFactory;
@@ -41,6 +42,7 @@ public class ServerMain {
 
     private static void startUpServer(int threadPoolSize, int portNumber) {
         try {
+            String docsPath = ServerProperties.DOCS_PATH;
             Server server = serverFactory.create(threadPoolSize, portNumber);
             server.handleConnections();
         } catch (IOException e1) {
