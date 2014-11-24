@@ -58,35 +58,34 @@ public class MainSceneController implements Initializable, Controller, Observer 
     @FXML
     private void handleButtonAction(ActionEvent event) {
 
-        try {
-            model.openConnection();
-            Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, getViewDocumentData());
-            model.sendMessage(message);
-            model.closeConnection();
-        } catch (CannotConnectToTheServerException e) {
-        	try{
-            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+        final DocumentData documentData = getViewDocumentData();
 
+        try {
+            ExecutorService executor = Executors.newFixedThreadPool(1);
+
+            FutureTask<Object> task = new FutureTask(new Callable() {
+                @Override
+                public Object call() throws CannotConnectToTheServerException {
+                    model.openConnection();
+                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+                    model.sendMessage(message);
+                    model.closeConnection();
+                    return null;
+                }
+            });
+
+            Future<?> submit = executor.submit(task);
+            task.get();
+            
             mainWindow = (Stage) checkButton.getScene().getWindow();
             mainWindow.hide();
             showResultScene();
-
-	        } catch (IOException e1) {
-	            e1.printStackTrace();
-	        }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-//        final DocumentData documentData = getViewDocumentData();
-//
-//        try {
-//            model.openConnection(hostname, port);
-//            Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
-//            model.sendMessage(message);
-//            model.closeConnection();
-//        } catch (CannotConnectToTheServerException e) {
-//            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
-//            e.printStackTrace();
-//        }
 //
 //         /*
 //         System.out.println("You clicked me!");
@@ -102,7 +101,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
         String title = inputTitle.getText();
         String keywords = inputKeywords.getText();
         Set<String> keywordsSet = TextUtils.splitIntoSet(keywords);
-        Set<String> codes = Collections.emptySet();
+        Set<String> codes = new HashSet(codeList);
 
         return new DocumentData(title, keywordsSet, articleText, codes);
     }
@@ -165,7 +164,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
     private void handleRemoveCodeAction() {
         if (totalCodeIndex > 1) {
             codeList.remove(currCodeIndex);
-            if(currCodeIndex==totalCodeIndex-1) {
+            if (currCodeIndex == totalCodeIndex - 1) {
                 currCodeIndex--;
             }
             inputCode.setText(codeList.get(currCodeIndex));
@@ -210,21 +209,23 @@ public class MainSceneController implements Initializable, Controller, Observer 
         model.addObserver(this);
         return model;
     }
-    
+
     public static void setServerAndPort(String _hostname, int _port) {
         hostname = _hostname;
         port = _port;
     }
+
     public static String getHostname() {
         return hostname;
     }
-    
-   public static int getPort() {
-       return port;
-   }
+
+    public static int getPort() {
+        return port;
+    }
 
     /**
      * Metoda która obsługuje komunikaty przychodzące od serwera
+     *
      * @param o
      * @param arg
      */
@@ -233,7 +234,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
         Message message = (Message) arg;
 
         ProtocolCode code = message.getCode();
-        if(code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
+        if (code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
             PlagiarismDetectionResult plagiarismDetectionResult = (PlagiarismDetectionResult) message.getSentObject();
         }
     }
