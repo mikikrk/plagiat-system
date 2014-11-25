@@ -88,20 +88,20 @@ public class ResultSceneController implements Initializable, Controller {
         String doc = "";
         LinkedList<List<PlagiarismResult>> allResults = new LinkedList<List<PlagiarismResult>>();
         LinkedList<PlagiarismResult> docResults;
+        LinkedList<String> foundResults = new LinkedList<String>();
 
         while (!results.isEmpty() && doc != null) {
             doc = null;
             docResults = new LinkedList<PlagiarismResult>();
             for (PlagiarismResult result : results) {
                 if (result != null) {
-                    if (doc == null) {
+                    if (doc == null && foundResults.contains(result.getNewDocument())) {
                         doc = result.getNewDocument();
                         docResults.add(result);
-                        results.remove(result);
+                        foundResults.add(doc);
                     } else {
                         if (result.getNewDocument().equals(doc)) {
                             docResults.add(result);
-                            results.remove(result);
                         }
                     }
                 }
