@@ -82,6 +82,9 @@ public class MainSceneController implements Initializable, Controller, Observer 
             } else {
             mainWindow = (Stage) checkButton.getScene().getWindow();
             mainWindow.hide();
+            for(PlagiarismResult res: allResults) {
+                System.out.println(res.getExistingDocument());
+            }
             showResultScene();
             }
         } catch (InterruptedException | ExecutionException e) {
@@ -108,7 +111,12 @@ public class MainSceneController implements Initializable, Controller, Observer 
         if(!keywords.isEmpty()) {
         keywordsSet = TextUtils.splitIntoSet(keywords);
         }
-        Set<String> codes = new HashSet<String>(codeList);
+        Set<String> codes = new HashSet<String>();
+        for (String code: codeList) {
+            if(!code.equals("") && code != null) {
+                codes.add(code);
+            }
+        }
 
         return new DocumentData(title, keywordsSet, articleText, codes);
     }

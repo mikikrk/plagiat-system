@@ -12,11 +12,15 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  * FXML Controller class
@@ -39,7 +43,11 @@ public class ArticleGridController implements Initializable {
     private Label totalArticleCnt;
     @FXML
     private TextArea outputData;
+    @FXML
+    private Button prevArticle, nextArticle;
     private List<List<PlagiarismResult>> allResults;
+    private List<PlagiarismResult> allData = separateArticles().get(0);
+    private SimpleIntegerProperty currArticleIndex = new SimpleIntegerProperty(1), totalArticleIndex = new SimpleIntegerProperty(1);
 
     /**
      * Initializes the controller class.
@@ -48,18 +56,24 @@ public class ArticleGridController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         allResults = ResultSceneController.getSeparatedDocuments();
         System.out.println("ArticleGrid all documents: " + allResults.size());
-        List<PlagiarismResult> allData = separateArticles().get(0);
         if (allData.size() > 0) {
             inputData.setText(allData.get(0).getNewDocument());
             outputData.setText(allData.get(0).getExistingDocument());
         }
+        totalArticleIndex.set(allData.size());
+        Bindings.bindBidirectional(currentArticleNr.textProperty(),
+                currArticleIndex,
+                new NumberStringConverter());
+        Bindings.bindBidirectional(totalArticleCnt.textProperty(),
+                totalArticleIndex,
+                new NumberStringConverter());
     }
 
     private List<List<PlagiarismResult>> separateArticles() {
         LinkedList<List<PlagiarismResult>> filteredArticles = new LinkedList<List<PlagiarismResult>>();
         List<PlagiarismResult> tempList = new LinkedList<PlagiarismResult>();
         for (List<PlagiarismResult> resultList : allResults) {
-                System.out.println("resultListSize: " + resultList.size());
+            System.out.println("resultListSize: " + resultList.size());
             for (PlagiarismResult singleResult : resultList) {
                 if (singleResult.getType().equals(DocumentType.TEXT)) {
                     tempList.add(singleResult);
@@ -69,5 +83,21 @@ public class ArticleGridController implements Initializable {
         }
 //        return filteredArticles;
         return allResults;
+    }
+
+    @FXML
+    private void handlePrevArticleAction() {
+        if (currArticleIndex.get() > 1) {
+            currArticleIndex.set(currArticleIndex.get() - 1);
+            outputData.setText(allData.get(currArticleIndex.get() - 1).getExistingDocument());
+        }
+    }
+
+    @FXML
+    private void handleNextArticleAction() {
+        if (currArticleIndex.get() < totalArticleIndex.get()) {
+            currArticleIndex.set(currArticleIndex.get() + 1);
+            outputData.setText(allData.get(currArticleIndex.get() - 1).getExistingDocument());
+        }
     }
 }
