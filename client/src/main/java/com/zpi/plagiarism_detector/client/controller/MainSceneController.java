@@ -100,7 +100,10 @@ public class MainSceneController implements Initializable, Controller, Observer 
         String articleText = inputData.getText();
         String title = inputTitle.getText();
         String keywords = inputKeywords.getText();
-        Set<String> keywordsSet = TextUtils.splitIntoSet(keywords);
+        Set<String> keywordsSet = new HashSet<String>();
+        if(!keywords.isEmpty()) {
+        keywordsSet = TextUtils.splitIntoSet(keywords);
+        }
         Set<String> codes = new HashSet<String>(codeList);
 
         return new DocumentData(title, keywordsSet, articleText, codes);
@@ -133,6 +136,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
         inputKeywords.setText(null);
         inputCode.setText(null);
         codeList.clear();
+        codeList.add(null);
         System.out.println(codeList.size());
         currCodeIndex.set(1);
         totalCodeIndex.set(1);

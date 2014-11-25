@@ -36,7 +36,7 @@ public class ResultSceneController implements Initializable, Controller {
     @FXML
     TextField statWordsArtic, statWordsOvall, statPercArtic, statPercOvall;
     Node articleGridNode, codeGridNode;
-    List<List<PlagiarismResult>> allDocuments;
+    private static List<List<PlagiarismResult>> allDocuments;
     private static final List<PlagiarismResult> returnedResult = MainSceneController.getAllResults();
 
     @Override
@@ -107,6 +107,10 @@ public class ResultSceneController implements Initializable, Controller {
             allResults.add(docResults);
         }
         return allResults;
+    }
+    
+    public static List<List<PlagiarismResult>> getSeparatedDocuments() {
+        return allDocuments;
     }
 
     /**
