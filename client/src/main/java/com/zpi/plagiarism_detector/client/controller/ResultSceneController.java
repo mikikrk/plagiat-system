@@ -50,13 +50,7 @@ public class ResultSceneController implements Initializable, Controller {
         FXMLLoader loader = new FXMLLoader();
         returnedResult = MainSceneController.getAllResults();
         System.out.println("ResultScene all documents: " + returnedResult.size());
-        System.out.println(returnedResult);
 
-        allDocuments = separateDocuments(returnedResult);
-        System.out.println(allDocuments.size());
-        if (allDocuments.size()>0){
-        	System.out.println(allDocuments.get(0));
-        }
         System.out.println("ResultScene all documents: " + allDocuments.size());
         try {
             articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
@@ -103,23 +97,26 @@ public class ResultSceneController implements Initializable, Controller {
         LinkedList<PlagiarismResult> docResults;
         LinkedList<String> foundResults = new LinkedList<String>();
 
+        
         while (!results.isEmpty() && doc != null) {
             doc = null;
             docResults = new LinkedList<PlagiarismResult>();
             for (PlagiarismResult result : results) {
                 if (result != null) {
-                    if (doc == null && foundResults.contains(result.getNewDocument())) {
+                    if (doc == null && !foundResults.contains(result.getNewDocument())) {
                         doc = result.getNewDocument();
-                        docResults.add(new PlagiarismResult(result));
+                        docResults.add(result);
                         foundResults.add(doc);
                     } else {
-                        if (result.getNewDocument().equals(doc)) {
-                            docResults.add(new PlagiarismResult(result));
+                        if (doc != null && result.getNewDocument().equals(doc)) {
+                            docResults.add(result);
                         }
                     }
                 }
             }
-            allResults.add(docResults);
+            if (!docResults.isEmpty()){
+            	allResults.add(docResults);
+            }
         }
         return allResults;
     }
