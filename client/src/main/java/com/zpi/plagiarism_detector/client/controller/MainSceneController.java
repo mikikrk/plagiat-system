@@ -77,9 +77,13 @@ public class MainSceneController implements Initializable, Controller, Observer 
             Future<?> submit = executor.submit(task);
             task.get();
             
+            if(allResults.isEmpty()) {
+                showNotPlagiarismScene();
+            } else {
             mainWindow = (Stage) checkButton.getScene().getWindow();
             mainWindow.hide();
             showResultScene();
+            }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
             ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
@@ -185,6 +189,19 @@ public class MainSceneController implements Initializable, Controller, Observer 
         Parent root;
         System.out.println("You clicked me, bastard!");
         URL url = getClass().getResource("/fxml/ResultScene.fxml");
+        root = FXMLLoader.load(url);
+        Stage stage = new Stage();
+        stage.setTitle("Result");
+        Scene scene = new Scene(root, 800, 600);
+        scene.getStylesheets().add("/styles/Styles.css");
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    private void showNotPlagiarismScene() throws IOException {
+        Parent root;
+        System.out.println("You clicked me, bastard!");
+        URL url = getClass().getResource("/fxml/ServerSettings.fxml");
         root = FXMLLoader.load(url);
         Stage stage = new Stage();
         stage.setTitle("Result");

@@ -50,14 +50,12 @@ public class CodeGridController implements Initializable {
         if (allData.size() > 0) {
             newCode.setText(allData.get(0).getNewDocument());
             foundCode.setText(allData.get(0).getExistingDocument());
+            System.out.println("Mikiiiiiiiiiiiii! <3");
         }
     }    
     private List<List<PlagiarismResult>> separateCodes() {
         LinkedList<List<PlagiarismResult>> filteredArticles = new LinkedList<List<PlagiarismResult>>();
         List<PlagiarismResult> tempList = new LinkedList<PlagiarismResult>();
-        if (allResults == null) {
-            System.out.println("KUPOOOOOOOOOOOOOOOOOOCZ");
-        }
         for (List<PlagiarismResult> resultList : allResults) {
             System.out.println(resultList.toString());
             for (PlagiarismResult singleResult : resultList) {

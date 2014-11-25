@@ -57,11 +57,7 @@ public class ArticleGridController implements Initializable {
     private List<List<PlagiarismResult>> separateArticles() {
         LinkedList<List<PlagiarismResult>> filteredArticles = new LinkedList<List<PlagiarismResult>>();
         List<PlagiarismResult> tempList = new LinkedList<PlagiarismResult>();
-        if (allResults == null) {
-            System.out.println("KUPOOOOOOOOOOOOOOOOOOCZ");
-        }
         for (List<PlagiarismResult> resultList : allResults) {
-            System.out.println(resultList.toString());
             for (PlagiarismResult singleResult : resultList) {
                 if (singleResult.getType().equals(DocumentType.TEXT)) {
                     if (tempList.size() > 0) {
