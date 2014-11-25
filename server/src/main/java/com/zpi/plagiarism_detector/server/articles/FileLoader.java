@@ -40,7 +40,7 @@ public class FileLoader {
         byte[] buffer = new byte[(int) f.length()];
         new DataInputStream(fin).readFully(buffer);
         fin.close();
-        pattern = new String(buffer, "UTF-8");
+        pattern = new String(buffer, "cp1250");
         //pattern = pattern.toLowerCase();
 
         File f2 = new File(textPath);
@@ -48,7 +48,7 @@ public class FileLoader {
         byte[] buffer2 = new byte[(int) f2.length()];
         new DataInputStream(fin2).readFully(buffer2);
         fin2.close();
-        text = new String(buffer2, "UTF-8");
+        text = new String(buffer2, "cp1250");
         //text = text.toLowerCase();
     }
 

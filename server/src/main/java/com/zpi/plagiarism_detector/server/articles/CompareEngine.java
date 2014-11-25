@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 
 
+
 public class CompareEngine {
 
     private String pattern = "";
@@ -42,13 +43,11 @@ public class CompareEngine {
         pattern = fL.getPattern();
         text = fL.getText();
         this.splitStrings();
-        int i = 0;
+        int indexStart = 0;
         for (String patternSentence : patternTab) {
-        	System.out.println(patternSentence);
-            comparisonResult = tP.compareTexts(text, patternSentence);
+            comparisonResult = tP.compareTexts(textTab, patternSentence, indexStart);
+            indexStart+=patternSentence.length();
         }
-        comparisonResult.setNewDocument(fL.getPattern());
-        comparisonResult.setExistingDocument(fL.getText());
 
         return comparisonResult;
     }
