@@ -1,17 +1,19 @@
 package com.zpi.plagiarism_detector.server.handlers;
 
+import static com.zpi.plagiarism_detector.commons.protocol.ProtocolCode.TEST;
+
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import com.zpi.plagiarism_detector.server.detector.PlagiarismDetector;
 import com.zpi.plagiarism_detector.server.exceptions.AbortConnectionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-
-import static com.zpi.plagiarism_detector.commons.protocol.ProtocolCode.TEST;
 
 public class MessageDispatcher {
     private static final Logger log = LoggerFactory.getLogger(MessageDispatcher.class);
@@ -56,6 +58,12 @@ public class MessageDispatcher {
         try {
             DocumentData document = (DocumentData) sentObject;
             PlagiarismDetectionResult result = plagiarismDetector.checkForPlagiarism(document);
+            System.out.println("\n\n\n\n\n\n" + result.getAllResults().size() + " \n\n\n\n\n\n\n");
+            if(result.getAllResults().size()>0){
+            	for(PlagiarismResult res: result.getAllResults()){
+            		System.out.println(res.getNewDocument() + res.getExistingDocument());
+            	}
+            }
             response = new Message(ProtocolCode.PLAGIARISM_CHECK_RESULT, result);
         } catch (IOException e) {
             response = new Message(ProtocolCode.PLAGIARISM_CHECK_ERROR, e.getCause());

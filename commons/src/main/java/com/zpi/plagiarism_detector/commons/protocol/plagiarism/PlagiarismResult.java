@@ -1,6 +1,7 @@
 package com.zpi.plagiarism_detector.commons.protocol.plagiarism;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.zpi.plagiarism_detector.commons.database.DocumentType;
@@ -14,6 +15,14 @@ public class PlagiarismResult implements Serializable{
 
     public PlagiarismResult() {
 
+    }
+    
+    public PlagiarismResult(PlagiarismResult plagiarism){
+    	this.newDocument = plagiarism.getNewDocument();
+    	this.existingDocument = plagiarism.getExistingDocument();
+    	this.plagiarisedFragments = new HashMap<PlagiarismFragment, PlagiarismFragment>();
+    	plagiarisedFragments.putAll(plagiarism.getPlagiarisedFragments());
+    	this.type = plagiarism.getType();
     }
 
     public PlagiarismResult(String newDocument,
