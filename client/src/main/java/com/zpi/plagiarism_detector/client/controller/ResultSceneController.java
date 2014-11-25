@@ -2,6 +2,7 @@ package com.zpi.plagiarism_detector.client.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import com.zpi.plagiarism_detector.client.model.factories.ClientFactory;
 import com.zpi.plagiarism_detector.client.view.SwitchButton;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+
 import javafx.scene.control.TextField;
 
 public class ResultSceneController implements Initializable, Controller {
@@ -149,11 +151,9 @@ public class ResultSceneController implements Initializable, Controller {
      * @return
      */
     private int getPercantageOfSimilarity(PlagiarismResult result) {
-        int fragmentsLength = 0;
-        for (Entry<PlagiarismFragment, PlagiarismFragment> fragments : result.getPlagiarisedFragments().entrySet()) {
-            fragmentsLength += fragments.getKey().getSize();
-        }
-        return fragmentsLength / result.getNewDocument().length();
+      int fragmentsAmount = result.getPlagiarisedFragments().entrySet().size();
+      int sentencesAmount =  result.getNewDocument().split("\\.").length;
+      return fragmentsAmount/ sentencesAmount;
     }
 
     /**
@@ -165,12 +165,13 @@ public class ResultSceneController implements Initializable, Controller {
      * @return
      */
     private int getPercantageOfSimilarityInAllResults(List<PlagiarismResult> results) {
-        int fragmentsLength = 0;
+    	int sentencesAmount =  results.get(0).getNewDocument().split("\\.").length;
+        int fragmentsAmount = 0;
         for (PlagiarismResult result : results) {
-            fragmentsLength += getPercantageOfSimilarity(result);
+            fragmentsAmount += getPercantageOfSimilarity(result);
         }
         if (!results.isEmpty()) {
-            return fragmentsLength / results.get(0).getNewDocument().length();
+            return fragmentsAmount / sentencesAmount;
         }
         return 0;
     }
