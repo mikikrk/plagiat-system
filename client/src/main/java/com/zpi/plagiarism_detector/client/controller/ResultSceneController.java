@@ -40,6 +40,9 @@ public class ResultSceneController implements Initializable, Controller {
     Node articleGridNode, codeGridNode;
     private static List<List<PlagiarismResult>> allDocuments;
     private static final List<PlagiarismResult> returnedResult = MainSceneController.getAllResults();
+    
+    @FXML
+    private ArticleGridController articleController;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -51,11 +54,13 @@ public class ResultSceneController implements Initializable, Controller {
             e.printStackTrace();
         }
         handleSwitchButtonAction();
-        allDocuments = separateDocuments(returnedResult);
-        statWordsArtic.setText(null);
-        statWordsOvall.setText(Integer.toString(getAmountOfSimilarSentencesInAllResults(returnedResult)));
-        statPercArtic.setText(null);
-        statPercOvall.setText(Integer.toString(getPercantageOfSimilarityInAllResults(returnedResult)));
+//        allDocuments = separateDocuments(returnedResult);
+        allDocuments = new LinkedList<List<PlagiarismResult>>();
+        allDocuments.add(returnedResult);
+//        statWordsArtic.setText(null);
+//        statWordsOvall.setText(Integer.toString(getAmountOfSimilarSentencesInAllResults(returnedResult)));
+//        statPercArtic.setText(null);
+//        statPercOvall.setText(Integer.toString(getPercantageOfSimilarityInAllResults(returnedResult)));
     }
 
     @FXML
