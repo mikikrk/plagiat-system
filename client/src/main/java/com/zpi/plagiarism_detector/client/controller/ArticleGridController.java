@@ -47,6 +47,7 @@ public class ArticleGridController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allResults = ResultSceneController.getSeparatedDocuments();
+        System.out.println("ArticleGrid all documents: " + allResults.size());
         List<PlagiarismResult> allData = separateArticles().get(0);
         if (allData.size() > 0) {
             inputData.setText(allData.get(0).getNewDocument());
@@ -58,15 +59,15 @@ public class ArticleGridController implements Initializable {
         LinkedList<List<PlagiarismResult>> filteredArticles = new LinkedList<List<PlagiarismResult>>();
         List<PlagiarismResult> tempList = new LinkedList<PlagiarismResult>();
         for (List<PlagiarismResult> resultList : allResults) {
+                System.out.println("resultListSize: " + resultList.size());
             for (PlagiarismResult singleResult : resultList) {
                 if (singleResult.getType().equals(DocumentType.TEXT)) {
-                    if (tempList.size() > 0) {
-                        tempList.add(singleResult);
-                    }
+                    tempList.add(singleResult);
                 }
             }
             filteredArticles.add(tempList);
         }
-        return filteredArticles;
+//        return filteredArticles;
+        return allResults;
     }
 }

@@ -50,6 +50,7 @@ public class ResultSceneController implements Initializable, Controller {
         FXMLLoader loader = new FXMLLoader();
         returnedResult = MainSceneController.getAllResults();
         allDocuments = separateDocuments(returnedResult);
+        System.out.println("ResultScene all documents: " + allDocuments.size());
         try {
             articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
             codeGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/codeGrid.fxml"));
