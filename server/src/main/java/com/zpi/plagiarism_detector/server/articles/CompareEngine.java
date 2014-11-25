@@ -47,6 +47,8 @@ public class CompareEngine {
         	System.out.println(patternSentence);
             comparisonResult = tP.compareTexts(text, patternSentence);
         }
+        comparisonResult.setNewDocument(fL.getPattern());
+        comparisonResult.setExistingDocument(fL.getText());
 
         return comparisonResult;
     }

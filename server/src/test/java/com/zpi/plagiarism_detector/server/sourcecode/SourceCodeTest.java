@@ -36,14 +36,24 @@ public class SourceCodeTest {
 
         URL url = Thread.currentThread().getContextClassLoader().getResource("highlight.pack.js");
 
-        doReturn("jsp").when(sc).recognizeLanguage(url.getPath());
+        try {
+			doReturn("jsp").when(sc).recognizeLanguage(url.getPath());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public void testRecognizeLanguage2() {
 
         URL url = Thread.currentThread().getContextClassLoader().getResource("cpp.txt");
 
-        doReturn("cpp").when(sc).recognizeLanguage(url.getPath());
+        try {
+			doReturn("cpp").when(sc).recognizeLanguage(url.getPath());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
 }
