@@ -3,12 +3,15 @@ package com.zpi.plagiarism_detector.server.sourcecode;
 import java.io.File;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import com.zpi.plagiarism_detector.server.articles.FileLoader;
 
 public class SourceCodeComparison {
 	
-//	private final static Logger log = LoggerFactory.getLogger(SourceCodeComparison.class);
+	private final static Logger log = LoggerFactory.getLogger(SourceCodeComparison.class);
 	
     private String language;
     private SourceCode sc;
@@ -61,10 +64,10 @@ public class SourceCodeComparison {
 		        result.setNewDocument(fl.getPattern());
 		        result.setExistingDocument(fl.getText());
 	        }else{
-	        	System.err.println("Given file does not exist");
+	        	log.warn(pathNew + " or " + pathExist + " does not exist");
 	        }
     	}catch(Exception e){
-    		System.err.println("Error while detecting language");
+    		log.warn("Error while detecting language of " + pathNew + " and " + pathExist);
     	}
 
         return result;

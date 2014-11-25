@@ -22,7 +22,9 @@ public class ComparingAlgorithm {
         List<PlagiarismResult> overalResults = new LinkedList<>();
         for (String matchingCodePath : matchingArticlesPaths) {
             PlagiarismResult plagiarismResult = articleComparison.compare(articlePath, matchingCodePath);
-            overalResults.add(plagiarismResult);
+            if (plagiarismResult != null){
+            	overalResults.add(plagiarismResult);
+            }
         }
         return overalResults;
     }
@@ -35,7 +37,9 @@ public class ComparingAlgorithm {
                     continue;
                 }
                 PlagiarismResult plagiarismResult = sourceCodeComparison.compareFiles(codePath, matchingCodePath);
-                plagiarismResults.add(plagiarismResult);
+                if (plagiarismResult != null){
+                	plagiarismResults.add(plagiarismResult);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
