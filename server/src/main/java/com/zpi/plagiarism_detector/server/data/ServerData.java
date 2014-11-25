@@ -124,7 +124,7 @@ public class ServerData {
     }
 
     public Set<String> getCommonKeywordDocumentsPaths(Set<String> keywords, DocumentType documentType) {
-        Set<String> commonArticlesPaths = dao.findArticlesWithAtLeastOne(keywords, DocumentType.TEXT);
+        Set<String> commonArticlesPaths = dao.findArticlesWithAtLeastOne(keywords, documentType);
         return commonArticlesPaths;
     }
 
