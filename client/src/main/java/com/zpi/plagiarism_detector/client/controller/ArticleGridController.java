@@ -46,10 +46,10 @@ public class ArticleGridController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        List<PlagiarismResult> allData = separateArticles().get(0);
-        System.out.println("all data size: " + allData.size());
-        inputData.setText(allData.get(0).getNewDocument());
-        outputData.setText(allData.get(0).getExistingDocument());
+//        List<PlagiarismResult> allData = separateArticles().get(0);
+//        System.out.println("all data size: " + allData.size());
+//        inputData.setText(allData.get(0).getNewDocument());
+//        outputData.setText(allData.get(0).getExistingDocument());
     }
     
     private List<List<PlagiarismResult>> separateArticles() {

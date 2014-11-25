@@ -253,5 +253,8 @@ public class MainSceneController implements Initializable, Controller, Observer 
     
     public static List<PlagiarismResult> getAllResults() {
         return allResults;
+//        PlagiarismDetectionResult res = new PlagiarismDetectionResult();
+//        res.addPlagiarismResult(new PlagiarismResult());
+//        return res.getAllResults();
     }
 }
