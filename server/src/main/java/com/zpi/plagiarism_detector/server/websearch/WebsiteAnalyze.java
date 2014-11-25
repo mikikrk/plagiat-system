@@ -42,7 +42,7 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
         this.dao = dao;
     }
 
-    public List<DocumentData> webAnalyze(Set<String> keywords) throws IOException {
+    private List<DocumentData> webAnalyze(Set<String> keywords) throws IOException {
         
         String keyword = StringUtils.join(keywords, " ");
         String[] linksArray = googleSearch(keyword);
@@ -54,7 +54,6 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
              * Sprawdzanie czy dany link jest juz w bazie.
              */
             if (dao.containsUri(linksArray[i])) {
-            	
                 dao.addKeywordsToUri(linksArray[i], keywords); //dodanie slowa kluczowego jesli dany url jest ju¿ w bazie, ale szukany keyword siê tam nie znajduje.
             }else{
 

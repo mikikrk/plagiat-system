@@ -1,11 +1,15 @@
 package com.zpi.plagiarism_detector.server.sourcecode;
 
-import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
-
 import java.io.File;
 import java.io.IOException;
 
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+import com.zpi.plagiarism_detector.server.articles.FileLoader;
+
 public class SourceCodeComparison {
+	
+//	private final static Logger log = LoggerFactory.getLogger(SourceCodeComparison.class);
+	
     private String language;
     private SourceCode sc;
 
@@ -13,7 +17,7 @@ public class SourceCodeComparison {
         this.language = null;
     }
 
-    public void getOriginalLanguage(String path) {
+    public void getOriginalLanguage(String path)  throws Exception{
 
         this.sc = new SourceCode(20);
         this.language = sc.recognizeLanguage(path);
@@ -31,23 +35,37 @@ public class SourceCodeComparison {
      */
     public PlagiarismResult compareFiles(String pathNew, String pathExist) throws IOException {
 
-
-        getOriginalLanguage(pathNew);
-        this.sc.init();
-
-        //dodanie pliku uzytkownika jako pierwszego
-        this.sc.add(new File(pathNew));
-        try {
-            //dodanie pliku do porownania
-            this.sc.add(new File(pathExist));
-        } catch (net.sourceforge.pmd.lang.ast.TokenMgrError e) {
-            //inny kod zrodlowy programu
-            return null;
-        }
-        //uruchomienie porownania
-        this.sc.go();
-
-        PlagiarismResult result = sc.convertXml(sc.getMatches(pathNew), pathNew);
+    	PlagiarismResult result = null;
+    	try{
+	        getOriginalLanguage(pathNew);
+	        this.sc.init();
+	
+	        File userFile = new File(pathNew);
+	        File foundFile = new File(pathExist);
+	        if (userFile.exists() && foundFile.exists()){
+		        //dodanie pliku uzytkownika jako pierwszego
+		        this.sc.add(userFile);
+		        try {
+		            //dodanie pliku do porownania
+		            this.sc.add(foundFile);
+		        } catch (net.sourceforge.pmd.lang.ast.TokenMgrError e) {
+		            //inny kod zrodlowy programu
+		            return null;
+		        }
+		        //uruchomienie porownania
+		        this.sc.go();
+		        
+		        result = sc.convertXml(sc.getMatches(pathNew), pathNew);
+		        FileLoader fl = new FileLoader(pathNew, pathExist);
+		        fl.loadFiles();
+		        result.setNewDocument(fl.getPattern());
+		        result.setExistingDocument(fl.getText());
+	        }else{
+	        	System.err.println("Given file does not exist");
+	        }
+    	}catch(Exception e){
+    		System.err.println("Error while detecting language");
+    	}
 
         return result;
     }

@@ -350,32 +350,32 @@ public class SourceCode {
      * @param filename - nazwa pliku
      * @return language name
      */
-    public String recognizeLanguage(String filename) {
+    public String recognizeLanguage(String filename) throws Exception{
 
         ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
         Invocable invocable = (Invocable) engine;
         String example;
         Object result = null;
 
-        try {
+//        try { TODO: delete
             URL url = getClass().getClassLoader().getResource("highlight.pack.js");
 
             engine.eval(new FileReader(url.getPath()));
             example = readFile(filename, Charset.defaultCharset());
             result = invocable.invokeFunction("fun1", example);
-        } catch (FileNotFoundException e) {
-            // brak pliku
-            e.printStackTrace();
-        } catch (ScriptException e) {
-            // blad w skrypcie
-            e.printStackTrace();
-        } catch (IOException e) {
-            // problem z owarciem pliku
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            // brak metody w pliku .js
-            e.printStackTrace();
-        }
+//        } catch (FileNotFoundException e) {
+//            // brak pliku
+//            e.printStackTrace();
+//        } catch (ScriptException e) {
+//            // blad w skrypcie
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            // problem z owarciem pliku
+//            e.printStackTrace();
+//        } catch (NoSuchMethodException e) {
+//            // brak metody w pliku .js
+//            e.printStackTrace();
+//        }
         //zwrocone jezyki
         String[] split = ((String) result).split("\n");
 
@@ -383,9 +383,9 @@ public class SourceCode {
         String[] lang2 = ((String) split[1]).split(":");
 
         //mapowanie jezykow
-        if (lang1[0] == "javascript") {
+        if (lang1[0].equals("javascript")) {
             lang1[0] = "jsp";
-        } else if (lang1[0] == "sql") {
+        } else if (lang1[0].equals("sql")) {
             lang1[0] = "plsql";
         }
 

@@ -61,28 +61,28 @@ public class MainSceneController implements Initializable, Controller, Observer 
         final DocumentData documentData = getViewDocumentData();
 
         try {
-            ExecutorService executor = Executors.newFixedThreadPool(1);
-
-            FutureTask<Object> task = new FutureTask(new Callable() {
-                @Override
-                public Object call() throws CannotConnectToTheServerException {
-                    model.openConnection();
-                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
-                    model.sendMessage(message);
-                    model.closeConnection();
-                    return null;
-                }
-            });
-
-            Future<?> submit = executor.submit(task);
-            task.get();
+//            ExecutorService executor = Executors.newFixedThreadPool(1);
+//
+//            FutureTask<Object> task = new FutureTask(new Callable() {
+//                @Override
+//                public Object call() throws CannotConnectToTheServerException {
+//                    model.openConnection();
+//                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+//                    model.sendMessage(message);
+//                    model.closeConnection();
+//                    return null;
+//                }
+//            });
+//
+//            Future<?> submit = executor.submit(task);
+//            task.get();
             
             mainWindow = (Stage) checkButton.getScene().getWindow();
             mainWindow.hide();
             showResultScene();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
         } catch (IOException e) {
             e.printStackTrace();
         }

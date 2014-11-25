@@ -41,8 +41,6 @@ public class PlagiarismDetector {
             results.addAll(codesResults);
         }
         
-        System.out.println(results);
-
         PlagiarismDetectionResult result = new PlagiarismDetectionResult(results);
         return result;
     }
