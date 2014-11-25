@@ -25,75 +25,35 @@ import com.zpi.plagiarism_detector.client.model.factories.ClientFactory;
 import com.zpi.plagiarism_detector.client.view.SwitchButton;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+import javafx.scene.control.TextField;
 
 public class ResultSceneController implements Initializable, Controller {
 
-    private static final ClientFactory clientFactory = new ClientFactory();
-    @FXML
-    Button button;
-    @FXML
-    Button checkButton, codeReviewButton;
     @FXML
     SwitchButton switchButton;
     @FXML
-    Parent inputArticleGrid, outputArticleGrid;
-    private ClientModel model;
-    @FXML
-    private Label label, appTitle;
-//    @FXML
-//    private TextArea inputData, outputData;
-    @FXML
     GridPane container;
-
+    @FXML
+    TextField statWordsArtic, statWordsOvall, statPercArtic, statPercOvall;
     Node articleGridNode, codeGridNode;
-
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        /*
-         System.out.println("You clicked me!");
-         outputData.setText("Napisa?e?: " + inputData.getText());
-         outputData.setStyle("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick;");
-         outputData.selectRange(11, outputData.getLength());
-         label.setText("Hello Guys! ;)"); 
-         */
-    }
-
-    @FXML
-    private void handleCodeReviewButtonAction(ActionEvent event) {
-        Parent root;
-        System.out.println("You clicked me, bastard!");
-        URL url = getClass().getResource("/fxml/CodeScene.fxml");
-        try {
-            root = FXMLLoader.load(url);
-            Stage stage = new Stage();
-            stage.setTitle("Code source review");
-            Scene scene = new Scene(root, 600, 500);
-            scene.getStylesheets().add("/styles/Styles.css");
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    List<List<PlagiarismResult>> allDocuments;
+    private static final List<PlagiarismResult> returnedResult = MainSceneController.getAllResults();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        model = createModel();
         FXMLLoader loader = new FXMLLoader();
         try {
             articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
-            codeGridNode = loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
+            codeGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/codeGrid.fxml"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         handleSwitchButtonAction();
-    }
-
-    private ClientModel createModel() {
-        ClientModel model = new ClientModel(clientFactory);
-        return model;
+        allDocuments = separateDocuments(returnedResult);
+        statWordsArtic.setText(null);
+        statWordsOvall.setText(Integer.toString(getAmountOfSimilarSentencesInAllResults(returnedResult)));
+        statPercArtic.setText(null);
+        statPercOvall.setText(Integer.toString(getPercantageOfSimilarityInAllResults(returnedResult)));
     }
 
     @FXML
@@ -114,89 +74,100 @@ public class ResultSceneController implements Initializable, Controller {
         container.getScene().getWindow().hide();
         MainSceneController.showMainWindow();
     }
-    
+
     /**
-     * Rozdzielenie listy wyników na listy poszczególnych plików (tekst, kody)
+     * Rozdzielenie listy wyników na listy poszczególnych plików (tekst,
+     * kody)
+     *
      * @param results
      * @return
      */
-    private List<List<PlagiarismResult>> separateDocuments(List<PlagiarismResult> results){
-    	String doc = "";
-    	LinkedList<List<PlagiarismResult>> allResults = new LinkedList<List<PlagiarismResult>>();
-    	LinkedList<PlagiarismResult> docResults;
-    	
-    	while(!results.isEmpty() && doc != null){
-    		doc = null;
-    		docResults = new LinkedList<PlagiarismResult>();
-    		for(PlagiarismResult result: results){
-    			if (result != null){
-    				if (doc == null){
-    					doc = result.getNewDocument();
-    					docResults.add(result);
-    					results.remove(result);
-    				}else{
-    					if(result.getNewDocument().equals(doc)){
-    						docResults.add(result);
-    						results.remove(result);
-    					}
-    				}
-    			}
-    		}
-    		allResults.add(docResults);
-    	}
-    	return allResults;
-   	} 
-    
+    private List<List<PlagiarismResult>> separateDocuments(List<PlagiarismResult> results) {
+        String doc = "";
+        LinkedList<List<PlagiarismResult>> allResults = new LinkedList<List<PlagiarismResult>>();
+        LinkedList<PlagiarismResult> docResults;
+
+        while (!results.isEmpty() && doc != null) {
+            doc = null;
+            docResults = new LinkedList<PlagiarismResult>();
+            for (PlagiarismResult result : results) {
+                if (result != null) {
+                    if (doc == null) {
+                        doc = result.getNewDocument();
+                        docResults.add(result);
+                        results.remove(result);
+                    } else {
+                        if (result.getNewDocument().equals(doc)) {
+                            docResults.add(result);
+                            results.remove(result);
+                        }
+                    }
+                }
+            }
+            allResults.add(docResults);
+        }
+        return allResults;
+    }
+
     /**
-     * Obliczanie ilości znalezionych zdań/linii podobnych w aktualnie wyświetlanym wyniku
-     *  (ile zdań/linii w artykule podanym jest podobnych do zdań/linii w artykule znalezionym - właśnie wyświetlanym)
+     * Obliczanie ilości znalezionych zdań/linii podobnych w aktualnie
+     * wyświetlanym wyniku (ile zdań/linii w artykule podanym jest podobnych
+     * do zdań/linii w artykule znalezionym - właśnie wyświetlanym)
+     *
      * @param result
      * @return
      */
-    private int getAmountOfSimilarSentences(PlagiarismResult result){
-    	return result.getPlagiarisedFragments().size();
+    private int getAmountOfSimilarSentences(PlagiarismResult result) {
+        return result.getPlagiarisedFragments().size();
     }
-    
+
     /**
-     * Obliczanie ilości znalezionych zdań/linii podobnych z zdaniami/liniami we wszystkich znalezionych dokumentach.
-     * Wynik dla poszczególnego pliku
+     * Obliczanie ilości znalezionych zdań/linii podobnych z zdaniami/liniami
+     * we wszystkich znalezionych dokumentach. Wynik dla poszczególnego pliku
+     *
      * @param results
      * @return
      */
-    private int getAmountOfSimilarSentencesInAllResults(List<PlagiarismResult> results){
-    	int amount = 0;
-    	for (PlagiarismResult result: results){
-    		amount += getAmountOfSimilarSentences(result);
-    	}
-    	return amount;
+    private int getAmountOfSimilarSentencesInAllResults(List<PlagiarismResult> results) {
+        int amount = 0;
+        for (PlagiarismResult result : results) {
+            amount += getAmountOfSimilarSentences(result);
+        }
+        return amount;
     }
-    
+
     /**
-     * Obliczanie procentu długości znalezionych zdań/linii podobnych z aktualnie wyświetlanym 
-     * znalezionym dokumentem w stosunku do długości przesłanego pliku
+     * Obliczanie procentu długości znalezionych zdań/linii podobnych z
+     * aktualnie wyświetlanym znalezionym dokumentem w stosunku do długości
+     * przesłanego pliku
+     *
      * @param result
      * @return
      */
-    private int getPercantageOfSimilarity(PlagiarismResult result){
-    	int fragmentsLength = 0;
-    	for (Entry<PlagiarismFragment, PlagiarismFragment> fragments : result.getPlagiarisedFragments().entrySet()){
-    		fragmentsLength += fragments.getKey().getSize();
-    	}
-    	return fragmentsLength/result.getNewDocument().length();
+    private int getPercantageOfSimilarity(PlagiarismResult result) {
+        int fragmentsLength = 0;
+        for (Entry<PlagiarismFragment, PlagiarismFragment> fragments : result.getPlagiarisedFragments().entrySet()) {
+            fragmentsLength += fragments.getKey().getSize();
+        }
+        return fragmentsLength / result.getNewDocument().length();
     }
-    
+
     /**
-     * Obliczanie procentu długości znalezionych zdań/linii podobnych z zdaniami/liniami 
-     * we wszystkich znalezionych dokumentach, w stosunku do długości przesłanego pliku
-     * Wynik dla poszczególnego pliku
+     * Obliczanie procentu długości znalezionych zdań/linii podobnych z
+     * zdaniami/liniami we wszystkich znalezionych dokumentach, w stosunku do
+     * długości przesłanego pliku Wynik dla poszczególnego pliku
+     *
      * @param results
      * @return
      */
-    private int getPercantageOfSimilarityInAllResults(List<PlagiarismResult> results){
-    	int fragmentsLength = 0;
-    	for (PlagiarismResult result: results){
-    		fragmentsLength += getPercantageOfSimilarity(result);
-    	}
-    	return fragmentsLength/results.get(0).getNewDocument().length();
+    private int getPercantageOfSimilarityInAllResults(List<PlagiarismResult> results) {
+        int fragmentsLength = 0;
+        for (PlagiarismResult result : results) {
+            fragmentsLength += getPercantageOfSimilarity(result);
+        }
+        if (!results.isEmpty()) {
+            return fragmentsLength / results.get(0).getNewDocument().length();
+        }
+        return 0;
     }
 }

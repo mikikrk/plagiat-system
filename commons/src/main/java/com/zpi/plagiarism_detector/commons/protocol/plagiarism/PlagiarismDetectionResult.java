@@ -36,4 +36,7 @@ public class PlagiarismDetectionResult implements Serializable {
         }
         return sb.toString();
     }
+    public List<PlagiarismResult> getAllResults() {
+        return plagiarisms;
+    }
 }

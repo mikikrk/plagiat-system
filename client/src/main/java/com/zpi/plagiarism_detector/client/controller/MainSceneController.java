@@ -9,11 +9,14 @@ import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.Message;
 import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import com.zpi.plagiarism_detector.commons.util.TextUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -26,11 +29,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.*;
+import javafx.util.converter.NumberStringConverter;
 
 public class MainSceneController implements Initializable, Controller, Observer {
 
@@ -43,13 +42,14 @@ public class MainSceneController implements Initializable, Controller, Observer 
     private ClientModel model;
     private static String hostname = ApplicationProperties.HOSTNAME;
     private static int port = ApplicationProperties.PORT;
+    static List<PlagiarismResult> allResults = new LinkedList<PlagiarismResult>();
     @FXML
     private Label label, appTitle, currentArticleNr, totalArticleCnt;
     @FXML
     private TextArea inputData, inputTitle, inputKeywords, inputCode;
 
     private List<String> codeList = new ArrayList<String>();
-    private int currCodeIndex = 0, totalCodeIndex = 1;
+    private SimpleIntegerProperty currCodeIndex = new SimpleIntegerProperty(1), totalCodeIndex = new SimpleIntegerProperty(1);
 
     public static void showMainWindow() {
         mainWindow.show();
@@ -61,28 +61,28 @@ public class MainSceneController implements Initializable, Controller, Observer 
         final DocumentData documentData = getViewDocumentData();
 
         try {
-            ExecutorService executor = Executors.newFixedThreadPool(1);
-
-            FutureTask<Object> task = new FutureTask(new Callable() {
-                @Override
-                public Object call() throws CannotConnectToTheServerException {
-                    model.openConnection();
-                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
-                    model.sendMessage(message);
-                    model.closeConnection();
-                    return null;
-                }
-            });
-
-            Future<?> submit = executor.submit(task);
-            task.get();
+//            ExecutorService executor = Executors.newFixedThreadPool(1);
+//
+//            FutureTask<Object> task = new FutureTask(new Callable() {
+//                @Override
+//                public Object call() throws CannotConnectToTheServerException {
+//                    model.openConnection();
+//                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+//                    model.sendMessage(message);
+//                    model.closeConnection();
+//                    return null;
+//                }
+//            });
+//
+//            Future<?> submit = executor.submit(task);
+//            task.get();
             
             mainWindow = (Stage) checkButton.getScene().getWindow();
             mainWindow.hide();
             showResultScene();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
         String title = inputTitle.getText();
         String keywords = inputKeywords.getText();
         Set<String> keywordsSet = TextUtils.splitIntoSet(keywords);
-        Set<String> codes = new HashSet(codeList);
+        Set<String> codes = new HashSet<String>(codeList);
 
         return new DocumentData(title, keywordsSet, articleText, codes);
     }
@@ -132,44 +132,47 @@ public class MainSceneController implements Initializable, Controller, Observer 
         inputTitle.setText(null);
         inputKeywords.setText(null);
         inputCode.setText(null);
+        codeList.clear();
+        System.out.println(codeList.size());
+        currCodeIndex.set(1);
+        totalCodeIndex.set(1);
     }
 
     @FXML
     private void handleAddNewCodeAction() {
-        codeList.add(++currCodeIndex, null);
+        currCodeIndex.set(currCodeIndex.get()+1);
+        totalCodeIndex.set(totalCodeIndex.get()+1);
+        codeList.add(currCodeIndex.get()-1, null);
         inputCode.setText(null);
-        totalCodeIndex++;
-        currentArticleNr.setText(Integer.toString(currCodeIndex + 1));
-        totalArticleCnt.setText(Integer.toString(totalCodeIndex));
-
+        System.out.println(totalCodeIndex.get());
     }
 
     @FXML
     private void handlePrevCodeAction() {
-        if (currCodeIndex > 0) {
-            inputCode.setText(codeList.get(--currCodeIndex));
-            currentArticleNr.setText(Integer.toString(currCodeIndex + 1));
+        if (currCodeIndex.get() > 1) {
+        currCodeIndex.set(currCodeIndex.get()-1);
+            inputCode.setText(codeList.get(currCodeIndex.get()-1));
         }
     }
 
     @FXML
     private void handleNextCodeAction() {
-        if (currCodeIndex < totalCodeIndex - 1) {
-            inputCode.setText(codeList.get(++currCodeIndex));
-            currentArticleNr.setText(Integer.toString(currCodeIndex + 1));
+        if (currCodeIndex.get() < totalCodeIndex.get()) {
+        currCodeIndex.set(currCodeIndex.get()+1);
+            inputCode.setText(codeList.get(currCodeIndex.get()-1));
         }
     }
 
     @FXML
     private void handleRemoveCodeAction() {
-        if (totalCodeIndex > 1) {
-            codeList.remove(currCodeIndex);
-            if (currCodeIndex == totalCodeIndex - 1) {
-                currCodeIndex--;
+        if (totalCodeIndex.get() > 1) {
+            codeList.remove(currCodeIndex.get()-1);
+            if (currCodeIndex.get() == totalCodeIndex.get()) {
+        currCodeIndex.set(currCodeIndex.get()-1);
             }
-            inputCode.setText(codeList.get(currCodeIndex));
-            currentArticleNr.setText(Integer.toString(currCodeIndex + 1));
-            totalArticleCnt.setText(Integer.toString(--totalCodeIndex));
+            inputCode.setText(codeList.get(currCodeIndex.get()-1));
+            totalCodeIndex.set(totalCodeIndex.get()-1);
+
         }
 
     }
@@ -190,15 +193,19 @@ public class MainSceneController implements Initializable, Controller, Observer 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         model = createModel();
-        currentArticleNr.setText(Integer.toString(currCodeIndex + 1));
-        totalArticleCnt.setText(Integer.toString(totalCodeIndex));
+        Bindings.bindBidirectional(currentArticleNr.textProperty(), 
+                           currCodeIndex, 
+                           new NumberStringConverter());
+        Bindings.bindBidirectional(totalArticleCnt.textProperty(), 
+                           totalCodeIndex, 
+                           new NumberStringConverter());
         codeList.add("");
         inputCode.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
                 if (!newValue) {
-                    codeList.set(currCodeIndex, inputCode.getText());
-                    System.out.println(codeList.get(currCodeIndex));
+                    codeList.set(currCodeIndex.get()-1, inputCode.getText());
+                    System.out.println(codeList.get(currCodeIndex.get()-1));
                 }
             }
         });
@@ -236,6 +243,11 @@ public class MainSceneController implements Initializable, Controller, Observer 
         ProtocolCode code = message.getCode();
         if (code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
             PlagiarismDetectionResult plagiarismDetectionResult = (PlagiarismDetectionResult) message.getSentObject();
+            allResults = plagiarismDetectionResult.getAllResults();
         }
+    }
+    
+    public static List<PlagiarismResult> getAllResults() {
+        return allResults;
     }
 }

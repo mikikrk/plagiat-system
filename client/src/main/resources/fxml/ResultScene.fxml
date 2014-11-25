@@ -98,10 +98,10 @@
                                       <children>
                                           <Label text="This article" textFill="WHITE" GridPane.halignment="CENTER" />
                                           <Label text="Overall" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                                          <TextField editable="false" maxWidth="100.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
-                                          <TextField editable="false" maxWidth="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
-                                          <TextField editable="false" layoutX="10.0" layoutY="55.0" maxWidth="100.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                                          <TextField editable="false" layoutX="10.0" layoutY="17.0" maxWidth="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                          <TextField fx:id="statWordsArtic" editable="false" maxWidth="100.0" text="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
+                                          <TextField fx:id="statWordsOvall" editable="false" maxWidth="100.0" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.vgrow="NEVER" />
+                                          <TextField fx:id="statPercArtic" editable="false" layoutX="10.0" layoutY="55.0" maxWidth="100.0" text="0" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                                          <TextField fx:id="statPercOvall" editable="false" layoutX="10.0" layoutY="17.0" maxWidth="100.0" text="0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                                       </children>
                                   </GridPane>
                               </children>
@@ -113,6 +113,9 @@
                   </VBox>
                 <SwitchButton fx:id="switchButton" onMouseClicked="#handleSwitchButtonAction" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="0" />
             <GridPane fx:id="container" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                <children>
+                    
+                </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
@@ -136,6 +139,9 @@
     <bottom>
     </bottom>
    <bottom>
-      <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButtonAction" text="Back to main" BorderPane.alignment="CENTER" />
+      <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButtonAction" text="Back to main" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="10.0" />
+         </BorderPane.margin></Button>
    </bottom>
 </BorderPane>

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package fxml.includes;
+package com.zpi.plagiarism_detector.client.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
