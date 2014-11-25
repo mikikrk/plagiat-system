@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane fx:id="inputArticleGrid" hgap="10.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="inputArticleGrid" hgap="10.0" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.zpi.plagiarism_detector.client.controller.CodeGridController">
       <children>
             <GridPane GridPane.columnIndex="1">
                 <columnConstraints>
@@ -47,7 +47,7 @@
                     </GridPane>
                 </children>
             </GridPane>
-            <TextArea fx:id="outputData" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextArea fx:id="foundCode" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <GridPane layoutX="475.0" layoutY="10.0">
          <children>
             <Button mnemonicParsing="false" text="&lt;" GridPane.halignment="RIGHT" />
@@ -85,7 +85,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <TextArea fx:id="outputData1" editable="false" layoutX="475.0" layoutY="48.0" GridPane.rowIndex="1" />
+      <TextArea fx:id="newCode" editable="false" layoutX="475.0" layoutY="48.0" GridPane.rowIndex="1" />
       </children>
       <columnConstraints>
           <ColumnConstraints percentWidth="50.0" />

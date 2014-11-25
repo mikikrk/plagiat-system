@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package com.zpi.plagiarism_detector.client.controller;
 
 import com.zpi.plagiarism_detector.commons.database.DocumentType;
-import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import java.net.URL;
 import java.util.LinkedList;
@@ -23,22 +23,21 @@ import javafx.scene.layout.GridPane;
  *
  * @author Agat
  */
-public class ArticleGridController implements Initializable {
-
+public class CodeGridController implements Initializable {
     @FXML
     private GridPane inputArticleGrid;
-    @FXML
-    private TextArea inputTitle;
-    @FXML
-    private TextArea inputData;
-    @FXML
-    private TextArea inputKeywords;
     @FXML
     private Label currentArticleNr;
     @FXML
     private Label totalArticleCnt;
     @FXML
-    private TextArea outputData;
+    private TextArea newCode;
+    @FXML
+    private Label currentArticleNr1;
+    @FXML
+    private Label totalArticleCnt1;
+    @FXML
+    private TextArea foundCode;
     private List<List<PlagiarismResult>> allResults;
 
     /**
@@ -47,14 +46,13 @@ public class ArticleGridController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allResults = ResultSceneController.getSeparatedDocuments();
-        List<PlagiarismResult> allData = separateArticles().get(0);
+        List<PlagiarismResult> allData = separateCodes().get(0);
         if (allData.size() > 0) {
-            inputData.setText(allData.get(0).getNewDocument());
-            outputData.setText(allData.get(0).getExistingDocument());
+            newCode.setText(allData.get(0).getNewDocument());
+            foundCode.setText(allData.get(0).getExistingDocument());
         }
-    }
-
-    private List<List<PlagiarismResult>> separateArticles() {
+    }    
+    private List<List<PlagiarismResult>> separateCodes() {
         LinkedList<List<PlagiarismResult>> filteredArticles = new LinkedList<List<PlagiarismResult>>();
         List<PlagiarismResult> tempList = new LinkedList<PlagiarismResult>();
         if (allResults == null) {
@@ -63,7 +61,7 @@ public class ArticleGridController implements Initializable {
         for (List<PlagiarismResult> resultList : allResults) {
             System.out.println(resultList.toString());
             for (PlagiarismResult singleResult : resultList) {
-                if (singleResult.getType().equals(DocumentType.TEXT)) {
+                if (singleResult.getType().equals(DocumentType.CODE)) {
                     if (tempList.size() > 0) {
                         tempList.add(singleResult);
                     }

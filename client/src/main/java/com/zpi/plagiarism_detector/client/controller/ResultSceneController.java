@@ -39,14 +39,17 @@ public class ResultSceneController implements Initializable, Controller {
     TextField statWordsArtic, statWordsOvall, statPercArtic, statPercOvall;
     Node articleGridNode, codeGridNode;
     private static List<List<PlagiarismResult>> allDocuments;
-    private static final List<PlagiarismResult> returnedResult = MainSceneController.getAllResults();
+    private static List<PlagiarismResult> returnedResult;
     
     @FXML
     private ArticleGridController articleController;
+    private CodeGridController codeGridController;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         FXMLLoader loader = new FXMLLoader();
+        returnedResult = MainSceneController.getAllResults();
+        allDocuments = separateDocuments(returnedResult);
         try {
             articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
             codeGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/codeGrid.fxml"));
@@ -54,9 +57,6 @@ public class ResultSceneController implements Initializable, Controller {
             e.printStackTrace();
         }
         handleSwitchButtonAction();
-//        allDocuments = separateDocuments(returnedResult);
-        allDocuments = new LinkedList<List<PlagiarismResult>>();
-        allDocuments.add(returnedResult);
 //        statWordsArtic.setText(null);
 //        statWordsOvall.setText(Integer.toString(getAmountOfSimilarSentencesInAllResults(returnedResult)));
 //        statPercArtic.setText(null);
