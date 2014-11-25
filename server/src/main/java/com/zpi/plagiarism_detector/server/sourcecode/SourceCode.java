@@ -238,8 +238,7 @@ public class SourceCode {
      */
     public PlagiarismResult convertXml(String xml, String filename) {
 
-        PlagiarismResult result = new PlagiarismResult();
-        result.setType(DocumentType.CODE);
+        PlagiarismResult result = null;
 
         //mapa fragmentow
         Map<PlagiarismFragment, PlagiarismFragment> plagiarisedFragments = new HashMap<PlagiarismFragment, PlagiarismFragment>();
@@ -327,7 +326,12 @@ public class SourceCode {
             e.printStackTrace();
         }
 
-        result.setPlagiarisedFragments(plagiarisedFragments);
+        if (plagiarisedFragments.size()>0){
+	        result = new PlagiarismResult();
+	        result.setType(DocumentType.CODE);
+	        
+	        result.setPlagiarisedFragments(plagiarisedFragments);
+        }
 
         return result;
     }
@@ -356,26 +360,13 @@ public class SourceCode {
         Invocable invocable = (Invocable) engine;
         String example;
         Object result = null;
-
-//        try { TODO: delete
-            URL url = getClass().getClassLoader().getResource("highlight.pack.js");
-
-            engine.eval(new FileReader(url.getPath()));
+	        InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("highlight.pack.js");
+	        InputStreamReader inputStreamReader = new InputStreamReader(resourceAsStream);
+	        engine.eval(inputStreamReader);
+        
+//            engine.eval(new FileReader(url.getPath()));
             example = readFile(filename, Charset.defaultCharset());
             result = invocable.invokeFunction("fun1", example);
-//        } catch (FileNotFoundException e) {
-//            // brak pliku
-//            e.printStackTrace();
-//        } catch (ScriptException e) {
-//            // blad w skrypcie
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            // problem z owarciem pliku
-//            e.printStackTrace();
-//        } catch (NoSuchMethodException e) {
-//            // brak metody w pliku .js
-//            e.printStackTrace();
-//        }
         //zwrocone jezyki
         String[] split = ((String) result).split("\n");
 
