@@ -58,11 +58,13 @@ public class SourceCodeComparison {
 		        //uruchomienie porownania
 		        this.sc.go();
 		        
-		        result = sc.convertXml(sc.getMatches(pathNew), pathNew);
-		        FileLoader fl = new FileLoader(pathNew, pathExist);
-		        fl.loadFiles();
-		        result.setNewDocument(fl.getPattern());
-		        result.setExistingDocument(fl.getText());
+		        result = sc.convertXml(sc.getMatches(), pathNew);
+		        if (result != null){
+			        FileLoader fl = new FileLoader(pathNew, pathExist);
+			        fl.loadFiles();
+			        result.setNewDocument(fl.getPattern());
+			        result.setExistingDocument(fl.getText());
+		        }
 	        }else{
 	        	log.warn(pathNew + " or " + pathExist + " does not exist");
 	        }
