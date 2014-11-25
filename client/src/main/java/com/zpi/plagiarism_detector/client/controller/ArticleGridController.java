@@ -46,7 +46,7 @@ public class ArticleGridController implements Initializable {
     @FXML
     private Button prevArticle, nextArticle;
     private List<List<PlagiarismResult>> allResults;
-    private List<PlagiarismResult> allData = separateArticles().get(0);
+    private List<PlagiarismResult> allData;
     private SimpleIntegerProperty currArticleIndex = new SimpleIntegerProperty(1), totalArticleIndex = new SimpleIntegerProperty(1);
 
     /**
@@ -55,6 +55,7 @@ public class ArticleGridController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allResults = ResultSceneController.getSeparatedDocuments();
+        allData = separateArticles().get(0);
         System.out.println("ArticleGrid all documents: " + allResults.size());
         if (allData.size() > 0) {
             inputData.setText(allData.get(0).getNewDocument());
