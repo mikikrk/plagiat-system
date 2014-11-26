@@ -32,7 +32,7 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
         List<DocumentData> ret = new ArrayList<>();
         try {
             ret = webAnalyze(keywords);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return ret;
@@ -54,7 +54,7 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
              * Sprawdzanie czy dany link jest juz w bazie.
              */
             if (dao.containsUri(linksArray[i])) {
-                dao.addKeywordsToUri(linksArray[i], keywords); //dodanie slowa kluczowego jesli dany url jest ju¿ w bazie, ale szukany keyword siê tam nie znajduje.
+                dao.addKeywordsToUri(linksArray[i], keywords); //dodanie slowa kluczowego jesli dany url jest juï¿½ w bazie, ale szukany keyword siï¿½ tam nie znajduje.
             }else{
 
                 String fileName = null;

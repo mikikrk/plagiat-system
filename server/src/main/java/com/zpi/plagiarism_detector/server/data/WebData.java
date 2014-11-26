@@ -15,8 +15,7 @@ public class WebData {
     }
 
     public List<DocumentData> searchDocuments(Set<String> keywords) {
-        List<DocumentData> ret = new ArrayList<>();
-        ret = websiteAnalyze.analyze(keywords);
+        List<DocumentData> ret = websiteAnalyze.analyze(keywords);
         return ret;
     }
 
