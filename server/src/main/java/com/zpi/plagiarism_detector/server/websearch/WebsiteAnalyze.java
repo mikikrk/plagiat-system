@@ -32,9 +32,7 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
         List<DocumentData> ret = new ArrayList<>();
         try {
             ret = webAnalyze(keywords);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        } catch (Exception ex) {}
         return ret;
     }
     
