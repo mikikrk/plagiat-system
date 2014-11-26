@@ -3,7 +3,10 @@ package com.zpi.plagiarism_detector.server.articles;
 
 
 import java.io.IOException;
+import java.util.HashMap;
 
+import com.zpi.plagiarism_detector.commons.database.DocumentType;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 
 
@@ -38,14 +41,19 @@ public class CompareEngine {
      * @param _text
      */
     public PlagiarismResult compare(String _pattern, String _text) throws IOException {
+    	comparisonResult = new PlagiarismResult();
+    	comparisonResult.setType(DocumentType.TEXT);
+    	comparisonResult.setPlagiarisedFragments(new HashMap<PlagiarismFragment, PlagiarismFragment>());
         fL = new FileLoader(_pattern, _text);
         fL.loadFiles();
         pattern = fL.getPattern();
+        comparisonResult.setNewDocument(fL.getPattern());
+        comparisonResult.setExistingDocument(fL.getText());
         text = fL.getText();
         this.splitStrings();
         int indexStart = 0;
         for (String patternSentence : patternTab) {
-            comparisonResult = tP.compareTexts(textTab, patternSentence, indexStart);
+            comparisonResult.getPlagiarisedFragments().putAll(tP.compareTexts(textTab, patternSentence, indexStart));
             indexStart+=patternSentence.length();
         }
 

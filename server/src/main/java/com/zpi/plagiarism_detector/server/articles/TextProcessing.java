@@ -6,6 +6,7 @@ import java.util.Map;
 import com.zpi.plagiarism_detector.commons.database.DocumentType;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+import com.zpi.plagiarism_detector.server.ServerProperties;
 
 
 public class TextProcessing {
@@ -14,11 +15,9 @@ public class TextProcessing {
     private String textPath;
     private double sentenceWordsCount;
     private double repeatedWords;
-    private PlagiarismResult plagiarismResult = new PlagiarismResult();
-    private Map<PlagiarismFragment, PlagiarismFragment> map = new LinkedHashMap<PlagiarismFragment, PlagiarismFragment>();
-
+    private Map<PlagiarismFragment, PlagiarismFragment> map;
+    
     public TextProcessing() {
-    	plagiarismResult.setType(DocumentType.TEXT);
     }
 
     /**
@@ -28,7 +27,8 @@ public class TextProcessing {
      * @param p
      * @param patternStart
      */
-    public PlagiarismResult compareTexts(String[] str, String p,int patternStart) {
+    public Map<PlagiarismFragment, PlagiarismFragment> compareTexts(String[] str, String p,int patternStart) {
+    	map  = new LinkedHashMap<PlagiarismFragment, PlagiarismFragment>();
         int textStart = 0;
         String tmpPattern = p;
         for(String textSentence : str){
@@ -57,8 +57,7 @@ public class TextProcessing {
     		}
     		textStart+=tmpText.length();
         }
-        plagiarismResult.setPlagiarisedFragments(map);
-        return plagiarismResult;
+        return map;
     }
 
 }

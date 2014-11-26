@@ -49,16 +49,12 @@ public class ResultSceneController implements Initializable, Controller {
     public void initialize(URL url, ResourceBundle rb) {
         FXMLLoader loader = new FXMLLoader();
         returnedResult = MainSceneController.getAllResults();
-        System.out.println("ResultScene all documents: " + returnedResult.size());
 
         allDocuments = separateDocuments(returnedResult);
-        System.out.println("ResultScene all documents: " + allDocuments.size());
-        if (allDocuments.size()>0){
-        	for (List<PlagiarismResult> list : allDocuments){
+        System.out.println(allDocuments.size());
+        if ( allDocuments.size() > 0){
+        	for (List<PlagiarismResult> list: allDocuments)
         		System.out.println(list.size());
-        		System.out.println(list.get(0).getNewDocument());
-        		System.out.println(list.get(0).getType());
-        	}
         }
         try {
             articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
