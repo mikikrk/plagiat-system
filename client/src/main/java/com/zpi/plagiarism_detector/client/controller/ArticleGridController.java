@@ -48,7 +48,7 @@ public class ArticleGridController implements Initializable {
     @FXML
     private Button prevArticle, nextArticle;
     private List<List<PlagiarismResult>> allResults;
-    private List<PlagiarismResult> allData = new LinkedList<PlagiarismResult>();
+    private List<PlagiarismResult> allData;
     private SimpleIntegerProperty currArticleIndex = new SimpleIntegerProperty(1), totalArticleIndex = new SimpleIntegerProperty(1);
 
     /**
@@ -57,9 +57,7 @@ public class ArticleGridController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         allResults = ResultSceneController.getSeparatedDocuments();
-        if (separateArticles().size() > 0) {
-            allData = separateArticles().get(0);
-        }
+        allData = separateArticles().get(0);
         System.out.println("ArticleGrid all documents: " + allResults.size());
         if (allData.size() > 0) {
             inputData.setText(allData.get(0).getNewDocument());
@@ -72,8 +70,6 @@ public class ArticleGridController implements Initializable {
         Bindings.bindBidirectional(totalArticleCnt.textProperty(),
                 totalArticleIndex,
                 new NumberStringConverter());
-        inputTitle.setText(MainSceneController.getTitle());
-        inputKeywords.setText(MainSceneController.getKeywords());
     }
 
     private List<List<PlagiarismResult>> separateArticles() {
@@ -81,17 +77,15 @@ public class ArticleGridController implements Initializable {
         List<PlagiarismResult> tempList = new LinkedList<PlagiarismResult>();
         for (List<PlagiarismResult> resultList : allResults) {
             System.out.println("resultListSize: " + resultList.size());
-            tempList.clear();
             for (PlagiarismResult singleResult : resultList) {
                 if (singleResult.getType().equals(DocumentType.TEXT)) {
                     tempList.add(singleResult);
                 }
             }
-            if (!tempList.isEmpty()) {
-                filteredArticles.add(tempList);
-            }
+            filteredArticles.add(tempList);
         }
-        return filteredArticles;
+//        return filteredArticles;
+        return allResults;
     }
 
     @FXML
@@ -111,16 +105,16 @@ public class ArticleGridController implements Initializable {
         }
         colorSimilarSentences(allData.get(currArticleIndex.get() - 1));
     }
-
+    
     private void colorSimilarSentences(PlagiarismResult result) {
         inputData.setStyle("-fx-highlight-fill: orange; -fx-highlight-text-fill: firebrick;");
         outputData.setStyle("-fx-highlight-fill: red; -fx-highlight-text-fill: firebrick;");
         Map<PlagiarismFragment, PlagiarismFragment> map = result.getPlagiarisedFragments();
-        for (PlagiarismFragment inValue : map.keySet()) {
-            inputData.selectRange(inValue.getBegin(), inValue.getEnd());
+        for(PlagiarismFragment inValue: map.keySet()) {
+         inputData.selectRange(inValue.getBegin(), inValue.getEnd());
         }
-        for (PlagiarismFragment outValue : map.values()) {
-            outputData.selectRange(outValue.getBegin(), outValue.getEnd());
+        for(PlagiarismFragment outValue: map.values()) {
+         outputData.selectRange(outValue.getBegin(), outValue.getEnd());
         }
     }
 }

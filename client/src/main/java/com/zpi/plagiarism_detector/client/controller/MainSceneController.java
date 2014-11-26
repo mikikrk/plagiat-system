@@ -51,7 +51,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
     private List<String> codeList = new ArrayList<String>();
     private SimpleIntegerProperty currCodeIndex = new SimpleIntegerProperty(1), totalCodeIndex = new SimpleIntegerProperty(1);
     private Stage progressStage = new Stage();
-    private static String articleTitle = new String(""), articleKeywords = new String("");
+    public static boolean isArticle = false, isCode = false;
 
     public static void showMainWindow() {
         mainWindow.show();
@@ -85,8 +85,6 @@ public class MainSceneController implements Initializable, Controller, Observer 
                 if (allResults.isEmpty()) {
                     showNotPlagiarismScene();
                 } else {
-                    articleTitle = documentData.getTitle();
-                    articleKeywords = documentData.getKeywordsJoined();
                     mainWindow = (Stage) checkButton.getScene().getWindow();
                     mainWindow.hide();
                     for (PlagiarismResult res : allResults) {
@@ -312,11 +310,5 @@ public class MainSceneController implements Initializable, Controller, Observer 
             return false;
         }
         return true;
-    }
-    public static String getTitle() {
-        return articleTitle;
-    }
-    public static String getKeywords() {
-        return articleKeywords;
     }
 }
