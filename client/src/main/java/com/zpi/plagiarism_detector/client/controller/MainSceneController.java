@@ -11,8 +11,14 @@ import com.zpi.plagiarism_detector.commons.protocol.ProtocolCode;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismDetectionResult;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import com.zpi.plagiarism_detector.commons.util.TextUtils;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.*;
 import javafx.beans.binding.Bindings;
@@ -28,8 +34,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
+import javax.swing.JFileChooser;
+import org.apache.pdfbox.cos.COSDocument;
+import org.apache.pdfbox.pdfparser.PDFParser;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFTextStripper;
 
 public class MainSceneController implements Initializable, Controller, Observer {
 
@@ -47,6 +60,8 @@ public class MainSceneController implements Initializable, Controller, Observer 
     private Label label, appTitle, currentArticleNr, totalArticleCnt;
     @FXML
     private TextArea inputData, inputTitle, inputKeywords, inputCode;
+    @FXML
+    private TextField fileInput;
 
     private List<String> codeList = new ArrayList<String>();
     private SimpleIntegerProperty currCodeIndex = new SimpleIntegerProperty(1), totalCodeIndex = new SimpleIntegerProperty(1);
@@ -149,6 +164,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
         inputTitle.setText(null);
         inputKeywords.setText(null);
         inputCode.setText(null);
+        fileInput.setText(null);
         codeList.clear();
         codeList.add(null);
         System.out.println(codeList.size());
@@ -193,6 +209,25 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
         }
 
+    }
+
+    @FXML
+    private void handleLoadFromFileButton() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("TXT", "*.txt"),
+                new FileChooser.ExtensionFilter("PDF", "*.pdf")
+        );
+        File file = fileChooser.showOpenDialog(mainWindow);
+        if (file != null) {
+            System.out.println("Chosen!");
+            fileInput.setText(file.getAbsolutePath());
+            inputTitle.setText(file.getName().substring(0, file.getName().lastIndexOf(".")));
+            readFile(file);
+        }
     }
 
     private void showResultScene() throws IOException {
@@ -313,10 +348,77 @@ public class MainSceneController implements Initializable, Controller, Observer 
         }
         return true;
     }
+
     public static String getTitle() {
         return articleTitle;
     }
+
     public static String getKeywords() {
         return articleKeywords;
+    }
+
+    private void readFile(File f) {
+        String extension = f.getName().substring(f.getName().lastIndexOf(".") + 1);
+        switch (extension) {
+            case "txt":
+                readTXT(f);
+                break;
+            case "pdf":
+                readPDF(f);
+                break;
+            default:
+                ViewUtils.showWarningDialog("File read failuire", "File extension not suppported", "The file you provided has an unsupported extension");
+        }
+    }
+
+    private void readTXT(File f) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(f));
+            String line;
+            inputData.setText(null);
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                inputData.appendText(line + "\n");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void readPDF(File f) {
+        PDFParser parser;
+        PDFTextStripper textStripper;
+        PDDocument document = null;
+        COSDocument COSDoc = null;
+        String text;
+        try {
+            parser = new PDFParser(new FileInputStream(f));
+            parser.parse();
+            COSDoc = parser.getDocument();
+            document = new PDDocument(COSDoc);
+            textStripper = new PDFTextStripper();
+            textStripper.setStartPage(1);
+            textStripper.setEndPage(document.getNumberOfPages());
+            text = textStripper.getText(document);
+            inputData.setText(text);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+			try {
+				if (COSDoc != null)
+					COSDoc.close();
+				if (document != null)
+					document.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
     }
 }
