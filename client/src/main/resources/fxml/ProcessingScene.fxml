@@ -22,6 +22,6 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <ProgressIndicator progress="0.0" GridPane.rowIndex="1" />
+      <!--<ProgressIndicator progress="0.0" GridPane.rowIndex="1" />-->
    </children>
 </GridPane>

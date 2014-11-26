@@ -50,7 +50,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
     private List<String> codeList = new ArrayList<String>();
     private SimpleIntegerProperty currCodeIndex = new SimpleIntegerProperty(1), totalCodeIndex = new SimpleIntegerProperty(1);
-    private Stage progressStage;
+    private Stage progressStage = new Stage();
     public static boolean isArticle = false, isCode = false;
 
     public static void showMainWindow() {
@@ -64,6 +64,8 @@ public class MainSceneController implements Initializable, Controller, Observer 
         if (validate(documentData)) {
 
             try {
+//                showProgressScene();
+
                 ExecutorService executor = Executors.newFixedThreadPool(1);
 
                 FutureTask<Object> task = new FutureTask(new Callable() {
@@ -79,7 +81,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
                 Future<?> submit = executor.submit(task);
                 task.get();
-                hideProgressScene();
+//                hideProgressScene();
                 if (allResults.isEmpty()) {
                     showNotPlagiarismScene();
                 } else {
@@ -97,7 +99,7 @@ public class MainSceneController implements Initializable, Controller, Observer 
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Insert valid data");
+            ViewUtils.showWarningDialog("Validation error", "Data not valid", "Insert valid data before you proceed");
         }
     }
 
@@ -223,7 +225,6 @@ public class MainSceneController implements Initializable, Controller, Observer 
         System.out.println("You clicked me, bastard!");
         URL url = getClass().getResource("/fxml/ProcessingScene.fxml");
         root = FXMLLoader.load(url);
-        progressStage = new Stage();
         progressStage.setTitle("Processing");
         Scene scene = new Scene(root, 300, 150);
         scene.getStylesheets().add("/styles/Styles.css");
@@ -287,11 +288,6 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
         ProtocolCode code = message.getCode();
         if (code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
-            try {
-                showProgressScene();
-            } catch (IOException e) {
-
-            }
             PlagiarismDetectionResult plagiarismDetectionResult = (PlagiarismDetectionResult) message.getSentObject();
             allResults = plagiarismDetectionResult.getAllResults();
         }
@@ -302,15 +298,15 @@ public class MainSceneController implements Initializable, Controller, Observer 
     }
 
     private boolean validate(DocumentData data) {
-        if(data.getTitle().equals("") || data.getTitle() == null) {
+        if (data.getTitle().equals("") || data.getTitle() == null) {
             return false;
         }
-        if(data.getKeywordsJoined().equals("") || data.getKeywordsJoined() == null) {
+        if (data.getKeywordsJoined().equals("") || data.getKeywordsJoined() == null) {
             return false;
         }
         String article = data.getArticle();
         int codeCnt = data.getCodesCount();
-        if((article.equals("") || article == null) && codeCnt == 0) {
+        if ((article.equals("") || article == null) && codeCnt == 0) {
             return false;
         }
         return true;
