@@ -120,7 +120,9 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
                          * Tu wpisujemy wybrane tagi lub klasy CSS.
                          * Klasy zaczynaja sie ".", id "#", a tagi to sama nazwa. 
                          */
-                        Elements texts = doc.select(".abstract, .description, .abstr");
+//                        Elements texts = doc.select(".abstract, .description, .abstr");
+                        Elements texts = doc.select("p, div, h");
+
                         for (org.jsoup.nodes.Element text : texts) {
                             articleText += text.text();
 

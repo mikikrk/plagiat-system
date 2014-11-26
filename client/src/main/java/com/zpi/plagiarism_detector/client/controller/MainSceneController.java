@@ -50,6 +50,8 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
     private List<String> codeList = new ArrayList<String>();
     private SimpleIntegerProperty currCodeIndex = new SimpleIntegerProperty(1), totalCodeIndex = new SimpleIntegerProperty(1);
+    private Stage progressStage;
+    public static boolean isArticle = false, isCode = false;
 
     public static void showMainWindow() {
         mainWindow.show();
@@ -59,48 +61,44 @@ public class MainSceneController implements Initializable, Controller, Observer 
     private void handleButtonAction(ActionEvent event) {
 
         final DocumentData documentData = getViewDocumentData();
+        if (validate(documentData)) {
 
-        try {
-            ExecutorService executor = Executors.newFixedThreadPool(1);
+            try {
+                ExecutorService executor = Executors.newFixedThreadPool(1);
 
-            FutureTask<Object> task = new FutureTask(new Callable() {
-                @Override
-                public Object call() throws CannotConnectToTheServerException {
-                    model.openConnection();
-                    Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
-                    model.sendMessage(message);
-                    model.closeConnection();
-                    return null;
+                FutureTask<Object> task = new FutureTask(new Callable() {
+                    @Override
+                    public Object call() throws CannotConnectToTheServerException {
+                        model.openConnection();
+                        Message message = new Message(ProtocolCode.CHECK_FOR_PLAGIARISM, documentData);
+                        model.sendMessage(message);
+                        model.closeConnection();
+                        return null;
+                    }
+                });
+
+                Future<?> submit = executor.submit(task);
+                task.get();
+                hideProgressScene();
+                if (allResults.isEmpty()) {
+                    showNotPlagiarismScene();
+                } else {
+                    mainWindow = (Stage) checkButton.getScene().getWindow();
+                    mainWindow.hide();
+                    for (PlagiarismResult res : allResults) {
+                        System.out.println(res.getExistingDocument());
+                    }
+                    showResultScene();
                 }
-            });
-
-            Future<?> submit = executor.submit(task);
-            task.get();
-            
-            if(allResults.isEmpty()) {
-                showNotPlagiarismScene();
-            } else {
-            mainWindow = (Stage) checkButton.getScene().getWindow();
-            mainWindow.hide();
-            for(PlagiarismResult res: allResults) {
-                System.out.println(res.getExistingDocument());
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            showResultScene();
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-            ViewUtils.showErrorDialog("Error", "Connection error", "Server is down or there are other issues with connection!");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            System.out.println("Insert valid data");
         }
-//
-//         /*
-//         System.out.println("You clicked me!");
-//         outputData.setText("Napisa?e?: " + inputData.getText());
-//         outputData.setStyle("-fx-highlight-fill: lightgray; -fx-highlight-text-fill: firebrick;");
-//         outputData.selectRange(11, outputData.getLength());
-//         label.setText("Hello Guys! ;)");
-//         */
     }
 
     private DocumentData getViewDocumentData() {
@@ -108,12 +106,12 @@ public class MainSceneController implements Initializable, Controller, Observer 
         String title = inputTitle.getText();
         String keywords = inputKeywords.getText();
         Set<String> keywordsSet = new HashSet<String>();
-        if(!keywords.isEmpty()) {
-        keywordsSet = TextUtils.splitIntoSet(keywords);
+        if (!keywords.isEmpty()) {
+            keywordsSet = TextUtils.splitIntoSet(keywords);
         }
         Set<String> codes = new HashSet<String>();
-        for (String code: codeList) {
-            if(!code.equals("") && code != null) {
+        for (String code : codeList) {
+            if (!code.equals("") && code != null) {
                 codes.add(code);
             }
         }
@@ -156,9 +154,9 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
     @FXML
     private void handleAddNewCodeAction() {
-        currCodeIndex.set(currCodeIndex.get()+1);
-        totalCodeIndex.set(totalCodeIndex.get()+1);
-        codeList.add(currCodeIndex.get()-1, null);
+        currCodeIndex.set(currCodeIndex.get() + 1);
+        totalCodeIndex.set(totalCodeIndex.get() + 1);
+        codeList.add(currCodeIndex.get() - 1, null);
         inputCode.setText(null);
         System.out.println(totalCodeIndex.get());
     }
@@ -166,28 +164,28 @@ public class MainSceneController implements Initializable, Controller, Observer 
     @FXML
     private void handlePrevCodeAction() {
         if (currCodeIndex.get() > 1) {
-        currCodeIndex.set(currCodeIndex.get()-1);
-            inputCode.setText(codeList.get(currCodeIndex.get()-1));
+            currCodeIndex.set(currCodeIndex.get() - 1);
+            inputCode.setText(codeList.get(currCodeIndex.get() - 1));
         }
     }
 
     @FXML
     private void handleNextCodeAction() {
         if (currCodeIndex.get() < totalCodeIndex.get()) {
-        currCodeIndex.set(currCodeIndex.get()+1);
-            inputCode.setText(codeList.get(currCodeIndex.get()-1));
+            currCodeIndex.set(currCodeIndex.get() + 1);
+            inputCode.setText(codeList.get(currCodeIndex.get() - 1));
         }
     }
 
     @FXML
     private void handleRemoveCodeAction() {
         if (totalCodeIndex.get() > 1) {
-            codeList.remove(currCodeIndex.get()-1);
+            codeList.remove(currCodeIndex.get() - 1);
             if (currCodeIndex.get() == totalCodeIndex.get()) {
-        currCodeIndex.set(currCodeIndex.get()-1);
+                currCodeIndex.set(currCodeIndex.get() - 1);
             }
-            inputCode.setText(codeList.get(currCodeIndex.get()-1));
-            totalCodeIndex.set(totalCodeIndex.get()-1);
+            inputCode.setText(codeList.get(currCodeIndex.get() - 1));
+            totalCodeIndex.set(totalCodeIndex.get() - 1);
 
         }
 
@@ -203,38 +201,56 @@ public class MainSceneController implements Initializable, Controller, Observer 
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
-    
+
     private void showNotPlagiarismScene() throws IOException {
         Parent root;
         System.out.println("You clicked me, bastard!");
-        URL url = getClass().getResource("/fxml/ServerSettings.fxml");
+        URL url = getClass().getResource("/fxml/NotPlagiarismScene.fxml");
         root = FXMLLoader.load(url);
         Stage stage = new Stage();
-        stage.setTitle("Result");
-        Scene scene = new Scene(root, 800, 600);
+        stage.setTitle("Plagiarism detection result");
+        Scene scene = new Scene(root, 300, 150);
         scene.getStylesheets().add("/styles/Styles.css");
         stage.setScene(scene);
         stage.show();
     }
 
+    private void showProgressScene() throws IOException {
+        Parent root;
+        System.out.println("You clicked me, bastard!");
+        URL url = getClass().getResource("/fxml/ProcessingScene.fxml");
+        root = FXMLLoader.load(url);
+        progressStage = new Stage();
+        progressStage.setTitle("Processing");
+        Scene scene = new Scene(root, 300, 150);
+        scene.getStylesheets().add("/styles/Styles.css");
+        progressStage.setScene(scene);
+        progressStage.show();
+    }
+
+    private void hideProgressScene() {
+        progressStage.hide();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         model = createModel();
-        Bindings.bindBidirectional(currentArticleNr.textProperty(), 
-                           currCodeIndex, 
-                           new NumberStringConverter());
-        Bindings.bindBidirectional(totalArticleCnt.textProperty(), 
-                           totalCodeIndex, 
-                           new NumberStringConverter());
+        Bindings.bindBidirectional(currentArticleNr.textProperty(),
+                currCodeIndex,
+                new NumberStringConverter());
+        Bindings.bindBidirectional(totalArticleCnt.textProperty(),
+                totalCodeIndex,
+                new NumberStringConverter());
         codeList.add("");
         inputCode.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
                 if (!newValue) {
-                    codeList.set(currCodeIndex.get()-1, inputCode.getText());
-                    System.out.println(codeList.get(currCodeIndex.get()-1));
+                    codeList.set(currCodeIndex.get() - 1, inputCode.getText());
+                    System.out.println(codeList.get(currCodeIndex.get() - 1));
                 }
             }
         });
@@ -271,15 +287,32 @@ public class MainSceneController implements Initializable, Controller, Observer 
 
         ProtocolCode code = message.getCode();
         if (code == ProtocolCode.PLAGIARISM_CHECK_RESULT) {
+            try {
+                showProgressScene();
+            } catch (IOException e) {
+
+            }
             PlagiarismDetectionResult plagiarismDetectionResult = (PlagiarismDetectionResult) message.getSentObject();
             allResults = plagiarismDetectionResult.getAllResults();
         }
     }
-    
+
     public static List<PlagiarismResult> getAllResults() {
         return allResults;
-//        PlagiarismDetectionResult res = new PlagiarismDetectionResult();
-//        res.addPlagiarismResult(new PlagiarismResult());
-//        return res.getAllResults();
+    }
+
+    private boolean validate(DocumentData data) {
+        if(data.getTitle().equals("") || data.getTitle() == null) {
+            return false;
+        }
+        if(data.getKeywordsJoined().equals("") || data.getKeywordsJoined() == null) {
+            return false;
+        }
+        String article = data.getArticle();
+        int codeCnt = data.getCodesCount();
+        if((article.equals("") || article == null) && codeCnt == 0) {
+            return false;
+        }
+        return true;
     }
 }
