@@ -26,6 +26,7 @@ import com.zpi.plagiarism_detector.client.model.factories.ClientFactory;
 import com.zpi.plagiarism_detector.client.view.SwitchButton;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
+import javafx.event.EventHandler;
 
 import javafx.scene.control.TextField;
 
@@ -40,7 +41,7 @@ public class ResultSceneController implements Initializable, Controller {
     Node articleGridNode, codeGridNode;
     private static List<List<PlagiarismResult>> allDocuments;
     private static List<PlagiarismResult> returnedResult;
-    
+
     @FXML
     private ArticleGridController articleController;
     private CodeGridController codeGridController;
@@ -52,9 +53,10 @@ public class ResultSceneController implements Initializable, Controller {
 
         allDocuments = separateDocuments(returnedResult);
         System.out.println(allDocuments.size());
-        if ( allDocuments.size() > 0){
-        	for (List<PlagiarismResult> list: allDocuments)
-        		System.out.println(list.size());
+        if (allDocuments.size() > 0) {
+            for (List<PlagiarismResult> list : allDocuments) {
+                System.out.println(list.size());
+            }
         }
         try {
             articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
@@ -67,6 +69,16 @@ public class ResultSceneController implements Initializable, Controller {
         statWordsOvall.setText(Integer.toString(getAmountOfSimilarSentencesInAllResults(returnedResult)));
         statPercArtic.setText(null);
         statPercOvall.setText(Integer.toString(getPercantageOfSimilarityInAllResults(returnedResult)));
+        
+        switchButton.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (event.getEventType().equals(ActionEvent.ACTION)) {
+                    handleSwitchButtonAction();
+                }
+            }
+        });
     }
 
     @FXML
@@ -101,7 +113,6 @@ public class ResultSceneController implements Initializable, Controller {
         LinkedList<PlagiarismResult> docResults;
         LinkedList<String> foundResults = new LinkedList<String>();
 
-        
         while (!results.isEmpty() && doc != null) {
             doc = null;
             docResults = new LinkedList<PlagiarismResult>();
@@ -118,13 +129,13 @@ public class ResultSceneController implements Initializable, Controller {
                     }
                 }
             }
-            if (!docResults.isEmpty()){
-            	allResults.add(docResults);
+            if (!docResults.isEmpty()) {
+                allResults.add(docResults);
             }
         }
         return allResults;
     }
-    
+
     public static List<List<PlagiarismResult>> getSeparatedDocuments() {
         return allDocuments;
     }
@@ -165,9 +176,9 @@ public class ResultSceneController implements Initializable, Controller {
      * @return
      */
     private int getPercantageOfSimilarity(PlagiarismResult result) {
-      int fragmentsAmount = result.getPlagiarisedFragments().entrySet().size();
-      int sentencesAmount =  result.getNewDocument().split("\\.").length;
-      return fragmentsAmount/ sentencesAmount;
+        int fragmentsAmount = result.getPlagiarisedFragments().entrySet().size();
+        int sentencesAmount = result.getNewDocument().split("\\.").length;
+        return fragmentsAmount / sentencesAmount;
     }
 
     /**
@@ -179,7 +190,7 @@ public class ResultSceneController implements Initializable, Controller {
      * @return
      */
     private int getPercantageOfSimilarityInAllResults(List<PlagiarismResult> results) {
-    	int sentencesAmount =  results.get(0).getNewDocument().split("\\.").length;
+        int sentencesAmount = results.get(0).getNewDocument().split("\\.").length;
         int fragmentsAmount = 0;
         for (PlagiarismResult result : results) {
             fragmentsAmount += getPercantageOfSimilarity(result);
