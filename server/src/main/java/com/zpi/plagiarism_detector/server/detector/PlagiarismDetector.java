@@ -8,9 +8,7 @@ import com.zpi.plagiarism_detector.server.data.ServerData;
 import com.zpi.plagiarism_detector.server.data.WebData;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class PlagiarismDetector {
     private ServerData serverData;
@@ -30,7 +28,9 @@ public class PlagiarismDetector {
 
     public PlagiarismDetectionResult checkForPlagiarism(DocumentData document) throws IOException {
         extractData(document);
-        saveDocument();
+        saveCheckedDocument();
+        downloadSimilarDocsFromWeb();
+
         List<PlagiarismResult> results = new ArrayList<>();
         if (articlePath != null) {
             List<PlagiarismResult> articleResults = checkArticle();
@@ -50,10 +50,17 @@ public class PlagiarismDetector {
         this.keywords = document.getKeywords();
     }
 
-    private void saveDocument() throws IOException {
+    private void saveCheckedDocument() throws IOException {
         int codesCount = analyzedDocument.getCodesCount();
         codesPaths = new ArrayList<>(codesCount);
         articlePath = serverData.saveDocument(analyzedDocument, codesPaths);
+    }
+
+    private void downloadSimilarDocsFromWeb() throws IOException {
+        List<DocumentData> downloadedDocuments = webData.searchDocuments(keywords);
+        for (DocumentData downloadedDoc : downloadedDocuments) {
+            serverData.saveDocument(downloadedDoc, new ArrayList<String>());
+        }
     }
 
     private List<PlagiarismResult> checkArticle() {
