@@ -6,10 +6,12 @@
 package com.zpi.plagiarism_detector.client.controller;
 
 import com.zpi.plagiarism_detector.commons.database.DocumentType;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -63,7 +65,9 @@ public class CodeGridController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         allResults = ResultSceneController.getSeparatedDocuments();
         allResults = separateCodes();
-        currentCodeList = allResults.get(0);
+        if (allResults.size() > 0) {
+            currentCodeList = allResults.get(0);
+        }
         if (currentCodeList.size() > 0) {
             newCode.setText(currentCodeList.get(0).getNewDocument());
             foundCode.setText(currentCodeList.get(0).getExistingDocument());
@@ -139,6 +143,18 @@ public class CodeGridController implements Initializable {
             totalCodeIndexOut.set(currentCodeList.size());
             newCode.setText(currentCodeList.get(0).getNewDocument());
             foundCode.setText(currentCodeList.get(0).getExistingDocument());
+        }
+    }
+    
+    private void colorSimilarSentences(PlagiarismResult result) {
+        newCode.setStyle("-fx-highlight-fill: orange; -fx-highlight-text-fill: firebrick;");
+        foundCode.setStyle("-fx-highlight-fill: red; -fx-highlight-text-fill: firebrick;");
+        Map<PlagiarismFragment, PlagiarismFragment> map = result.getPlagiarisedFragments();
+        for (PlagiarismFragment inValue : map.keySet()) {
+            newCode.selectRange(inValue.getBegin(), inValue.getEnd());
+        }
+        for (PlagiarismFragment outValue : map.values()) {
+            foundCode.selectRange(outValue.getBegin(), outValue.getEnd());
         }
     }
 }
