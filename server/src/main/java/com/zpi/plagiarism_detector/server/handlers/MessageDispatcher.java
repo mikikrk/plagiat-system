@@ -58,12 +58,6 @@ public class MessageDispatcher {
         try {
             DocumentData document = (DocumentData) sentObject;
             PlagiarismDetectionResult result = plagiarismDetector.checkForPlagiarism(document);
-            System.out.println("\n\n\n\n\n\n" + result.getAllResults().size() + " \n\n\n\n\n\n\n");
-            if(result.getAllResults().size()>0){
-            	for(PlagiarismResult res: result.getAllResults()){
-            		System.out.println(res.getNewDocument() + res.getExistingDocument());
-            	}
-            }
             response = new Message(ProtocolCode.PLAGIARISM_CHECK_RESULT, result);
         } catch (IOException e) {
             response = new Message(ProtocolCode.PLAGIARISM_CHECK_ERROR, e.getCause());

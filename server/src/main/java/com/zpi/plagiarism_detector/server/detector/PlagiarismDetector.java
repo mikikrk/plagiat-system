@@ -29,7 +29,7 @@ public class PlagiarismDetector {
     public PlagiarismDetectionResult checkForPlagiarism(DocumentData document) throws IOException {
         extractData(document);
         saveCheckedDocument();
-        downloadSimilarDocsFromWeb();
+//        	downloadSimilarDocsFromWeb();
 
         List<PlagiarismResult> results = new ArrayList<>();
         if (articlePath != null) {

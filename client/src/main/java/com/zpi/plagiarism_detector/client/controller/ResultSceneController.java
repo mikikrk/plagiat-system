@@ -51,11 +51,6 @@ public class ResultSceneController implements Initializable, Controller {
         returnedResult = MainSceneController.getAllResults();
 
         allDocuments = separateDocuments(returnedResult);
-        System.out.println(allDocuments.size());
-        if ( allDocuments.size() > 0){
-        	for (List<PlagiarismResult> list: allDocuments)
-        		System.out.println(list.size());
-        }
         try {
             articleGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/articleGrid.fxml"));
             codeGridNode = (Node) loader.load(getClass().getResource("/fxml/includes/codeGrid.fxml"));

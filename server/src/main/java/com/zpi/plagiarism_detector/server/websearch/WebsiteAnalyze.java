@@ -118,8 +118,7 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
                          * Tu wpisujemy wybrane tagi lub klasy CSS.
                          * Klasy zaczynaja sie ".", id "#", a tagi to sama nazwa. 
                          */
-//                        Elements texts = doc.select(".abstract, .description, .abstr");
-                        Elements texts = doc.select("p, div, h");
+                        Elements texts = doc.select("p, div");
 
                         for (org.jsoup.nodes.Element text : texts) {
                             articleText += text.text();
@@ -131,33 +130,7 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
                                 check2 = true;    
                             }
                         }
-                        if (articleText != null && check2) {
-                                serres.setArticle(articleText);
-                                serres.setUrl(linksArray[i]);
-                                serres.setTitle(siteTitle);
-                                serres.setKeywords(keywords);
-                                codesArray.add("n/a");
-                                serres.setCodes(codesArray);
-                                sr.add(serres);
-                        }
-                    }
-                }
-
-                /**
-                 * Jesli wyszukana strona ma pola z kodem zwracane sa one jako 
-                 * lista wraz z reszta parametrow uzywajac klasy DocumentData.
-                 */
-                else if (contentType.contains("text/html")) {
-                    DocumentData serres = new DocumentData();
-                    Set<String> codesArray = new HashSet<>();
-                    String siteTitle;
-                    org.jsoup.Connection con = Jsoup.connect(linksArray[i]).ignoreHttpErrors(true).userAgent("Mozilla"); //przygotowanie pliku html do analizy                    
-
-                    org.jsoup.nodes.Document doc = null;
-                    if (con.execute().statusCode() == 200) {
-                        doc = con.get();
-
-                        siteTitle = doc.title();
+                        
                         String codeText = null;
                         Elements codes = doc.select("pre, code, prettyprint, brush"); //tu wpisujemy tagi lub klasy CSS zawierajace w htmlu kod 
                         for (org.jsoup.nodes.Element code : codes) {
@@ -171,14 +144,13 @@ public class WebsiteAnalyze implements WebsiteAnalyzeInterface {
                                 codesArray.add(codeText);
                             }
                         }
-                        if (codesArray != null) {
-                            serres.setArticle("n/a");
-                            serres.setUrl(linksArray[i]);
-                            serres.setTitle(siteTitle);
-                            serres.setKeywords(keywords);
-                            serres.setCodes(codesArray);
-                            sr.add(serres);
-
+                        if (articleText != null && check2) {
+                                serres.setArticle(articleText);
+                                serres.setUrl(linksArray[i]);
+                                serres.setTitle(siteTitle);
+                                serres.setKeywords(keywords);
+                                serres.setCodes(codesArray);
+                                sr.add(serres);
                         }
                     }
                 }

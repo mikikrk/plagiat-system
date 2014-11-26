@@ -22,7 +22,6 @@ public class ComparingAlgorithm {
         List<PlagiarismResult> overalResults = new LinkedList<>();
         for (String matchingCodePath : matchingArticlesPaths) {
             PlagiarismResult plagiarismResult = articleComparison.compare(articlePath, matchingCodePath);
-            System.out.println("Sprawdzamy!!!!!\n\n\n\n" + plagiarismResult.getNewDocument() + "    " + plagiarismResult.getExistingDocument());
             if (plagiarismResult != null){
             	overalResults.add(plagiarismResult);
             }

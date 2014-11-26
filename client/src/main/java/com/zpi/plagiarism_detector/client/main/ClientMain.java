@@ -24,7 +24,6 @@ public class ClientMain extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/MainScene.fxml"));
-System.out.println(System.getProperty("java.version"));
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
 
