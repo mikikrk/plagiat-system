@@ -67,10 +67,10 @@ public class ResultSceneController implements Initializable, Controller {
             e.printStackTrace();
         }
         handleSwitchButtonAction();
-//        statWordsArtic.setText(null);
-//        statWordsOvall.setText(Integer.toString(getAmountOfSimilarSentencesInAllResults(returnedResult)));
-//        statPercArtic.setText(null);
-//        statPercOvall.setText(Integer.toString(getPercantageOfSimilarityInAllResults(returnedResult)));
+        statWordsArtic.setText(null);
+        statWordsOvall.setText(Integer.toString(getAmountOfSimilarSentencesInAllResults(returnedResult)));
+        statPercArtic.setText(null);
+        statPercOvall.setText(Integer.toString(getPercantageOfSimilarityInAllResults(returnedResult)));
     }
 
     @FXML

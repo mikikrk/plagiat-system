@@ -89,12 +89,15 @@ public class CodeGridController implements Initializable {
         List<PlagiarismResult> tempList = new LinkedList<PlagiarismResult>();
         for (List<PlagiarismResult> resultList : allResults) {
             System.out.println(resultList.toString());
+            tempList.clear();
             for (PlagiarismResult singleResult : resultList) {
                 if (singleResult.getType().equals(DocumentType.CODE)) {
                     tempList.add(singleResult);
                 }
             }
-            filteredArticles.add(tempList);
+            if (!tempList.isEmpty()) {
+                filteredArticles.add(tempList);
+            }
         }
         return filteredArticles;
     }

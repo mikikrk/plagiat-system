@@ -7,10 +7,12 @@ package com.zpi.plagiarism_detector.client.controller;
 
 import com.zpi.plagiarism_detector.commons.database.DocumentType;
 import com.zpi.plagiarism_detector.commons.protocol.DocumentData;
+import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismFragment;
 import com.zpi.plagiarism_detector.commons.protocol.plagiarism.PlagiarismResult;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -92,6 +94,7 @@ public class ArticleGridController implements Initializable {
             currArticleIndex.set(currArticleIndex.get() - 1);
             outputData.setText(allData.get(currArticleIndex.get() - 1).getExistingDocument());
         }
+        colorSimilarSentences(allData.get(currArticleIndex.get() - 1));
     }
 
     @FXML
@@ -99,6 +102,19 @@ public class ArticleGridController implements Initializable {
         if (currArticleIndex.get() < totalArticleIndex.get()) {
             currArticleIndex.set(currArticleIndex.get() + 1);
             outputData.setText(allData.get(currArticleIndex.get() - 1).getExistingDocument());
+        }
+        colorSimilarSentences(allData.get(currArticleIndex.get() - 1));
+    }
+    
+    private void colorSimilarSentences(PlagiarismResult result) {
+        inputData.setStyle("-fx-highlight-fill: orange; -fx-highlight-text-fill: firebrick;");
+        outputData.setStyle("-fx-highlight-fill: red; -fx-highlight-text-fill: firebrick;");
+        Map<PlagiarismFragment, PlagiarismFragment> map = result.getPlagiarisedFragments();
+        for(PlagiarismFragment inValue: map.keySet()) {
+         inputData.selectRange(inValue.getBegin(), inValue.getEnd());
+        }
+        for(PlagiarismFragment outValue: map.values()) {
+         outputData.selectRange(outValue.getBegin(), outValue.getEnd());
         }
     }
 }
